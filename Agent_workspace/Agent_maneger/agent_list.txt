@@ -1,0 +1,4 @@
+# Agent Registry
+# Format: Date | Module Name | Agent Type
+2025/11/23 | environment_state_modul | Environment Agent
+2025/12/01 | user_state_module | User State Agent (Pending)
