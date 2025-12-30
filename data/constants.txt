@@ -1,0 +1,29 @@
+🀰 tau_dish_washing: 皿洗いの単位処理時間 (1.0分/個)
+🀱 tau_laundry: 洗濯物処理の単位処理時間 (0.5分/個)
+🀲 tau_trash_picking: ゴミ拾いの単位処理時間 (0.27分/個)
+🀳 tau_receipt_collection: 領収書収集の単位処理時間 (0.13分/枚)
+🀴 tau_toilet_cleaning: トイレ掃除の単位処理時間 (0.65分/箇所)
+🀵 tau_furniture_cleaning: 家具清掃の単位処理時間 (5.0分/個)
+🁠 measurement_limit_daily_min: 1日の測定時間推奨下限 (6時間)
+🁡 measurement_limit_daily_max: 1日の測定時間推奨上限 (8時間)
+🁢 measurement_days_weekly_min: 週の測定日数推奨下限 (3日)
+🁣 measurement_days_weekly_max: 週の測定日数推奨上限 (6日)
+🁧 critical_state_definitions: 危篤状態の定義と判定条件の集合 (過覚醒, うつ, etc.)
+🁨 recovery_task_templates: 危篤状態ごとの推奨リカバリータスク定義
+🁩 state_schema_user: ユーザー状態のフィールド定義と値域
+🁪 state_schema_environment: 環境状態のフィールド定義と値域
+🁫 state_schema_social: 社会的状態のフィールド定義 (エッジ強度, ペアリング状態)
+🀶 measurement_capability_base: ユーザー固有の基礎測定能力 (遺伝・脳年齢等による定数)
+🀷 decay_rate_pairing_single_loss: 片方の測定能力低下時のペアリング消失速度
+🀸 decay_rate_pairing_double_loss: 両方の測定能力低下時のペアリング消失速度 (即時消失に近い高レート)
+🁤 threshold_measurement_capability_for_monitoring: セルフモニタリング可能となる測定能力の閾値
+🁥 threshold_environment_variance_for_user_stability: ユーザー分散が低下しうる環境分散の上限値
+🀹 correlation_executive_monitoring: 遂行能力とモニタリング能力の相関係数
+🁬 task_templates_dictionary: システムに登録されたタスクテンプレート辞書
+🁭 notification_rules_default: デフォルトの通知ルール定義 (開始10分前, 終了時など)
+🀺 entropy_decay_rate: 放置時のエントロピー自然増加率 (係数k)
+🀻 human_metabolic_rate_cleaning: 掃除中の平均代謝エネルギー (約150W)
+🀼 room_temperature_default: エントロピー計算用の基準室温 (300K)
+🁦 precondition_match_threshold: 代替タスク検索時の一致スコア閾値
+🁮 notification_snooze_interval: 通知スヌーズ時の再送間隔 (分)
+

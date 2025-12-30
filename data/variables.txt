@@ -1,0 +1,23 @@
+🀀 current_timestamp: 現在のシステム時刻 (ISO 8601)
+🀁 user_state_current: 現在のユーザー状態オブジェクト (神経, 臓器, 筋肉, 血圧, 脈拍, 行動, 想起, 栄養, 目標)
+🀂 environment_state_current: 現在の環境状態オブジェクト (清潔度, 換気, 照明, 騒音, 温度, 湿度, カビリスク, 整理整頓)
+🀃 social_state_current: 現在の社会的状態 (組織エントロピー理論に基づくペアリング状態、エッジ強度)
+🀆 organization_entropy_s: 組織エントロピー (組織の分散の経時的差分)
+┣ pairing_edges: ユーザー間の測定ペアリングのリスト (エッジID, ユーザーA, ユーザーB, 結合強度)
+🀇 user_measurement_capability: ユーザーの現在の測定能力 (遺伝・栄養・環境状態から算出されるスカラ値)
+🀙 is_measurement_state_active: 測定状態が維持されているか (Falseの場合、タスク遂行は確率的になる)
+🀚 probability_of_recovery: 測定状態解除後の復旧確率
+🀈 executive_function_level: 現在の遂行能力レベル (測定能力と相関)
+┝ scheduled_events_list: カレンダーに配置された予定オブジェクトのリスト
+┠ execution_records_list: 実行されたタスクの記録オブジェクトのリスト
+🀄 room_entropy_s: 現在の部屋の機能的エントロピー (未処理タスクの総期待掃除時間)
+🀅 room_negentropy_j: 直近の介入で生成されたネゲントロピー量
+╏ task_queue: 実行待ちのタスクインスタンスのキュー
+║ active_notifications: 現在アクティブな通知のリスト
+🀐 measurement_time_daily: 本日の累積測定時間
+🀑 measurement_days_weekly: 今週の累積測定日数
+🀛 is_measurement_mode: 現在測定モード中かどうかのフラグ
+🀒 last_interaction_time: ユーザーが最後に操作を行った時刻
+│ temp_object_counts: エリアごとの未処理オブジェクト数 (n_{alpha,i})
+🀜 current_critical_state: 現在検知されている危篤状態 (なしの場合はnull)
+
