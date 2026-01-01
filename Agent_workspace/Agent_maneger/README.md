@@ -1,24 +1,41 @@
-# Agent Manager
+# Implementation Agent Manager
 
-This directory contains the orchestration logic for the autonomous agents in the system.
+このディレクトリは、本プロジェクト（Schedule-Management-Tool）の開発プロセスを管理・推進するための「実装エージェントマネージャー」のワークスペースです。
+ランタイム（動作中）のエージェント管理ではなく、**実装フェーズにおけるタスク管理、エージェント編成、設計情報の伝達**を担います。
 
-## Files
+## 目的
 
-- `agent_manager.py`: The main entry point for managing agents and coordinating their activities. It currently orchestrates the `environment_state_modul` to determine optimal environmental interventions.
-- `agent_list.txt`: A registry of available agents and their modules.
+「観点の補充」理論に基づき、開発に必要な視点（UI、データモデル、状態理論など）を個別の実装エージェントに分担させ、人間の認知限界を超えた複雑なシステム構築を支援します。
 
-## Usage
+## ワークフロー
 
-Run `agent_manager.py` to execute a simulation of the agent arbitration process:
+開発タスクは以下の自律的なフローで処理されます。ディレクトリ: `Agent_workspace/Task_Management/`
 
-```bash
-python agent_manager.py
-```
+1.  **提案 (Propose)** -> `01_Proposals/`
+    *   各エージェントは状況を確認し、必要な実装タスクや設計変更を提案ファイルとしてここに作成します。
+    *   ファイル名規則: `proposal_by_[Agent名]_[件名].txt`
+2.  **割り振り (Assign)** -> `02_Active/`
+    *   Agent_Managerは提案を確認し、採用するものをこのフォルダに移動します。
+    *   独断または状況に応じた協力エージェントと相談の上、担当者を決定し、ファイル内に追記します。
+3.  **実行と確認 (Execute & Review)**
+    *   担当エージェントはタスクを実行します。
+    *   Agent_Managerは進捗を確認します。
+4.  **完了 (Complete)** -> `03_Completed/`
+    *   タスクが完了したら、ファイルをこのフォルダに移動します。
 
+## 機能
 
+1.  **エージェント編成**: 必要な「観点」を定義し、担当エージェントを任命・管理します。
+2.  **業務管理**: `業務/` ディレクトリ内で、プロジェクトの進行状況をチケット管理します。
+3.  **情報伝達**: `docs/` 内の決定事項を、適切な実装エージェントに指示として渡します。
 
+## ディレクトリ構造
 
+- `業務/`: マネジメント業務のログとタスク定義（01_xxx.txt 形式）
+- `agent_list.txt`: 稼働中の実装エージェントとその役割定義
+- `Agent管理.txt`: エージェントの作成・変更履歴
+- `観点の補充.txt`: マネジメントの理論的背景
 
+## 使用方法
 
-
-
+開発のフェーズが進むごとに、必要な観点を持つエージェントを `agent_list.txt` に定義し、`業務/` 内に具体的な作業指示書を作成してください。

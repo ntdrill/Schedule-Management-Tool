@@ -1,0 +1,21 @@
+# Agent管理履歴
+
+プロジェクト内の実装エージェントの作成、変更、統合の履歴を記録します。
+
+## 履歴
+
+### 2025/12/31
+**Agent_Manager (System Reform)**
+- 役割変更: ランタイム管理から実装プロセス管理へ移行。
+- アクション: ディレクトリ構造の再編、管理台帳の整備。
+
+### 既存エージェントの確認
+以下のエージェントフォルダが存在することを確認（役割の再定義が必要）：
+- environment_state_agent
+- user_state_agent
+- monitoring_state_agent
+- organization_state_agent
+- symbol_agent
+- task_queue
+- social_state_agent (フォルダ未確認だがagent_listには定義、要作成確認)
+

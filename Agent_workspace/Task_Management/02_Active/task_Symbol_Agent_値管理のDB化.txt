@@ -1,0 +1,6 @@
+## Assignment
+- **担当**: Symbol_Agent
+- **承認日**: 2026/01/01
+- **期限**: TBD
+- **ステータス**: 進行中
+- **参照**: `Agent_workspace/symbol_agent/業務/01_DB導入と登録フロー策定.txt`

@@ -1,4 +1,4 @@
-→ calc_room_entropy: オブジェクト数と単位時間を入力とし、部屋の総エントロピーSを算出する写像
+⇨ calc_room_entropy: オブジェクト数と単位時間を入力とし、部屋の総エントロピーSを算出する写像
 ↦ calc_negentropy: 掃除前後のエントロピー差分からネゲントロピーJを算出する写像
 ⇒ detect_critical_state: 現在の状態ベクトルを入力とし、危篤状態の種類(またはnull)を出力する判定関数
 ⇔ check_preconditions: 現在の状態とタスクの前提条件を入力とし、実行可能性(Boolean)を出力する関数
