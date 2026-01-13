@@ -1,0 +1,73 @@
+# 進捗報告: ワークフロー設計
+
+報告日: 2026/01/11
+報告者: Agent_Manager (Cursor Agent)
+
+---
+
+## 本日の実施内容
+
+### 1. ユースケースとスナップショットの調査
+- 既存資料（`docs/`, `Agent_workspace/`）を確認
+- ユースケース: 各専門エージェントが自然言語で記述するシナリオ（入力・処理・出力）
+- スナップショット: Data_Model_Agentがシンボルを用いて記述する1文の論理式
+- 両者の関係性と変換プロセスを整理
+
+### 2. ワークフロー設計方法論の確立
+- 「エージェントのワークをプログラムするようなキュー形式」の表現を採用
+- 各ステップを「主語 + 動詞 + 目的語」で記述
+- ファイル移動（Proposals → Active → Completed → Archive）を明示
+
+### 3. Phase 1〜3 のワークフロー作成
+| Phase | 名称 | 焦点 | ステップ数 |
+| :--- | :--- | :--- | :--- |
+| Phase 1 | 基礎動作 | 単一エージェント内の処理 | 24 |
+| Phase 2 | 相互作用 | 複数エージェント間の影響 | 27 |
+| Phase 3 | 複合・例外 | ループ、分岐、リカバリー | 27 |
+
+### 4. Phase 4 以降のフェーズ提案
+- Phase 4: 構造抽出（クラス/変数/関数リスト）
+- Phase 5: スキーマ定義（SwiftData モデル）
+- Phase 6: デバイス分担設計（iPhone/Watch 割り当て）
+- Phase 7: プロトタイプ実装（Swift コード）
+- Phase 8: 検証とフィードバック（修正ループ）
+
+---
+
+## 成果物
+
+| ファイル | 場所 |
+| :--- | :--- |
+| Phase 1 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_1.txt` |
+| Phase 2 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase2.txt` |
+| Phase 3 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase3.txt` |
+| Phase 4以降の提案 | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/phase3以降のphase.txt` |
+
+---
+
+## 得られた知見
+
+1. **シンボル定義はSymbol_Agentの専権事項**: Data_Model_Agentは「既存シンボルを使う」か「不足をSymbol_Agentに依頼する」役割に徹する
+2. **ワークフロー設計の5ステップ**:
+   - Step A: インプット・アウトプットの定義
+   - Step B: 役割分担の確認（推論で補わない）
+   - Step C: フォルダ・ファイルの状態遷移を定義
+   - Step D: 依存関係の整理
+   - Step E: 各ステップを「主語 + 動詞 + 目的語」で記述
+3. **ファイル移動の明示が重要**: Agent_Managerはファイル位置の差分に反応しやすい
+
+---
+
+## 次のアクション
+
+- [ ] Phase 1 ワークフローの実行開始
+- [ ] 各専門エージェントへのユースケース提出指示
+- [ ] Phase 4 以降のワークフローキュー詳細作成（必要に応じて）
+
+---
+
+## ステータス
+
+**完了**: ワークフロー設計フェーズ
+**次**: ワークフロー実行フェーズ（Phase 1 開始）
+
