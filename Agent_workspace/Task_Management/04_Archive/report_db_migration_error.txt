@@ -1,0 +1,49 @@
+# エラー報告書: DB登録処理におけるユニーク制約違反
+
+**作成日**: 2026/01/01
+**報告者**: Symbol Agent
+**ステータス**: 完了済み
+
+## 1. 発生事象
+`migrate_symbols_to_supabase.py` を用いて、記号体系を刷新したデータをSupabase上の `symbols` テーブルに登録しようとした際、以下のエラーが発生し処理が中断した。
+
+```
+Error pushing to Supabase: {'message': 'duplicate key value violates unique constraint "symbols_name_key"', 'code': '23505', 'hint': None, 'details': 'Key (name)=(correlation_executive_monitoring) already exists.'}
+```
+
+## 2. 原因分析
+### 直接的な原因
+`symbols` テーブルのスキーマ定義および `upsert` の挙動に起因する。
+
+- **テーブル定義**:
+  - `symbol` カラム: PRIMARY KEY
+  - `name` カラム: UNIQUE 制約
+- **スクリプトの挙動**:
+  - `upsert(on_conflict="symbol")` で実行。
+- **不整合の発生プロセス**:
+  1. 既存のDBには、古い記号（例: 麻雀牌など）と名前（例: `correlation_executive_monitoring`）の組み合わせでレコードが存在していた。
+  2. 今回の更新で、同じ名前に対して新しい記号（例: エチオピア文字など）を割り当てたデータを作成した。
+  3. `upsert` は `symbol` (PK) を基準に「新規レコード」と判断し、INSERT を試みた。
+  4. しかし、`name` カラムの値は既存レコードと重複しているため、UNIQUE制約違反が発生した。
+
+### 設計上の課題
+- **識別子の選定ミス**:
+  - 記号（Symbol）は今回のように刷新される可能性がある可変な属性であるにもかかわらず、PRIMARY KEY として設計されていた。
+  - 本来、データの同一性は `name`（または不変のID）によって保証されるべきであり、`name` を PRIMARY KEY にするか、更新ロジックを `name` 基準にする必要があった。
+
+## 3. 暫定対処と今後の対策
+### 暫定対処（スクリプト修正案）
+- データの整合性を保つため、登録処理の直前にテーブル内の既存データを全削除（DELETE）するロジックをスクリプトに追加した（実行前に中断）。
+- これにより、新旧の記号の衝突を回避し、新しい体系でデータを再構築することを目指した。
+
+### 恒久対策の提案
+- **DBスキーマの変更**: `name` を PRIMARY KEY に変更し、`symbol` は単なる属性（UNIQUE制約なし、または状況に応じて）とする。
+- **移行ロジックの見直し**: データ更新時は `name` をキーとして `upsert` を行うようにスクリプトを変更する。
+
+対処
+```
+v2sqlを実行したところデータが空になってしまいましたが、シンボルエージェントがもう一度migrate_symbols_to_supabase.pyを実行したことで168件全て復旧しました
+```
+
+以上
+

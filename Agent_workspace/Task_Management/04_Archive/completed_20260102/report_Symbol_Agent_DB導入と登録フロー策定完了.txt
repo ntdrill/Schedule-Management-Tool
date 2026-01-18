@@ -1,0 +1,36 @@
+# 完了レポート: DB導入と登録フロー策定
+
+作成日: 2026/01/02
+担当: Symbol_Agent
+
+## 概要
+Symbol Agentは、値（シンボル）の管理をテキストベースからデータベース（Supabase）へ移行し、堅牢な登録・同期フローを確立しました。
+
+## 実施内容
+
+### 1. DBスキーマ設計と構築
+- `create_symbols_table_v2.sql` を作成し、`symbols` テーブルを定義。
+- `name` を主キーとし、`symbol`, `category`, `group_id` などのメタデータを構造化。
+
+### 2. データ移行スクリプトの実装
+- `migrate_symbols_to_supabase.py`: 初期データ移行用スクリプト。
+- `sync_symbols_diff.py`: 差分更新用スクリプト。ローカルファイルとDBを比較し、変更・追加分のみをUpsertする効率的な同期を実現。
+
+### 3. データの登録
+- `data/` フォルダ内の定義ファイル（`constants.txt`, `variables.txt`, `transforms.txt`）から計173件のシンボルを抽出。
+- 記号割り当ての見直し（重複排除、分類ごとのUnicodeチャート適用）を実施。
+- 全データをSupabaseに登録完了。
+
+### 4. 登録フローの整備
+- 値の追加時は `data/` フォルダのファイルを編集し、`sync_symbols_diff.py` を実行するだけでDBへの同期が可能となった。
+
+## 成果物
+- `create_symbols_table_v2.sql`
+- `migrate_symbols_to_supabase.py`
+- `sync_symbols_diff.py`
+- Supabase上の `symbols` テーブル（173レコード）
+
+## 今後の課題
+- 削除の同期（ローカルで削除されたシンボルのDBからの削除または無効化）の実装検討。
+
+

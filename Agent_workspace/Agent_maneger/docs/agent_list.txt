@@ -1,0 +1,27 @@
+# Agent_Manager (System Reform) の管理下にあるエージェント一覧
+
+## マネジメント
+| エージェント名 | パス | 担当観点 | 責任範囲 |
+| :--- | :--- | :--- | :--- |
+| **Agent_Manager** | `Agent_workspace/Agent_maneger` | プロジェクト管理、観点の補充 | 全体進捗の管理、エージェント間の調停、タスクの割り振り |
+
+## 状態モデル担当
+| エージェント名 | パス | 担当観点 | 責任範囲 |
+| :--- | :--- | :--- | :--- |
+| **User_State_Agent** | `Agent_workspace/user_state_agent` | ユーザー状態、生理的指標 | ユーザー状態スキーマの定義、判定ロジック、危篤状態の検知 |
+| **Environment_State_Agent** | `Agent_workspace/environment_state_agent` | 環境状態、エントロピー | 環境状態スキーマの定義、掃除タスクによるネゲントロピー計算 |
+| **Social_State_Agent** | `Agent_workspace/social_state_agent` | 社会的状態、組織構造 | 社会的状態スキーマの定義、組織エントロピー、他者との接続性 |
+| **Monitoring_State_Agent** | `Agent_workspace/monitoring_state_agent` | 測定、モニタリング | 測定モードの仕様策定、センサー連携の設計 |
+| **Organization_State_Agent** | `Agent_workspace/organization_state_agent` | 組織論、ペアリング | (Social_State_Agentと統合検討中) 組織エントロピーの詳細定義 |
+
+## UI/UX担当
+| エージェント名 | パス | 担当観点 | 責任範囲 |
+| :--- | :--- | :--- | :--- |
+| **UI_Design_Agent** | `Agent_workspace/ui_design_agent` | UI/UX、可視化 | 状態中心UIの設計、カレンダー表示、状態のグラフィック表現 |
+
+## システム基盤担当
+| エージェント名 | パス | 担当観点 | 責任範囲 |
+| :--- | :--- | :--- | :--- |
+| **Symbol_Agent** | `Agent_workspace/symbol_agent` | 記号接地、データ構造 | 辞書.yamlの管理、概念と実装の紐付け、ID体系の管理、DB管理 |
+| **Data_Model_Agent** | `Agent_workspace/data_model_agent` | システム構造設計、形式記述 | 静的スナップショット記述、クラス/関係性の抽出、モデル整合性管理、予定オブジェクト・実行オブジェクトの構造設計 |
+| **Task_Management** | `Agent_workspace/Task_Management` | タスク管理 | 各エージェントからの提案と実行状況の集約 |

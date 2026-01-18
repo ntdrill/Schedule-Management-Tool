@@ -1,0 +1,20 @@
+⇨ calc_room_entropy: オブジェクト数と単位時間を入力とし、部屋の総エントロピーSを算出する写像
+↦ calc_negentropy: 掃除前後のエントロピー差分からネゲントロピーJを算出する写像
+⇒ detect_critical_state: 現在の状態ベクトルを入力とし、危篤状態の種類(またはnull)を出力する判定関数
+⇔ check_preconditions: 現在の状態とタスクの前提条件を入力とし、実行可能性(Boolean)を出力する関数
+⇢ find_alternative_tasks: 現在の状態と元のタスクを入力とし、適合する代替タスクリストを出力する検索関数
+↬ generate_execution_record: 予定オブジェクトと実行結果を入力とし、実行オブジェクトを生成する変換
+⇄ evaluate_task_effect: 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
+↻ update_state_from_sensor: センサーデータと現在の状態を入力とし、更新された状態ベクトルを出力する更新関数
+↝ calc_user_variance: 環境分散を入力とし、ユーザー分散(S_user)を算出する写像
+↠ calc_measurement_capability: ユーザー分散と生物学的因子を入力とし、現在の測定能力を算出する写像
+↺ update_organization_entropy: エッジの結合強度の変化を入力とし、組織エントロピーの増分を算出する変換
+↷ decay_pairing_edge: ユーザーの測定能力低下を入力とし、エッジ強度の減衰を計算する時間発展関数
+⇻ estimate_recovery_probability: 現在の状態ベクトルを入力とし、測定状態への復旧確率を算出する推定関数
+⇕ judge_executive_function_validity: 現在の測定状態を入力とし、遂行能力が機能しているか(Boolean)を判定する関数
+⇶ calc_thermal_entropy_increase: 消費エネルギーを入力とし、環境への熱エントロピー増大量を算出する写像
+↯ judge_notification_trigger: 状態・時間・ルールを入力とし、通知を送るべきか(Boolean)を判定する関数
+⇝ select_recovery_task: 検知された危篤状態を入力とし、最適なリカバリータスクテンプレートを出力する選択関数
+⨁ merge_state_snapshot: 複数の状態ソース(センサー, 入力)を統合し、一つの状態履歴オブジェクトを生成する変換
+⟳ convert_schedule_to_execution: 予定時刻到来時に予定オブジェクトを実行オブジェクト(in_progress)へ変換する処理
+

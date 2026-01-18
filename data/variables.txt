@@ -1,23 +1,58 @@
-🀀 current_timestamp: 現在のシステム時刻 (ISO 8601)
-🀁 user_state_current: 現在のユーザー状態オブジェクト (神経, 臓器, 筋肉, 血圧, 脈拍, 行動, 想起, 栄養, 目標)
-🀂 environment_state_current: 現在の環境状態オブジェクト (清潔度, 換気, 照明, 騒音, 温度, 湿度, カビリスク, 整理整頓)
-🀃 social_state_current: 現在の社会的状態 (組織エントロピー理論に基づくペアリング状態、エッジ強度)
-🀆 organization_entropy_s: 組織エントロピー (組織の分散の経時的差分)
-┣ pairing_edges: ユーザー間の測定ペアリングのリスト (エッジID, ユーザーA, ユーザーB, 結合強度)
-🀇 user_measurement_capability: ユーザーの現在の測定能力 (遺伝・栄養・環境状態から算出されるスカラ値)
-🀙 is_measurement_state_active: 測定状態が維持されているか (Falseの場合、タスク遂行は確率的になる)
-🀚 probability_of_recovery: 測定状態解除後の復旧確率
-🀈 executive_function_level: 現在の遂行能力レベル (測定能力と相関)
-┝ scheduled_events_list: カレンダーに配置された予定オブジェクトのリスト
-┠ execution_records_list: 実行されたタスクの記録オブジェクトのリスト
-🀄 room_entropy_s: 現在の部屋の機能的エントロピー (未処理タスクの総期待掃除時間)
-🀅 room_negentropy_j: 直近の介入で生成されたネゲントロピー量
-╏ task_queue: 実行待ちのタスクインスタンスのキュー
-║ active_notifications: 現在アクティブな通知のリスト
-🀐 measurement_time_daily: 本日の累積測定時間
-🀑 measurement_days_weekly: 今週の累積測定日数
-🀛 is_measurement_mode: 現在測定モード中かどうかのフラグ
-🀒 last_interaction_time: ユーザーが最後に操作を行った時刻
-│ temp_object_counts: エリアごとの未処理オブジェクト数 (n_{alpha,i})
-🀜 current_critical_state: 現在検知されている危篤状態 (なしの場合はnull)
-
+ꀀ accumulated_thermal_entropy_production: No description extracted
+ꀁ active_notifications: 現在アクティブな通知のリスト
+ꀂ adjust_notification_frequency_by_fatigue: No description extracted
+ꀃ autonomic_nerve_balance: 自律神経バランス指標 (LF/HF比など、交感/副交感の優位度を数値化したもの)
+ꀄ bowel_condition_score: 腸内環境の状態スコア（「腸内環境の悪化」判定用）
+ꀅ calc_autonomic_balance: 脈拍変動データ等から自律神経バランスを算出する計算式
+ꀆ calc_user_variance: 環境分散を入力とし、ユーザー分散(S_user)を算出する写像
+ꀇ current_cognitive_resource_level: No description extracted
+ꀈ current_critical_state: 現在検知されている危篤状態 (なしの場合はnull)
+ꀉ current_measurement_quality_score: No description extracted
+ꀊ current_timestamp: 現在のシステム時刻 (ISO 8601)
+ꀋ daily_calorie_intake_standard: 厚生労働省推奨に基づく摂取カロリーの基準値
+ꀌ daily_protein_intake_standard: 厚生労働省推奨に基づくタンパク質摂取量の基準値
+ꀍ device_connection_status_map: No description extracted
+ꀎ dirt_level_input: (汚れレベル)
+ꀏ discrepancy_score_subjective_vs_sensor: No description extracted
+ꀐ dmn_activation_required_silence: DMN活性化に必要な無音・耳栓状態の継続時間 (15 分)
+ꀑ dmn_activity_status: DMN（デフォルト・モード・ネットワーク）が活性化しているかどうかのフラグ
+ꀒ energy_expenditure_realtime: (リアルタイム消費エネルギー)
+ꀓ environment_state_current: 現在の環境状態オブジェクト (清潔度, 換気, 照明, 騒音, 温度, 湿度, カビリスク, 整理整頓)
+ꀔ environmental_sensor_raw: (環境センサー生値)
+ꀕ estimate_recovery_probability: 現在の状態ベクトルを入力とし、測定状態への復旧確率を算出する推定関数
+ꀖ executive_function_level: 現在の遂行能力レベル (測定能力と相関)
+ꀗ external_air_quality_index: 外気の質（花粉、PM2.5）。換気タスクの実行可否判断（窓を開けるべきか、空気清浄機を使うべきか）に使います。
+ꀘ external_noise_level_db: 外部からの騒音レベル（道路工事、隣人の生活音）。窓を開けて換気できるかどうかの判断基準になります。
+ꀙ is_measurement_mode: 現在測定モード中かどうかのフラグ
+ꀚ is_measurement_state_active: 測定状態が維持されているか (Falseの場合、タスク遂行は確率的になる)
+ꀛ is_physiological_suppression: 心理的抑制状態にあるかどうかのフラグ
+ꀜ judge_ventilation_status: 換気履歴と環境センサから、現在の空気が作業に適しているか判定する関数
+ꀝ last_interaction_time: ユーザーが最後に操作を行った時刻
+ꀞ last_valid_measurement_timestamp: No description extracted
+ꀟ measurement_fatigue_level: No description extracted
+ꀠ measurement_gap_tolerance_seconds: No description extracted
+ꀡ measurement_time_daily: 本日の累積測定時間
+ꀢ organization_entropy_s: 組織エントロピー (組織の分散の経時的差分)
+ꀣ predicted_dropout_probability: No description extracted
+ꀤ probability_of_recovery: 測定状態解除後の復旧確率
+ꀥ psychological_safety_level: 現在の心理的安全性レベル (主観入力または環境エントロピーから推定)
+ꀦ response_latency_to_feedback: No description extracted
+ꀧ room_entropy_s: 現在の部屋の機能的エントロピー (未処理タスクの総期待掃除時間)
+ꀨ room_negentropy_j: 直近の介入で生成されたネゲントロピー量
+ꀩ satiety_level: 現在の満腹度・空腹感のレベル（過剰食欲や空腹状態の判定用）
+ꀪ sense_of_self_dissolution: 「自分はどこにもいない」感覚（自我希薄化）の深度（表現力状態の判定用）
+ꀫ social_state_current: 現在の社会的状態 (組織エントロピー理論に基づくペアリング状態、エッジ強度)
+ꀬ state_verification_boolean: (状態確認のYes/No)
+ꀭ subjective_pain_level: 特定部位（右奥歯など）の主観的な痛みのレベル (0-10)
+ꀮ subjective_sensation_score: (主観的感覚スコア)
+ꀯ temp_object_counts: エリアごとの未処理オブジェクト数 (n_{alpha,i})
+ꀰ time_since_last_awakening: 最終覚醒時刻からの経過時間
+ꀱ time_since_last_break: 最後の休憩からの経過作業時間
+ꀲ time_since_last_ventilation: 最終換気完了時刻からの経過時間
+ꀳ user_measurement_capability: ユーザーの現在の測定能力 (遺伝・栄養・環境状態から算出されるスカラ値)
+ꀴ user_state_current: 現在のユーザー状態オブジェクト (神経, 臓器, 筋肉, 血圧, 脈拍, 行動, 想起, 栄養, 目標)
+─ execution_records_list: 実行されたタスクの記録オブジェクトのリスト
+━ pairing_edges: ユーザー間の測定ペアリングのリスト (エッジID, ユーザーA, ユーザーB, 結合強度)
+│ savoring_content_buffer: セーバリング（感謝・祈り）の対象となっている具体的な内容（例：「鮭の雑炊」）を一時保持するバッファ
+┃ scheduled_events_list: カレンダーに配置された予定オブジェクトのリスト
+┄ task_queue: 実行待ちのタスクインスタンスのキュー

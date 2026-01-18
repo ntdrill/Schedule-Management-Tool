@@ -1,0 +1,58 @@
+# 業務: 静的スナップショットの記述
+
+作成日: 2026/01/02
+担当: Data_Model_Agent
+
+## 目的
+ソフトウェアの挙動を形式的に捉えるための第一歩として、システムが取りうる「静的なスナップショット（ある瞬間の状態と変換の適用例）」をシンボルを用いて具体的に記述する。
+抽象的な設計図（クラス図等）を描く前に、具体的な事例（インスタンス）を積み上げることで、モデルの解像度を高める。
+
+**シンボルの参照**: `Symbol_Agent` が管理する `symbols` DB (または `data/*.txt`) から、定義済みの記号を参照する。
+
+---
+
+## Snapshot 01: 危篤検知と乖離判定を含むフィードバック制御ループ
+
+### Expression
+`(↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (↖(ꀴ.subjective, ꀔ) ⟼ ꀏ) ≫ (↞(ꀴ, ꀏ, ህ) ⟼ ꀈ) ≫ ((ꀈ ?!= null) ⫸ (↬(ꀈ, ሡ) ⟼ ┃_rec) ≫ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↪(ꀴ, ꀔ) ⟼ ─_exec.state_after) ≫ (↥(┃_rec.expected, ─_exec.state_after) ⟼ ─_exec.result) ≫ (↞(─_exec.state_after, ꀏ, ህ) ?= null ∴ ꀚ_restored))`
+
+### Symbol Definitions
+*   `↮` (update_state_from_sensor): センサーデータからユーザー状態を更新する関数
+*   `ꀴ` (user_state_current): 現在のユーザー状態オブジェクト
+*   `ꀔ` (environmental_sensor_raw): センサー生値（脈拍、活動量等）
+*   `⟼` (assign_operator): 出力を変数に代入する演算子
+*   `≫` (sequence_operator): 処理の順次実行を表す演算子
+*   `↖` (calc_subjective_objective_discrepancy): 主観と客観の乖離スコアを算出する関数
+*   `ꀏ` (discrepancy_score_subjective_vs_sensor): 算出された乖離スコア
+*   `↞` (detect_critical_state): 状態・乖離・危篤定義から危篤状態を判定する関数
+*   `ህ` (critical_state_definitions): 危篤状態の定義集合（判定基準）
+*   `ꀈ` (current_critical_state): 検知された危篤状態（nullなら正常）
+*   `?!=`: (未定義演算子) 非等価判定
+*   `⫸` (pipeline_operator): 条件成立時に次の処理へパイプラインする
+*   `↬` (select_recovery_task): 危篤状態と辞書から最適なリカバリータスクを選択・生成する関数
+*   `ሡ` (task_templates_dictionary): システムのタスクテンプレート辞書
+*   `┃_rec` (scheduled_event): 生成されたリカバリータスクの予定オブジェクト
+*   `↛` (convert_schedule_to_execution): 予定と現在時刻から実行オブジェクトを生成（開始）する関数
+*   `ꀊ` (current_timestamp): 現在時刻
+*   `─_exec` (execution_record): 生成された実行オブジェクト
+*   `↪` (merge_state_snapshot): 現在の状態とセンサー値からスナップショットを作成する関数
+*   `─_exec.state_after`: 実行オブジェクト内の「実行後状態」フィールド
+*   `↥` (evaluate_task_effect): 期待状態と実際状態を比較評価する関数
+*   `┃_rec.expected`: 予定オブジェクト内の「期待状態」
+*   `─_exec.result`: 実行オブジェクト内の評価結果
+*   `?=`: (未定義演算子) 等価判定
+*   `∴` (result_operator): 最終的な結論（状態遷移の確定）
+*   `ꀚ_restored`: 測定状態が正常に維持されていることを示すフラグ（True）
+
+### Meaning (Description)
+この記述は、危篤検知から回復までの完全なデータフローを定義している。
+
+1.  **状態更新**: センサー(`ꀔ`)を用いてユーザー状態(`ꀴ`)を最新化する。
+2.  **乖離算出**: ユーザーの主観とセンサー値のズレ(`ꀏ`)を計算する。
+3.  **危篤判定**: 状態(`ꀴ`)、乖離(`ꀏ`)、そして定義データ(`ህ`)を用いて、現在の危篤状態(`ꀈ`)を判定する。
+4.  **介入プロセス**:
+    *   危篤状態が検知された場合、タスク辞書(`ሡ`)を参照して最適なリカバリータスク予定(`┃_rec`)を生成する。
+    *   現在時刻(`ꀊ`)をもって、その予定を実行オブジェクト(`─_exec`)に変換（開始）する。
+    *   タスク完了後、最新の状態とセンサー値からスナップショットを作成し、実行オブジェクトの事後状態(`─_exec.state_after`)として記録する。
+    *   予定の期待値(`┃_rec.expected`)と実績(`─_exec.state_after`)を比較評価(`↥`)し、結果を記録する。
+5.  **回復確認**: 実行後の状態(`─_exec.state_after`)に対して再度危篤判定を行い、`null`（異常なし）であれば、システムは正常状態への復帰(`ꀚ_restored`)を結論付ける。

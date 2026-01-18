@@ -1,0 +1,24 @@
+1. **Agent_Manager**: `Task_Management/02_Active` に親タスク `task_Phase1_Foundation.txt` を作成する
+2. **Agent_Manager**: `task_Phase1_Foundation.txt` 内で、各専門エージェントにユースケースの提出をアサインする
+3. **User_State_Agent**: `Task_Management/01_Proposals` に `proposal_user_usecase.txt` を作成し、シナリオを記述する
+4. **Environment_State_Agent**: `Task_Management/01_Proposals` に `proposal_env_usecase.txt` を作成し、シナリオを記述する
+5. **Agent_Manager**: `Task_Management/01_Proposals` を監視し、ファイルが提出されたことを検知する
+6. **Agent_Manager**: 提出された `proposal_*.txt` を読み込み、内容が適切か（形式に従っているか）確認する
+7. **Agent_Manager**: 確認した `proposal_*.txt` を `Task_Management/02_Active` （または専用サブフォルダ）に移動する
+8. **Agent_Manager**: `task_Phase1_Foundation.txt` を更新し、Symbol_Agent に「語彙抽出と定義」を指示する
+9. **Symbol_Agent**: `Task_Management/02_Active` に移動されたユースケースファイルを読み込む
+10. **Symbol_Agent**: 文章から「システムが扱うべき概念（名詞・動詞）」を抽出してリスト化する
+11. **Symbol_Agent**: 抽出リストと既存の `data/` 内のシンボル定義を照合し、未定義語を特定する
+12. **Symbol_Agent**: 未定義語に対して新しいシンボルを設計し、`data/` 内の適切な辞書ファイルに追記する
+13. **Symbol_Agent**: `Task_Management/02_Active` に `report_symbol_definition_Phase1.txt` を作成し、定義結果を報告する
+14. **Symbol_Agent**: `task_Phase1_Foundation.txt` に「シンボル定義完了」を追記する
+15. **Agent_Manager**: シンボル定義報告を確認し、Data_Model_Agent に「スナップショット記述」を指示する
+16. **Data_Model_Agent**: `Task_Management/02_Active` のユースケースファイルと、更新された `data/` を読み込む
+17. **Data_Model_Agent**: 各ユースケースを「1文の論理式（スナップショット）」に変換する
+18. **Data_Model_Agent**: `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` に論理式を追記する
+19. **Data_Model_Agent**: `task_Phase1_Foundation.txt` に作業完了を追記する
+20. **Agent_Manager**: 成果物（スナップショットファイル）を確認し、最終承認を行う
+21. **Agent_Manager**: `Task_Management/02_Active` 内の `proposal_*.txt` を `Task_Management/03_Completed` に移動する
+22. **Agent_Manager**: `Task_Management/02_Active` 内の `report_symbol_definition_Phase1.txt` を `Task_Management/03_Completed` に移動する
+23. **Agent_Manager**: 親タスク `task_Phase1_Foundation.txt` を `Task_Management/03_Completed` に移動する
+24. **Agent_Manager**: 完了したファイル群を `Task_Management/04_Archive/Phase1_Foundation_[日付]/` にアーカイブする

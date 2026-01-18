@@ -5,10 +5,15 @@ Implementation Agent Manager が管理する業務チケットの一覧とステ
 ## 完了済み
 - 01_マネジメント体制構築.txt (2025/12/31) - システム見直しと初期設定完了
 - 02_ワークフロー整備.txt (2025/12/31) - 提案型タスク管理フローの導入
+- [Task] Symbol_Agent関連 (DB化, スキーマ修正, データ登録) - 168件のデータ移行完了
+- 03_UI設計エージェント作成.txt (2026/01/01) - UI_Design_Agent稼働開始
+- [Task] Data_Model_Agent_データモデル設計プロセス (Phase 1) - 1文形式の有効性確認
 
 ## 進行中
-- なし
+- [Active] task_UI_Design_Agent_状態中心UIの仕様策定.txt - 画面設計中
+- [Active] task_Data_Model_Agent_スナップショット拡充.txt - 基本ユースケースの形式記述
+- [Active] task_All_Agents_ユースケース提案の提出.txt - 各専門領域のシナリオ収集
 
 ## 予定
-- 03_UI設計エージェント作成.txt - 状態中心UIの具体化担当
 - 04_データモデル実装準備.txt - スキーマファイル作成の指示出し
+- 05_エージェント標準構成の更新.txt - 全エージェントへexperienceフォルダを追加

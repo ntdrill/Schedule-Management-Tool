@@ -1,20 +1,37 @@
-⇨ calc_room_entropy: オブジェクト数と単位時間を入力とし、部屋の総エントロピーSを算出する写像
-↦ calc_negentropy: 掃除前後のエントロピー差分からネゲントロピーJを算出する写像
-⇒ detect_critical_state: 現在の状態ベクトルを入力とし、危篤状態の種類(またはnull)を出力する判定関数
-⇔ check_preconditions: 現在の状態とタスクの前提条件を入力とし、実行可能性(Boolean)を出力する関数
-⇢ find_alternative_tasks: 現在の状態と元のタスクを入力とし、適合する代替タスクリストを出力する検索関数
-↬ generate_execution_record: 予定オブジェクトと実行結果を入力とし、実行オブジェクトを生成する変換
-⇄ evaluate_task_effect: 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
-↻ update_state_from_sensor: センサーデータと現在の状態を入力とし、更新された状態ベクトルを出力する更新関数
-↝ calc_user_variance: 環境分散を入力とし、ユーザー分散(S_user)を算出する写像
-↠ calc_measurement_capability: ユーザー分散と生物学的因子を入力とし、現在の測定能力を算出する写像
-↺ update_organization_entropy: エッジの結合強度の変化を入力とし、組織エントロピーの増分を算出する変換
-↷ decay_pairing_edge: ユーザーの測定能力低下を入力とし、エッジ強度の減衰を計算する時間発展関数
-⇻ estimate_recovery_probability: 現在の状態ベクトルを入力とし、測定状態への復旧確率を算出する推定関数
-⇕ judge_executive_function_validity: 現在の測定状態を入力とし、遂行能力が機能しているか(Boolean)を判定する関数
-⇶ calc_thermal_entropy_increase: 消費エネルギーを入力とし、環境への熱エントロピー増大量を算出する写像
-↯ judge_notification_trigger: 状態・時間・ルールを入力とし、通知を送るべきか(Boolean)を判定する関数
-⇝ select_recovery_task: 検知された危篤状態を入力とし、最適なリカバリータスクテンプレートを出力する選択関数
-⨁ merge_state_snapshot: 複数の状態ソース(センサー, 入力)を統合し、一つの状態履歴オブジェクトを生成する変換
-⟳ convert_schedule_to_execution: 予定時刻到来時に予定オブジェクトを実行オブジェクト(in_progress)へ変換する処理
-
+← assess_savoring_state: 感謝や祈りの想起入力から、セーバリング状態の成立を判定する関数
+↑ calc_cognitive_fatigue: 作業時間とタスク負荷から認知疲労度を算出する計算式
+→ calc_measurement_capability: ユーザー分散と生物学的因子を入力とし、現在の測定能力を算出する写像
+↓ calc_measurement_reliability: No description extracted
+↔ calc_negentropy: 掃除前後のエントロピー差分からネゲントロピーJを算出する写像
+↕ calc_room_entropy: オブジェクト数と単位時間を入力とし、部屋の総エントロピーSを算出する写像
+↖ calc_subjective_objective_discrepancy: No description extracted
+↗ calc_thermal_entropy_increase: 消費エネルギーを入力とし、環境への熱エントロピー増大量を算出する写像
+↘ check_nutritional_compliance: 直近3日間の食事ログと基準値を比較し、推奨量を満たしているか判定する関数
+↙ check_preconditions: 現在の状態とタスクの前提条件を入力とし、実行可能性(Boolean)を出力する関数
+↚ cleaning_method_selection: (清掃方法の選択)
+↛ convert_schedule_to_execution: 予定時刻到来時に予定オブジェクトを実行オブジェクト(in_progress)へ変換する処理
+↜ decay_pairing_edge: ユーザーの測定能力低下を入力とし、エッジ強度の減衰を計算する時間発展関数
+↝ detect_abnormal_appetite: 満腹度と食事履歴から、過剰食欲や異常な空腹を検知する関数
+↞ detect_critical_state: 現在の状態ベクトルを入力とし、危篤状態の種類(またはnull)を出力する判定関数
+↟ detect_hyperarousal_signs: 脈拍、作業時間、時刻から過覚醒の兆候（まだ危篤ではない段階）を検知する関数
+↠ estimate_cognitive_depletion: No description extracted
+↡ estimate_psychological_safety: 環境エントロピーと社会的状態から心理的安全性を推定する関数
+↢ estimate_state_controllability: No description extracted
+↣ estimated_cognitive_resource: 現在の推定認知リソース残量 (0.0-1.0)
+↤ evaluate_somatic_symptom: 痛みや不快感の入力から、身体的不調の深刻度を評価する関数
+↥ evaluate_task_effect: 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
+↦ find_alternative_tasks: 現在の状態と元のタスクを入力とし、適合する代替タスクリストを出力する検索関数
+↧ judge_executive_function_validity: 現在の測定状態を入力とし、遂行能力が機能しているか(Boolean)を判定する関数
+↨ judge_notification_trigger: 状態・時間・ルールを入力とし、通知を送るべきか(Boolean)を判定する関数
+↩ judge_sleep_quality_sufficiency: 過去の睡眠ログから「睡眠質x以上」を満たしているか判定する関数
+↪ merge_state_snapshot: 複数の状態ソース(センサー, 入力)を統合し、一つの状態履歴オブジェクトを生成する変換
+↫ predict_measurement_dropout: No description extracted
+↬ select_recovery_task: 検知された危篤状態を入力とし、最適なリカバリータスクテンプレートを出力する選択関数
+↭ update_organization_entropy: エッジの結合強度の変化を入力とし、組織エントロピーの増分を算出する変換
+↮ update_state_from_sensor: センサーデータと現在の状態を入力とし、更新された状態ベクトルを出力する更新関数
+↯ validate_measurement_continuity: No description extracted
+≫ sequence_operator: (順次実行) 状態遷移や処理の順序を表す演算子
+⊳ apply_operator: (適用) 関数や更新を状態に適用することを表す演算子
+⫸ pipeline_operator: (パイプライン) 前の処理結果を次の処理の入力として渡す演算子
+⟼ assign_operator: (代入) 出力結果を変数に束縛することを表す演算子
+∴ result_operator: (結論) 最終的な判定結果や戻り値を表す記号

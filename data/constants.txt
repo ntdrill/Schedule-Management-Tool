@@ -1,29 +1,78 @@
-🀰 tau_dish_washing: 皿洗いの単位処理時間 (1.0分/個)
-🀱 tau_laundry: 洗濯物処理の単位処理時間 (0.5分/個)
-🀲 tau_trash_picking: ゴミ拾いの単位処理時間 (0.27分/個)
-🀳 tau_receipt_collection: 領収書収集の単位処理時間 (0.13分/枚)
-🀴 tau_toilet_cleaning: トイレ掃除の単位処理時間 (0.65分/箇所)
-🀵 tau_furniture_cleaning: 家具清掃の単位処理時間 (5.0分/個)
-🁠 measurement_limit_daily_min: 1日の測定時間推奨下限 (6時間)
-🁡 measurement_limit_daily_max: 1日の測定時間推奨上限 (8時間)
-🁢 measurement_days_weekly_min: 週の測定日数推奨下限 (3日)
-🁣 measurement_days_weekly_max: 週の測定日数推奨上限 (6日)
-🁧 critical_state_definitions: 危篤状態の定義と判定条件の集合 (過覚醒, うつ, etc.)
-🁨 recovery_task_templates: 危篤状態ごとの推奨リカバリータスク定義
-🁩 state_schema_user: ユーザー状態のフィールド定義と値域
-🁪 state_schema_environment: 環境状態のフィールド定義と値域
-🁫 state_schema_social: 社会的状態のフィールド定義 (エッジ強度, ペアリング状態)
-🀶 measurement_capability_base: ユーザー固有の基礎測定能力 (遺伝・脳年齢等による定数)
-🀷 decay_rate_pairing_single_loss: 片方の測定能力低下時のペアリング消失速度
-🀸 decay_rate_pairing_double_loss: 両方の測定能力低下時のペアリング消失速度 (即時消失に近い高レート)
-🁤 threshold_measurement_capability_for_monitoring: セルフモニタリング可能となる測定能力の閾値
-🁥 threshold_environment_variance_for_user_stability: ユーザー分散が低下しうる環境分散の上限値
-🀹 correlation_executive_monitoring: 遂行能力とモニタリング能力の相関係数
-🁬 task_templates_dictionary: システムに登録されたタスクテンプレート辞書
-🁭 notification_rules_default: デフォルトの通知ルール定義 (開始10分前, 終了時など)
-🀺 entropy_decay_rate: 放置時のエントロピー自然増加率 (係数k)
-🀻 human_metabolic_rate_cleaning: 掃除中の平均代謝エネルギー (約150W)
-🀼 room_temperature_default: エントロピー計算用の基準室温 (300K)
-🁦 precondition_match_threshold: 代替タスク検索時の一致スコア閾値
-🁮 notification_snooze_interval: 通知スヌーズ時の再送間隔 (分)
-
+ᐁ accumulation_rate_dust: ハウスダストの自然堆積速度係数（何もしていなくても増えるホコリの量）。
+ᐂ actual_room_temperature: (実測室温)
+ᐃ cognitive_resource_decay_rate: 作業中の認知リソースの単位時間あたりの減衰率
+ᐄ cognitive_resource_decay_rate_per_task: No description extracted
+ᐅ correlation_executive_monitoring: 遂行能力とモニタリング能力の相関係数
+ᐆ decay_rate_air_quality: 閉め切った部屋での空気質悪化速度（CO2蓄積速度係数）。
+ᐇ decay_rate_pairing_double_loss: 両方の測定能力低下時のペアリング消失速度 (即時消失に近い高レート)
+ᐈ decay_rate_pairing_single_loss: 片方の測定能力低下時のペアリング消失速度
+ᐉ energy_entropy_conversion_factor: No description extracted
+ᐊ entropy_decay_rate: 放置時のエントロピー自然増加率 (係数k)
+ᐋ generate_execution_record: 予定オブジェクトと実行結果を入力とし、実行オブジェクトを生成する変換
+ᐌ hard_carbohydrate_intake_flag: 直近（3時間以内）に硬い炭水化物を摂取したかどうかのフラグ（過集中・覚醒の判定条件にあるため）
+ᐍ heart_rate_hyperarousal_threshold: 過覚醒と判定する心拍数閾値 (90 bpm)
+ᐎ heart_rate_standard_max: 標準状態の上限心拍数 (65 bpm)
+ᐏ heart_rate_standard_min: 標準状態の下限心拍数 (55 bpm)
+ᐐ heart_rate_work_max: 作業継続の許容上限心拍数 (80 bpm)
+ᐑ human_metabolic_rate_cleaning: 掃除中の平均代謝エネルギー (約150W)
+ᐒ measurement_capability_base: ユーザー固有の基礎測定能力 (遺伝・脳年齢等による定数)
+ᐓ measurement_fatigue_recovery_rate: No description extracted
+ᐔ power_consumption_air_conditioner: 空調の平均消費電力（W）。
+ᐕ power_consumption_vacuum_cleaner: 掃除機の平均消費電力（W）。熱エントロピー増大の計算用。
+ᐖ room_temperature_default: エントロピー計算用の基準室温 (300K)
+ᐗ sensor_habituation_factor: No description extracted
+ᐘ tau_air_exchange_operation: 換気操作（窓開け～閉め）の単位処理時間（分/回）。
+ᐙ tau_bed_making: ベッドメイク・リネン整理の単位処理時間（分/回）。就寝環境のエントロピー低下。
+ᐚ tau_dish_drying_shelving: 食器拭き・棚戻しの単位処理時間（分/個）。洗浄後の「乾燥・収納」プロセスのコスト。
+ᐛ tau_dish_washing: 皿洗いの単位処理時間 (1.0分/個)
+ᐜ tau_floor_vacuuming: 床掃除機掛けの単位処理時間（分/平方メートル または 分/部屋）。
+ᐝ tau_floor_wiping: 床拭き掃除の単位処理時間（分/平方メートル）。微細なハウスダスト除去用。
+ᐞ tau_furniture_cleaning: 家具清掃の単位処理時間 (5.0分/個)
+ᐟ tau_garbage_bag_replacement: ゴミ袋交換・集積所への搬出の単位処理時間（分/回）。「部屋の外へ出す」プロセスのコスト。
+ᐠ tau_laundry: 洗濯物処理の単位処理時間 (0.5分/個)
+ᐡ tau_receipt_collection: 領収書収集の単位処理時間 (0.13分/枚)
+ᐢ tau_replenishment_shopping: 消耗品買い出し・補充にかかる単位時間。これも「環境維持コスト」の一部です。
+ᐣ tau_toilet_cleaning: トイレ掃除の単位処理時間 (0.65分/箇所)
+ᐤ tau_trash_picking: ゴミ拾いの単位処理時間 (0.27分/個)
+ᐥ tau_window_wiping: 窓拭きの単位処理時間（分/枚）。採光確保のため。
+ᐦ thermal_loss_rate_room: 室温の変化速度係数（空調停止時の熱損失率）。
+ᐧ water_usage_laundry: 洗濯1回あたりの平均水使用量（L）。水資源コストの計算用。
+ሀ awake_time_limit_for_standard: 標準状態維持のための覚醒時間上限 (18 時間)
+ሁ break_interval_limit: 過集中を防ぐための休憩なし作業時間の限界 (2 時間)
+ሂ clutter_stress_threshold_count: 視界に入る「散らかったオブジェクト」の許容限界数。これを超えると「視覚的ノイズ」として認知負荷（ユーザーエントロピー）が急増する閾値。
+ሃ co2_concentration_limit_ppm: 換気判定の基準となるCO2濃度限界値（例: 1000ppm）。これを超えると「換気：不良」と判定し、認知機能低下を防ぐ。
+ሄ consumable_stock_warning_threshold: 洗剤やゴミ袋などの消耗品在庫の警告閾値（例: 残り2回分）。
+ህ critical_state_definitions: 危篤状態の定義と判定条件の集合 (過覚醒, うつ, etc.)
+ሆ cycle_filter_cleaning_days: エアコン/空気清浄機フィルターの清掃推奨サイクル（例: 30日）。換気効率の低下係数と連動。
+ሇ humidity_mold_risk_threshold_percent: カビリスクが高まる湿度の閾値（例: 60%）。「カビ鬱」予防の重要指標。
+ለ humidity_skin_comfort_min_percent: 皮膚や粘膜の不快感が生じる最低湿度（例: 40%）。ウイルス拡散リスクの管理。
+ሉ illuminance_relax_max_lux: 休息・リラックス状態に適した最大照度（例: 150lux）。副交感神経優位への移行を助ける。
+ሊ illuminance_work_min_lux: 作業開始可能状態に必要な最低照度（例: 500lux）。眼精疲労と覚醒度低下を防ぐ。
+ላ max_pain_level: 主観的な痛みの最大レベル（例: 10）
+ሌ measurement_days_weekly: 今週の累積測定日数
+ል measurement_days_weekly_max: 週の測定日数推奨上限 (6日)
+ሎ measurement_days_weekly_min: 週の測定日数推奨下限 (3日)
+ሏ measurement_limit_daily_max: 1日の測定時間推奨上限 (8時間)
+ሐ measurement_limit_daily_min: 1日の測定時間推奨下限 (6時間)
+ሑ minimum_reliability_for_valid_record: No description extracted
+ሒ minimum_response_time_valid: No description extracted
+ሓ noise_limit_concentration_db: 集中状態を阻害する騒音レベルの閾値（例: 50dB）。過覚醒予防。
+ሔ notification_rules_default: デフォルトの通知ルール定義 (開始10分前, 終了時など)
+ሕ notification_snooze_interval: 通知スヌーズ時の再送間隔 (分)
+ሖ nutritional_balance_maintenance_days: 栄養摂取バランス維持を判定するための期間 (3 日)
+ሗ precondition_match_threshold: 代替タスク検索時の一致スコア閾値
+መ recovery_task_templates: 危篤状態ごとの推奨リカバリータスク定義
+ሙ rest_duration_min: 過集中解除に必要な最小休憩時間 (20 分)
+ሚ scent_intensity_unpleasant_threshold: 不快臭気（生ゴミ、カビ臭など）の閾値。数値化は難しいですが、5段階評価の閾値（例: Level 3以上で介入必須）として設定。
+ማ sleep_cycle_maintenance_days: 睡眠サイクル維持を判定するための期間 (3 日)
+ሜ spo2_standard_threshold: 正常な酸素レベルの下限 (96 %)
+ም spo2_work_ready_threshold: 作業開始に望ましい酸素レベルの下限 (97 %)
+ሞ state_schema_environment: 環境状態のフィールド定義と値域
+ሟ state_schema_social: 社会的状態のフィールド定義 (エッジ強度, ペアリング状態)
+ሠ state_schema_user: ユーザー状態のフィールド定義と値域
+ሡ task_templates_dictionary: システムに登録されたタスクテンプレート辞書
+ሢ threshold_discrepancy_for_dissociation_alert: No description extracted
+ሣ threshold_environment_variance_for_user_stability: ユーザー分散が低下しうる環境分散の上限値
+ሤ threshold_measurement_capability_for_monitoring: セルフモニタリング可能となる測定能力の閾値
+ሥ ventilation_duration_min: 有効な換気とみなす最小実施時間 (10 分)
+ሦ ventilation_interval_limit: 作業継続に必要な換気間隔の上限 (1 時間)

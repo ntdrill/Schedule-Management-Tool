@@ -1,0 +1,2 @@
+## Snapshot 01: 危篤検知と乖離判定を含むフィードバック制御ループ
+`(↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (↖(ꀴ.subjective, ꀔ) ⟼ ꀏ) ≫ (↞(ꀴ, ꀏ, ህ) ⟼ ꀈ) ≫ ((ꀈ ?!= null) ⫸ (↬(ꀈ, ሡ) ⟼ ┃_rec) ≫ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↪(ꀴ, ꀔ) ⟼ ─_exec.state_after) ≫ (↥(┃_rec.expected, ─_exec.state_after) ⟼ ─_exec.result) ≫ (↞(─_exec.state_after, ꀏ, ህ) ?= null ∴ ꀚ_restored))`
