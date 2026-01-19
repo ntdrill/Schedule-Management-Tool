@@ -1,0 +1,89 @@
+# Proposal: User State Use Cases (Phase 1 Foundation)
+
+## 概要
+本提案は、Phase 1 (Foundation) における「ユーザー状態 (User State)」の単一領域ユースケースを定義するものです。
+これらは v1 (MVP) の実装範囲に基づき、測定・記録・評価の基本サイクルをカバーします。
+
+## 1. 定数 (Constants) / 静的定義
+
+### 1.1 状態オブジェクトの基本構造
+ユーザー状態は以下のフィールドを持つオブジェクトとして定義される。
+
+- **id**: UUID
+- **timestamp**: 記録日時
+- **subjectType**: "user" (固定)
+- **source**: "manual" | "healthkit" | "inference"
+- **context**:
+  - `measurementMode`: boolean (ON/OFF)
+  - `currentAction`: string (実行中の対処行動ID, optional)
+
+### 1.2 ユーザー状態フィールド (v1 MVP)
+v1で扱う主要なパラメータ。
+
+- **physiological**:
+  - `heartRate`: number (bpm)
+  - `hrv`: number (ms)
+- **subjective**:
+  - `valence`: 1-5 (快-不快)
+  - `arousal`: 1-5 (覚醒-沈静)
+  - `focus`: 1-5 (集中度)
+  - `fatigue`: 1-5 (疲労度)
+
+### 1.3 プリセット (期待状態)
+ユーザーが選択可能な「期待状態」のリスト。
+
+- **Standard**: 標準状態
+- **Ready**: 作業開始可能
+- **Focus**: 集中
+- **Rest**: 休息
+- **Sleep**: 睡眠
+
+---
+
+## 2. 変換 (Transformations) / ユースケース
+
+### UC-01: 測定モードの開始 (Start Measurement)
+- **Input**: User toggles "ON"
+- **Process**:
+  - 測定セッションオブジェクトを作成
+  - HealthKitのバックグラウンド収集を開始
+  - ローカル通知をスケジュール（長時間経過確認用）
+- **Output**: 測定モード = ON
+
+### UC-02: 現在状態の記録 (Log Current State)
+- **Input**: User selects "Log State" (via Watch/iOS)
+- **Process**:
+  - 現在のセンサー値 (HeartRate, HRV) を取得
+  - ユーザー入力 (Valence, Arousal etc.) を取得
+  - 期待状態 (Expected State) が選択されていれば紐付け
+- **Output**: UserStateObject 保存
+
+### UC-03: 対処行動の実行と評価 (Action & Evaluation)
+- **Input**: User completes Action
+- **Process**:
+  - 行動開始時(Snapshot Before)と終了時(Snapshot After)の状態を比較
+  - ユーザーによる主観評価 (Effectiveness: 1-5) を記録
+- **Output**: ExecutionObject (with evaluation) 保存
+
+### UC-04: 状態の比較 (Compare State)
+- **Input**: Actual State vs Expected State
+- **Process**:
+  - 指定されたフィールド（例: Focus）の差分を計算
+  - 一致度 (Match Score) を算出
+- **Output**: EvaluationResult
+
+---
+
+## 3. 形式的記述への橋渡し (To Data_Model_Agent)
+
+### 必要なシンボル候補
+- `User_State`: Type
+- `Heart_Rate`: Variable
+- `Subjective_Score`: Range(1..5)
+- `Log_State()`: Function
+- `Compare(Expected, Actual)`: Function
+
+## 4. 備考
+- v1では「危篤状態の自動検知」は含めない（手動記録のみ）。
+- 社会的状態(Social)は別エージェント担当だが、User Stateの一部として記録される場合があるため、連携が必要。
+

@@ -8,12 +8,15 @@ Implementation Agent Manager が管理する業務チケットの一覧とステ
 - [Task] Symbol_Agent関連 (DB化, スキーマ修正, データ登録) - 168件のデータ移行完了
 - 03_UI設計エージェント作成.txt (2026/01/01) - UI_Design_Agent稼働開始
 - [Task] Data_Model_Agent_データモデル設計プロセス (Phase 1) - 1文形式の有効性確認
+- [Task] v1_alignment_20260111 (Loop 1) - v1方針転換と既存タスクのアーカイブ完了
+- [Task] v1_workflow_definition - Phase 1〜3 のワークフロー定義完了
 
 ## 進行中
-- [Active] task_UI_Design_Agent_状態中心UIの仕様策定.txt - 画面設計中
-- [Active] task_Data_Model_Agent_スナップショット拡充.txt - 基本ユースケースの形式記述
-- [Active] task_All_Agents_ユースケース提案の提出.txt - 各専門領域のシナリオ収集
+- [Active] task_Phase1_Foundation.txt - 単一領域スナップショット作成フェーズ (v1_phase1.txt準拠)
+  - 状態: 各エージェントへユースケース提出を依頼中
 
 ## 予定
+- [Pending] task_Phase2_Interactions.txt - 相互作用スナップショット作成
+- [Pending] task_Phase3_Complex.txt - 複合制御スナップショット作成
 - 04_データモデル実装準備.txt - スキーマファイル作成の指示出し
 - 05_エージェント標準構成の更新.txt - 全エージェントへexperienceフォルダを追加

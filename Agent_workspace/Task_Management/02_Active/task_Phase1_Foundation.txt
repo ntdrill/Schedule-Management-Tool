@@ -1,0 +1,33 @@
+# Task: Phase 1 - Foundation (単一領域の処理をスナップショット化する)
+
+## 概要
+開発ワークフロー `v1_phase1.txt` に基づき、システムの基礎となる単一領域（User, Environment, Social）のユースケースを収集し、形式的スナップショット（論理式）として定義する。
+
+## 参照
+- ワークフロー定義: `Agent_workspace/Agent_maneger/data/Agent Workflow Queue /v1_phase1.txt`
+- 理論基盤: `docs/readme/05_ドメイン知識・理論基盤.md`
+
+## 担当と役割 (Assignment)
+- **Agent_Manager**: 進捗管理、成果物承認
+- **User_State_Agent**: ユーザー状態に関するユースケース提出 (@User_State_Agent)
+- **Environment_State_Agent**: 環境状態に関するユースケース提出 (@Environment_State_Agent)
+- **Monitoring_State_Agent**: 測定モードに関するユースケース提出 (@Monitoring_State_Agent)
+- **Symbol_Agent**: 提出されたユースケースからの語彙抽出・定義
+- **Data_Model_Agent**: 定義された語彙を用いた形式的スナップショット記述
+
+## ステータスと履歴
+- [ ] Step 1: 親タスク作成 (Done)
+- [ ] Step 2: 各エージェントへユースケース提出をアサイン (In Progress)
+  - 期限: 2026/01/20
+  - 提出先: `Agent_workspace/Task_Management/01_Proposals/`
+  - ファイル名規則: `proposal_[agent_name]_usecase.txt`
+  - 提出状況:
+    - [x] User_State_Agent: `01_Proposals/proposal_user_state_agent_usecase.txt`
+    - [x] Monitoring_State_Agent: `01_Proposals/proposal_monitoring_state_agent_usecase.txt`
+    - [x] Environment_State_Agent: `01_Proposals/proposal_environment_state_agent_usecase.txt`
+
+## 成果物
+1. 各エージェントからのユースケース提案書
+2. 更新されたシンボル辞書 (Symbol_Agent)
+3. 形式的スナップショット記述書 (Data_Model_Agent)
+
