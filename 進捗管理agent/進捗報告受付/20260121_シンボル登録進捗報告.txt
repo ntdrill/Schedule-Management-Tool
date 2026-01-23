@@ -1,0 +1,52 @@
+進捗報告: シンボル登録進捗（Phase 1）
+
+報告日: 2026/01/21
+報告者: 進捗管理agent
+
+---
+
+## 資料準拠（事実）
+
+### 1) タスク配置
+- `Agent_workspace/Task_Management/02_Active/` に以下が存在
+  - `task_Phase1_Foundation.txt`
+  - `proposal_user_state_agent_usecase.txt`
+  - `proposal_environment_state_agent_usecase.txt`
+  - `proposal_monitoring_state_agent_usecase.txt`
+  - `symbolization_from_proposal_user_state_agent_usecase_20260120.txt`
+  - `symbolization_from_proposal_environment_state_agent_usecase_20260120.txt`
+  - `symbolization_from_proposal_monitoring_state_agent_usecase_20260120.txt`
+  - `task_Symbol_Agent_SymbolRegistration_Phase1.txt`
+  - `report_symbol_registration_Phase1.txt`
+
+### 2) シンボル登録の進捗（Symbol_Agentの報告）
+- `report_symbol_registration_Phase1.txt` により、**ローカル定義ファイルへの新規シンボル反映は完了**。
+- Supabase `symbols` への登録は**未実施**。
+- 新規シンボルの `value_type` は**未整備（提案値のみ）**。
+- 保留項目:
+  - `measurement_session`（Group D: 登録先未確定）
+  - `InterventionTransaction` のスキーマ（P/L集計の前提未整備）
+  - `ResourceArbitrator` の定義（機能/判定基準/入出力未整備）
+  - `state_preset_user_*`（期待状態プリセットの正本が未確定）
+
+---
+
+## 未整備
+- DB正本（Supabase `symbols`）への登録が未完了。
+- `value_type` の確定が未完了。
+- 上記の保留項目の仕様整理が未完了。
+
+---
+
+## 提案/ドラフト
+
+### 1) Agent_Managerへの確認事項
+- `report_symbol_registration_Phase1.txt` の内容を承認し、**DB登録の実施可否**を確定してください。
+- `value_type` の決定方針（仮置き/確定/別管理）を決めてください。
+
+### 2) 次の実行タスク（承認後）
+- Symbol_Agent に **Supabase登録タスク** を指示。
+- Data_Model_Agent に **スナップショット記述開始**を指示。
+- 保留項目の仕様確定タスクは Phase 1 外として扱うかを判断。
+
+

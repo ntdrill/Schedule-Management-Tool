@@ -1,0 +1,88 @@
+# シンボル化ドラフト: Environment State Use Cases
+作成日: 2026/01/20
+対象: `Agent_workspace/Task_Management/02_Active/proposal_environment_state_agent_usecase.txt`
+担当: Symbol_Agent
+
+---
+
+## 資料準拠（事実）
+以下は既存のシンボル定義ファイル（`data/constants.txt`, `data/variables.txt`, `data/transforms.txt`）に存在する値である。
+
+### 既存シンボル（存在確認済み）
+- `accumulation_rate_dust`（`data/constants.txt`）
+- `decay_rate_air_quality`（`data/constants.txt`）
+- `humidity_mold_risk_threshold_percent`（`data/constants.txt`）
+- `clutter_stress_threshold_count`（`data/constants.txt`）
+- `external_air_quality_index`（`data/variables.txt`）
+- `room_entropy_s`（`data/variables.txt`）
+- `room_negentropy_j`（`data/variables.txt`）
+- `calc_room_entropy`（`data/transforms.txt`）
+- `calc_negentropy`（`data/transforms.txt`）
+- `calc_thermal_entropy_increase`（`data/transforms.txt`）
+- `cleaning_method_selection`（`data/transforms.txt`）
+- `update_organization_entropy`（`data/transforms.txt`）
+
+---
+
+## 未整備
+- **介入トランザクション（InterventionTransaction）のスキーマ**が、
+  シンボル定義ファイル内では確定できない（P/L集計・ROI計算の前提となるが未記載）。
+- **ResourceArbitrator の定義（機能/判定基準/入出力）**が未整備のため、関数シンボルとして確定できない。
+
+---
+
+## 提案/ドラフト
+### 1) 既存シンボルへの対応付け（no-op 想定）
+以下の候補は既存シンボルと意味が重複するため、**新規発行せず既存参照**とする提案。
+
+- `Exponential/Linear/Sigmoid Decay` → `decay_rate_air_quality` / `accumulation_rate_dust` 等の既存係数で代替
+- `CleaningMethod` → `cleaning_method_selection` で対応
+- `Entropy/Negentropy` → `calc_room_entropy` / `calc_negentropy` / `room_entropy_s` / `room_negentropy_j`
+
+### 2) 新規シンボル提案（不足分）
+#### Group C: 動的状態変数（Environment State フィールド）
+- **name**: `mold_risk`
+  - **description**: カビ発生リスク（0.0-1.0）
+  - **value_type**: float
+- **name**: `dust_accumulation`
+  - **description**: 埃の蓄積度（0.0-1.0）
+  - **value_type**: float
+- **name**: `kitchen_grime`
+  - **description**: キッチン汚れ度（0.0-1.0）
+  - **value_type**: float
+- **name**: `air_quality_internal`
+  - **description**: 室内空気質（CO2等の総合指標）
+  - **value_type**: float
+- **name**: `bath_cleanliness`
+  - **description**: 風呂場の清潔度（0.0-1.0）
+  - **value_type**: float
+- **name**: `room_clutter`
+  - **description**: 部屋の散らかり度（人を呼べないレベル判定に使用）
+  - **value_type**: float
+
+#### Group C: 学習・評価用の状態変数
+- **name**: `efficiency_gap`
+  - **description**: 期待減少量と実績減少量の乖離（Actual - Expected）
+  - **value_type**: float
+- **name**: `cleaning_skill_level`
+  - **description**: 掃除熟練度（例: 風呂掃除熟練度）
+  - **value_type**: float
+
+#### Group E: 変換・関数
+- **name**: `calc_efficiency_gap`
+  - **description**: 期待値と実績値からEfficiency Gapを算出する関数
+  - **value_type**: float
+- **name**: `update_cleaning_skill_level`
+  - **description**: Efficiency Gapを入力し、熟練度パラメータを更新する関数
+  - **value_type**: float
+- **name**: `calc_environment_pl_report`
+  - **description**: 期間内のネゲントロピーと消費エネルギーを集計しP/L指標を算出する関数
+  - **value_type**: json
+
+---
+
+## 補足
+- 既存シンボルとの重複検出・分岐処理は `Agent_workspace/symbol_agent/docs/重複検出と分岐処理.md` に準拠。
+- DB正本（Supabase `symbols`）への登録は、本提案の採択後に実施。
+
+

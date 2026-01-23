@@ -1,0 +1,73 @@
+# シンボル化ドラフト: User State Use Cases
+作成日: 2026/01/20
+対象: `Agent_workspace/Task_Management/02_Active/proposal_user_state_agent_usecase.txt`
+担当: Symbol_Agent
+
+---
+
+## 資料準拠（事実）
+以下は既存のシンボル定義ファイル（`data/constants.txt`, `data/variables.txt`, `data/transforms.txt`）に存在する値である。
+
+### 既存シンボル（存在確認済み）
+- `state_schema_user`（`data/constants.txt`）
+- `user_state_current`（`data/variables.txt`）
+- `merge_state_snapshot`（`data/transforms.txt`）
+- `update_state_from_sensor`（`data/transforms.txt`）
+- `evaluate_task_effect`（`data/transforms.txt`）
+
+---
+
+## 未整備
+- **期待状態プリセット（Standard/Ready/Focus/Rest/Sleep）の登録先と正本**が、
+  シンボル定義ファイル内では確定できない（テンプレート管理はDB運用に依存）。
+
+---
+
+## 提案/ドラフト
+### 1) 既存シンボルへの対応付け（no-op 想定）
+以下の候補は既存シンボルと意味が重複するため、**新規発行せず既存参照**とする提案。
+
+- `User_State` → `user_state_current`（現在状態オブジェクトとして参照）
+- `Log_State()` → `merge_state_snapshot` + `update_state_from_sensor`（センサー/主観入力の統合記録）
+- `Compare(Expected, Actual)` → `evaluate_task_effect`（一致スコア/詳細評価の算出）
+
+### 2) 新規シンボル提案（不足分）
+#### Group C: 動的状態変数（User State フィールド）
+- **name**: `heart_rate_bpm`
+  - **description**: 心拍数（bpm）
+  - **value_type**: float
+- **name**: `hrv_ms`
+  - **description**: 心拍変動（HRV, ms）
+  - **value_type**: float
+- **name**: `valence_score`
+  - **description**: 主観的快‐不快（1-5）
+  - **value_type**: int
+- **name**: `arousal_score`
+  - **description**: 覚醒度（1-5）
+  - **value_type**: int
+- **name**: `focus_score`
+  - **description**: 集中度（1-5）
+  - **value_type**: int
+- **name**: `fatigue_score`
+  - **description**: 疲労度（1-5）
+  - **value_type**: int
+
+#### Group B: システム設定・テンプレートID（期待状態プリセット）
+※テンプレート管理マニュアルに基づき、**テンプレートIDはGroup B**とする想定。
+- **name**: `state_preset_user_standard`
+  - **description**: 期待状態プリセット（Standard）
+- **name**: `state_preset_user_ready`
+  - **description**: 期待状態プリセット（Ready）
+- **name**: `state_preset_user_focus`
+  - **description**: 期待状態プリセット（Focus）
+- **name**: `state_preset_user_rest`
+  - **description**: 期待状態プリセット（Rest）
+- **name**: `state_preset_user_sleep`
+  - **description**: 期待状態プリセット（Sleep）
+
+---
+
+## 補足
+- 既存シンボルとの重複検出・分岐処理は `Agent_workspace/symbol_agent/docs/重複検出と分岐処理.md` に準拠。
+- DB正本（Supabase `symbols`）への登録は、本提案の採択後に実施。
+

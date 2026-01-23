@@ -1,0 +1,64 @@
+# シンボル化ドラフト: Monitoring State Use Cases
+作成日: 2026/01/20
+対象: `Agent_workspace/Task_Management/02_Active/proposal_monitoring_state_agent_usecase.txt`
+担当: Symbol_Agent
+
+---
+
+## 資料準拠（事実）
+以下は既存のシンボル定義ファイル（`data/constants.txt`, `data/variables.txt`, `data/transforms.txt`）に存在する値である。
+
+### 既存シンボル（存在確認済み）
+- `calc_measurement_capability`（`data/transforms.txt`）
+- `validate_measurement_continuity`（`data/transforms.txt`）
+- `calc_subjective_objective_discrepancy`（`data/transforms.txt`）
+- `response_latency_to_feedback`（`data/variables.txt`）
+- `sensor_habituation_factor`（`data/constants.txt`）
+- `current_measurement_quality_score`（`data/variables.txt`）
+- `user_measurement_capability`（`data/variables.txt`）
+- `threshold_measurement_capability_for_monitoring`（`data/constants.txt`）
+
+---
+
+## 未整備
+- **「クラス/スキーマ（Group D）」の登録先**が現行の運用ファイル内で明文化されていないため、
+  `Measurement_Session` のシンボル登録場所（`data/*.txt` か専用ファイルか）が確定できない。
+
+---
+
+## 提案/ドラフト
+### 1) 既存シンボルへの対応付け（no-op 想定）
+以下の候補は既存シンボルと意味が重複するため、**新規発行せず既存参照**とする提案。
+
+- `Calc_Measurement_Capability(...)` → `calc_measurement_capability`
+- `Validate_Continuity(...)` → `validate_measurement_continuity`
+- `Calc_Discrepancy(Sub, Obj)` → `calc_subjective_objective_discrepancy`
+- `Sensor_Habituation` → `sensor_habituation_factor`
+- `CMQS` 関連 → `current_measurement_quality_score` + `calc_measurement_reliability` の組み合わせで代替可能
+  - ※ `calc_measurement_reliability` は `data/transforms.txt` に存在
+
+### 2) 新規シンボル提案（不足分）
+#### Group E: 変換・関数
+- **name**: `eval_response_latency`
+  - **description**: 介入通知からの反応時間を評価し、精神運動制止/過速/無反応のフラグを出力する関数
+  - **source**: UC-M06（反応潜時評価）
+  - **value_type**: json（判定結果の構造化を想定）
+
+- **name**: `judge_system_mode_by_capability`
+  - **description**: 測定能力スコアを入力し、決定論モード/確率的モードを判定する関数
+  - **source**: UC-M08（System Mode Update）
+  - **value_type**: string（"deterministic" | "probabilistic" を想定）
+
+#### Group D: コンテナ・構造（登録先未整備のため保留）
+- **name**: `measurement_session`
+  - **description**: 測定セッションの予定オブジェクト（type="measurement_session"）
+  - **source**: UC-M01/UC-M02
+  - **note**: 登録先の確定後にシンボル化
+
+---
+
+## 補足
+- 既存シンボルとの重複検出・分岐処理は `Agent_workspace/symbol_agent/docs/重複検出と分岐処理.md` に準拠。
+- DB正本（Supabase `symbols`）への登録は、本提案の採択後に実施。
+
+

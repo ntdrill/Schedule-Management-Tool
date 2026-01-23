@@ -16,18 +16,39 @@
 - **Data_Model_Agent**: 定義された語彙を用いた形式的スナップショット記述
 
 ## ステータスと履歴
-- [ ] Step 1: 親タスク作成 (Done)
-- [ ] Step 2: 各エージェントへユースケース提出をアサイン (In Progress)
-  - 期限: 2026/01/20
-  - 提出先: `Agent_workspace/Task_Management/01_Proposals/`
-  - ファイル名規則: `proposal_[agent_name]_usecase.txt`
+- [x] Step 1: 親タスク作成 (Done)
+- [x] Step 2: 各エージェントへユースケース提出をアサイン (Done)
   - 提出状況:
-    - [x] User_State_Agent: `01_Proposals/proposal_user_state_agent_usecase.txt`
-    - [x] Monitoring_State_Agent: `01_Proposals/proposal_monitoring_state_agent_usecase.txt`
-    - [x] Environment_State_Agent: `01_Proposals/proposal_environment_state_agent_usecase.txt`
+    - [x] User_State_Agent: `02_Active/proposal_user_state_agent_usecase.txt` (Approved)
+    - [x] Monitoring_State_Agent: `02_Active/proposal_monitoring_state_agent_usecase.txt` (Approved)
+    - [x] Environment_State_Agent: `02_Active/proposal_environment_state_agent_usecase.txt` (Approved)
+- [ ] Step 3: シンボル定義（ドラフト提出）(In Review)
+  - 担当: Symbol_Agent (@Symbol_Agent)
+  - 入力: `02_Active/proposal_*.txt`
+  - 成果物（ドラフト）:
+    - `02_Active/symbolization_from_proposal_user_state_agent_usecase_20260120.txt`
+    - `02_Active/symbolization_from_proposal_environment_state_agent_usecase_20260120.txt`
+    - `02_Active/symbolization_from_proposal_monitoring_state_agent_usecase_20260120.txt`
+- [ ] Step 4: シンボル正式登録 (Pending)
+  - 担当: Symbol_Agent (@Symbol_Agent)
+  - 内容: 承認済みドラフトに基づき、DBおよび定義ファイルへ正式登録
+  - 成果物: `report_symbol_registration_Phase1.txt`
+- [ ] Step 5: 形式的スナップショット記述 (Pending)
+  - 担当: Data_Model_Agent (@Data_Model_Agent)
+  - 内容: 確定したシンボルを用いて、ユースケースを論理式として記述
+  - 入力: ユースケース提案書 + 確定シンボル定義
 
 ## 成果物
 1. 各エージェントからのユースケース提案書
 2. 更新されたシンボル辞書 (Symbol_Agent)
 3. 形式的スナップショット記述書 (Data_Model_Agent)
+
+## Assignment
+- **Assignee**: Agent_Manager (@Agent_Manager)
+- **期限**: 2026/01/22
+- **タスク**:
+  - Phase1の進捗管理と承認
+  - Symbol_Agent向けの正式登録タスクを実行に移す
+    - 参照: `02_Active/task_Symbol_Agent_SymbolRegistration_Phase1.txt`
+- **成果物**: Phase1の承認記録および関連タスクの進行管理
 

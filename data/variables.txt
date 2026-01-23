@@ -51,6 +51,20 @@
 ꀲ time_since_last_ventilation: 最終換気完了時刻からの経過時間
 ꀳ user_measurement_capability: ユーザーの現在の測定能力 (遺伝・栄養・環境状態から算出されるスカラ値)
 ꀴ user_state_current: 現在のユーザー状態オブジェクト (神経, 臓器, 筋肉, 血圧, 脈拍, 行動, 想起, 栄養, 目標)
+ꀵ heart_rate_bpm: 心拍数（bpm）
+ꀶ hrv_ms: 心拍変動（HRV, ms）
+ꀷ valence_score: 主観的快‐不快（1-5）
+ꀸ arousal_score: 覚醒度（1-5）
+ꀹ focus_score: 集中度（1-5）
+ꀺ fatigue_score: 疲労度（1-5）
+ꀻ mold_risk: カビ発生リスク（0.0-1.0）
+ꀼ dust_accumulation: 埃の蓄積度（0.0-1.0）
+ꀽ kitchen_grime: キッチン汚れ度（0.0-1.0）
+ꀾ air_quality_internal: 室内空気質（CO2等の総合指標）
+ꀿ bath_cleanliness: 風呂場の清潔度（0.0-1.0）
+ꁀ room_clutter: 部屋の散らかり度（人を呼べないレベル判定に使用）
+ꁁ efficiency_gap: 期待減少量と実績減少量の乖離（Actual - Expected）
+ꁂ cleaning_skill_level: 掃除熟練度（例: 風呂掃除熟練度）
 ─ execution_records_list: 実行されたタスクの記録オブジェクトのリスト
 ━ pairing_edges: ユーザー間の測定ペアリングのリスト (エッジID, ユーザーA, ユーザーB, 結合強度)
 │ savoring_content_buffer: セーバリング（感謝・祈り）の対象となっている具体的な内容（例：「鮭の雑炊」）を一時保持するバッファ
