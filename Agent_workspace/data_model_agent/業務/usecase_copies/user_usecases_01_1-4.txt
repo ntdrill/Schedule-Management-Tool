@@ -1,0 +1,47 @@
+# user usecases (split copy)
+# source: /Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Task_Management/02_Active/proposal_user_state_agent_usecase.txt
+# range: 1-4
+### UC-01: 測定モードの開始 (Start Measurement)
+- **Input**: User toggles "ON"
+- **Process**:
+  - 測定セッションオブジェクトを作成
+  - HealthKitのバックグラウンド収集を開始
+  - ローカル通知をスケジュール（長時間経過確認用）
+- **Output**: 測定モード = ON
+
+### UC-02: 現在状態の記録 (Log Current State)
+- **Input**: User selects "Log State" (via Watch/iOS)
+- **Process**:
+  - 現在のセンサー値 (HeartRate, HRV) を取得
+  - ユーザー入力 (Valence, Arousal etc.) を取得
+  - 期待状態 (Expected State) が選択されていれば紐付け
+- **Output**: UserStateObject 保存
+
+### UC-03: 対処行動の実行と評価 (Action & Evaluation)
+- **Input**: User completes Action
+- **Process**:
+  - 行動開始時(Snapshot Before)と終了時(Snapshot After)の状態を比較
+  - ユーザーによる主観評価 (Effectiveness: 1-5) を記録
+- **Output**: ExecutionObject (with evaluation) 保存
+
+### UC-04: 状態の比較 (Compare State)
+- **Input**: Actual State vs Expected State
+- **Process**:
+  - 指定されたフィールド（例: Focus）の差分を計算
+  - 一致度 (Match Score) を算出
+- **Output**: EvaluationResult
+
+---
+
+## 3. 形式的記述への橋渡し (To Data_Model_Agent)
+
+### 必要なシンボル候補
+- `User_State`: Type
+- `Heart_Rate`: Variable
+- `Subjective_Score`: Range(1..5)
+- `Log_State()`: Function
+- `Compare(Expected, Actual)`: Function
+
+## 4. 備考
+- v1では「危篤状態の自動検知」は含めない（手動記録のみ）。
+- 社会的状態(Social)は別エージェント担当だが、User Stateの一部として記録される場合があるため、連携が必要。

@@ -1,0 +1,44 @@
+進捗報告: Data_Model_Agent 作業報告
+
+報告日: 2026/01/24
+報告者: Data_Model_Agent
+
+---
+
+## 資料準拠（事実）
+
+### 1) 形式的スナップショット記述の更新
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` に以下を追加・修正
+  - Snapshot 02（現在状態の記録）の式を追加
+  - Snapshot 02 に「期待状態が選択されている場合の紐付け」を未定義記号で追記（`?_1`, `?_2`）
+  - Snapshot 03（期待状態と実際状態の比較評価）に入力元・保存先の未定義記号を追加（`?_3`, `?_4`, `?_5`）
+
+### 2) ガイドラインの更新
+- `Agent_workspace/data_model_agent/docs/形式的スナップショット記述法_ガイドライン.md` に、
+  「ユースケースに明記されたトリガー・条件の明示」と「未定義記号 `?_n` の使用」について追記済み。
+
+### 3) 現在の業務ファイル構成
+- `01_静的スナップショットの記述.txt` 先頭に「記述ルール（補足）」のセクションは存在しない。
+
+### 4) ユースケースの分割コピー
+- `Agent_workspace/data_model_agent/業務/usecase_copies/` に、ユースケース提案を3〜5件単位で分割したコピーを作成。
+- 作成ファイル:
+  - `environment_usecases_01_1-4.txt`
+  - `environment_usecases_02_5-7.txt`
+  - `monitoring_usecases_01_1-4.txt`
+  - `monitoring_usecases_02_5-8.txt`
+  - `user_usecases_01_1-4.txt`
+
+---
+
+## 未整備
+- Snapshot 02/03 における未定義記号（`?_1`〜`?_5`）の具体的な入力元・保存先の確定。
+- 期待状態の参照（expected_state）を保持する正規オブジェクトの確定。
+
+---
+
+## 提案/ドラフト
+- `report_snapshot_definition_Phase1.txt` の作成と提出（記述数、対象ユースケース、未定義一覧の明示）。
+- 未定義記号（`?_1`〜`?_5`）の解決に向け、Data_Model_Agent / Symbol_Agent 間で対象オブジェクトの確定を行う。
+
+

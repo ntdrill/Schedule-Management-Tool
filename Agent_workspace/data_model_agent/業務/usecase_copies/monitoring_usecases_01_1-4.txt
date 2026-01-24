@@ -1,0 +1,36 @@
+# monitoring usecases (split copy)
+# source: /Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Task_Management/02_Active/proposal_monitoring_state_agent_usecase.txt
+# range: 1-4
+### UC-M01: 測定セッションの開始 (Start Measurement Session)
+- **Input**: User toggles "ON"
+- **Process**:
+  - `measurement_session` 作成
+  - センサーデータ購読開始
+  - **UC-M05 (主観入力)** を即時トリガー
+  - `sensor_habituation_factor` に基づくベースライン補正適用
+- **Output**: `measurementMode` = true
+
+### UC-M02: 測定セッションの終了 (End Measurement Session)
+- **Input**: User toggles "OFF"
+- **Process**:
+  - `measurement_session` 完了処理
+  - **UC-M05 (主観入力)** トリガー（振り返り）
+  - 統計保存
+  - 疲労回復プロセス開始
+- **Output**: `measurementMode` = false
+
+### UC-M03: 測定品質のモニタリング (Monitor Data Quality)
+- **Input**: Sensor Data Stream
+- **Process**:
+  - 4要素 ($S_{noise}, R_{loss}, C_{device}, A_{context}$) から CMQS を算出
+  - `last_valid_measurement_timestamp` 更新
+  - `validate_measurement_continuity` 関数による継続性判定
+  - `DATA_GAP_TOLERANCE` 超過で中断判定
+- **Output**: Updated Quality Score
+
+### UC-M04: 測定疲労と制限管理 (Manage Measurement Fatigue)
+- **Input**: Time Tick
+- **Process**:
+  - 疲労蓄積計算（線形+入力コスト）
+  - リミット超過時の警告・推奨
+- **Output**: Fatigue Level Update

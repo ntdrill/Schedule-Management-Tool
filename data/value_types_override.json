@@ -1,0 +1,22 @@
+{
+  "heart_rate_bpm": "float",
+  "hrv_ms": "float",
+  "valence_score": "int",
+  "arousal_score": "int",
+  "focus_score": "int",
+  "fatigue_score": "int",
+  "mold_risk": "float",
+  "dust_accumulation": "float",
+  "kitchen_grime": "float",
+  "air_quality_internal": "float",
+  "bath_cleanliness": "float",
+  "room_clutter": "float",
+  "efficiency_gap": "float",
+  "cleaning_skill_level": "float",
+  "eval_response_latency": "json",
+  "judge_system_mode_by_capability": "string",
+  "calc_efficiency_gap": "float",
+  "update_cleaning_skill_level": "float",
+  "calc_environment_pl_report": "json"
+}
+

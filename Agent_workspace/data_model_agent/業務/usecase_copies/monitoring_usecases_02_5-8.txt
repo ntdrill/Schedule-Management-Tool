@@ -1,0 +1,56 @@
+# monitoring usecases (split copy)
+# source: /Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Task_Management/02_Active/proposal_monitoring_state_agent_usecase.txt
+# range: 5-8
+### UC-M05: 主観入力のトリガー (Trigger Subjective Input)
+- **Input**: Event or Interval
+- **Process**:
+  - 状態入力UI提示
+  - 入力結果を `UserState` として保存
+  - **UC-M06** へ移行
+- **Output**: User Input Data
+
+### UC-M06: 主観と客観の乖離・反応検知 (Detect Discrepancy & Latency)
+- **Input**: Subjective Input, Sensor Data, User Reaction Time
+- **Process**:
+  - **乖離検知**: 主観スコアと客観スコアのベクトル距離を計算。`DISCREPANCY_ALERT_THRESHOLD` 超過で警告。
+  - **反応潜時評価**: 通知から反応までの時間 (`response_latency`) を計測。
+    - 遅延 (> 2x Base): 精神運動制止の疑い
+    - 過速 (< 0.5s): 形骸化の疑い
+    - 反応なし: フリーズまたは回避
+- **Output**: Discrepancy Alert, Mental Health Flags
+
+### UC-M07: デバイス接続の管理 (Manage Device Connection)
+- **Input**: Connectivity Event
+- **Process**:
+  - 接続マップ更新
+  - 切断時の品質スコア低下処理と再接続誘導
+- **Output**: Connection Status
+
+### UC-M08: 測定能力の評価 (Evaluate Measurement Capability)
+- **Input**: `cognitive_resource_level`, Environment Entropy, Biology Factors
+- **Process**:
+  - 環境・生理要因から `user_measurement_capability` を算出
+  - 閾値 (`CAPABILITY_THRESHOLD_FOR_MONITORING`) と比較
+  - **判定**:
+    - High: 決定論的モード（通常運転）
+    - Low: 確率的モード（リカバリー優先、複雑なタスク提示停止）
+- **Output**: System Mode Update, Intervention Suggestion
+
+---
+
+## 3. 形式的記述への橋渡し (To Data_Model_Agent)
+
+### 必要なシンボル候補
+- `Measurement_Session`: Class
+- `Calc_CMQS(...)`: Function
+- `Validate_Continuity(...)`: Function
+- `Calc_Discrepancy(Sub, Obj)`: Function
+- `Eval_Response_Latency(Time)`: Function
+- `Calc_Measurement_Capability(...)`: Function
+- `Judge_System_Mode(Capability)`: Function
+- `Sensor_Habituation`: Variable
+
+## 4. 備考
+- **他エージェント連携**:
+  - 環境エントロピー (`Environment_State_Agent`) は `UC-M08` の重要入力となる。
+  - `User_State_Agent` とは乖離検知で密に連携する。

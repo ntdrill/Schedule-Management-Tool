@@ -6,6 +6,9 @@ from supabase import create_client, Client
 
 # --- Configuration ---
 KEY_FILE_PATH = "Agent_workspace/symbol_agent/key/supabase_1.txt"
+# value_type is optional; DBにカラムがない場合は無効化する
+USE_VALUE_TYPE = False
+VALUE_TYPES_PATH = "data/value_types_override.json"
 
 def load_credentials():
     print(f"Current CWD: {os.getcwd()}")
@@ -15,7 +18,6 @@ def load_credentials():
         
         with open(KEY_FILE_PATH, 'r') as f:
             lines = f.readlines()
-            print(f"Debug: Lines read from key file: {lines}")
             if len(lines) < 2:
                 # Fallback for single line case
                 if len(lines) == 1 and " " in lines[0]:
@@ -41,7 +43,26 @@ FILES = {
 }
 
 # --- Parsing Logic ---
-def parse_line(line: str, file_name: str, default_category: str) -> Optional[Dict[str, Any]]:
+def load_value_types() -> Dict[str, str]:
+    if not USE_VALUE_TYPE:
+        return {}
+    if not os.path.exists(VALUE_TYPES_PATH):
+        return {}
+    try:
+        import json
+        with open(VALUE_TYPES_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Failed to load value types from {VALUE_TYPES_PATH}: {e}")
+        return {}
+
+
+def parse_line(
+    line: str,
+    file_name: str,
+    default_category: str,
+    value_types: Dict[str, str]
+) -> Optional[Dict[str, Any]]:
     line = line.strip()
     if not line or ":" not in line:
         return None
@@ -58,6 +79,7 @@ def parse_line(line: str, file_name: str, default_category: str) -> Optional[Dic
     description = rest
     default_value = None
     unit = None
+    value_type = value_types.get(name)
     
     paren_match = re.search(r"\((.+)\)$", rest)
     if paren_match:
@@ -100,12 +122,14 @@ def parse_line(line: str, file_name: str, default_category: str) -> Optional[Dic
         "category": default_category,
         "group_id": group_id,
         "default_value": {"raw": default_value} if default_value else None,
-        "unit": unit
+        "unit": unit,
+        **({"value_type": value_type} if USE_VALUE_TYPE else {})
     }
 
 def process_files() -> List[Dict[str, Any]]:
     records = []
     print("--- Parsing Files ---")
+    value_types = load_value_types()
     for filename, config in FILES.items():
         filepath = os.path.join(DATA_DIR, filename)
         if not os.path.exists(filepath):
@@ -117,7 +141,7 @@ def process_files() -> List[Dict[str, Any]]:
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
                 for line in f:
-                    record = parse_line(line, filename, config["category"])
+                    record = parse_line(line, filename, config["category"], value_types)
                     if record:
                         records.append(record)
                         count += 1

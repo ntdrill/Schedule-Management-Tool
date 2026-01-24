@@ -9,7 +9,6 @@
 
 **シンボルの参照**: `Symbol_Agent` が管理する `symbols` DB (または `data/*.txt`) から、定義済みの記号を参照する。
 
----
 
 ## Snapshot 01: 危篤検知と乖離判定を含むフィードバック制御ループ
 
@@ -56,3 +55,58 @@
     *   タスク完了後、最新の状態とセンサー値からスナップショットを作成し、実行オブジェクトの事後状態(`─_exec.state_after`)として記録する。
     *   予定の期待値(`┃_rec.expected`)と実績(`─_exec.state_after`)を比較評価(`↥`)し、結果を記録する。
 5.  **回復確認**: 実行後の状態(`─_exec.state_after`)に対して再度危篤判定を行い、`null`（異常なし）であれば、システムは正常状態への復帰(`ꀚ_restored`)を結論付ける。
+
+---
+
+## Snapshot 02: 現在状態の記録（センサー＋主観入力の統合）
+
+### Expression
+`(↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ꀷ, ꀸ, ꀹ, ꀺ) ⟼ ─_user_state_log) ≫ ((?_1) ⫸ (?_2 ⟼ ─_user_state_log.expected_state))`
+
+### Symbol Definitions
+*   `↮` (update_state_from_sensor): センサーデータからユーザー状態を更新する関数
+*   `ꀴ` (user_state_current): 現在のユーザー状態オブジェクト
+*   `ꀵ` (heart_rate_bpm): 心拍数（bpm）
+*   `ꀶ` (hrv_ms): 心拍変動（HRV, ms）
+*   `⟼` (assign_operator): 出力を変数に代入する演算子
+*   `≫` (sequence_operator): 処理の順次実行を表す演算子
+*   `↪` (merge_state_snapshot): 複数の状態ソースを統合し、状態履歴を生成する変換
+*   `ꀷ` (valence_score): 主観的快‐不快（1-5）
+*   `ꀸ` (arousal_score): 覚醒度（1-5）
+*   `ꀹ` (focus_score): 集中度（1-5）
+*   `ꀺ` (fatigue_score): 疲労度（1-5）
+*   `─_user_state_log` (user_state_history_record): 生成されたユーザー状態履歴オブジェクト
+*   `?_1` (expected_state_selected): 期待状態が選択されているかの条件（未定義記号）
+*   `?_2` (expected_state_reference): 選択された期待状態の参照（未定義記号）
+
+### Meaning (Description)
+この記述は、現在のユーザー状態を「センサー値＋主観入力」で統合し、状態履歴として保存する。
+
+1.  **状態更新**: 心拍数・HRV (`ꀵ`, `ꀶ`) を用いて現在状態 (`ꀴ`) を更新する。
+2.  **履歴生成**: 更新済みの状態と主観入力 (`ꀷ`, `ꀸ`, `ꀹ`, `ꀺ`) を統合し、履歴オブジェクト (`─_user_state_log`) を生成する。
+3.  **期待状態の紐付け**: 期待状態が選択されている場合（`?_1`）、選択された期待状態参照（`?_2`）を履歴に紐付ける。
+
+---
+
+## Snapshot 03: 期待状態と実際状態の比較評価
+
+### Expression
+`(?_3 ⫸ ?_4) ≫ (↥(┃_expected, ─_actual) ⟼ ─_evaluation_result) ≫ (─_evaluation_result ⟼ ?_5.result)`
+
+### Symbol Definitions
+*   `↥` (evaluate_task_effect): 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
+*   `┃_expected` (expected_state_schema): 期待状態スキーマ
+*   `─_actual` (actual_state_snapshot): 実際状態の履歴スナップショット
+*   `⟼` (assign_operator): 出力を変数に代入する演算子
+*   `─_evaluation_result` (evaluation_result): 一致スコアと詳細評価の構造化結果
+*   `?_3` (expected_state_source): 期待状態スキーマの入力元（未定義記号）
+*   `?_4` (actual_state_source): 実際状態スナップショットの入力元（未定義記号）
+*   `?_5` (evaluation_target_object): 評価結果の保存先オブジェクト（未定義記号）
+
+### Meaning (Description)
+この記述は、期待状態スキーマと実際状態スナップショットを比較し、評価結果を構造化して保存する。
+
+1. **入力元の明示**: 期待状態（`?_3`）と実際状態（`?_4`）を入力元として前提化する。
+2. **比較評価**: `↥` で比較し、構造化結果を `─_evaluation_result` に束縛する。
+3. **保存**: 評価結果を保存先オブジェクト（`?_5`）の `result` に書き込む。
+

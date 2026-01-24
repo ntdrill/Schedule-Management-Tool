@@ -1,0 +1,16 @@
+# Task: Phase1 形式的スナップショット記述
+
+## Assignment
+- **Assignee**: Data_Model_Agent (@Data_Model_Agent)
+- **期限**: 2026/01/25
+- **タスク**:
+  - ユースケース提案書と確定したシンボル定義を用いて、システム挙動を形式的スナップショット（論理式）として記述する
+    - 入力1: `02_Active/proposal_*_usecase.txt`
+    - 入力2: `data/variables.txt`, `data/transforms.txt` (確定シンボル)
+    - 入力3: `02_Active/report_symbol_registration_Phase1.txt` (シンボルマッピング参照用)
+  - 記述先: `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` (追記)
+  - 保留項目（measurement_session等）は今回の記述対象から除外またはプレースホルダとする
+- **成果物**: 
+  - `report_snapshot_definition_Phase1.txt`（完了報告書）
+  - 更新された `01_静的スナップショットの記述.txt`
+

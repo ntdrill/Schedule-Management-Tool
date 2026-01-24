@@ -1,8 +1,10 @@
 # Proposal: Phase1 シンボル正式登録タスク
 
 ## 現状の課題
-- シンボル化ドラフト3件が `02_Active/` に提出済みだが、正式登録（DB/定義ファイル）が未実施。
-- 未整備項目の扱い（保留）が未確定のため、Data_Model_Agent のスナップショット記述へ進めない。
+- シンボル化ドラフト3件はレビュー済み。
+- ローカル定義ファイルへの反映は完了したが、DB（Supabase `symbols`）登録は未実施。
+- `value_type` は提案値のみで未確定。
+- 未整備項目（保留）の扱いが確定していないため、Data_Model_Agent のスナップショット記述へ進めない。
 
 ## 提案内容
 - Symbol_Agent に正式登録タスクを発行し、登録対象を確定・実施する。
@@ -18,8 +20,10 @@
   - シンボル化ドラフト3件をレビューし、正式登録対象を確定する
     - 対象: `02_Active/symbolization_from_proposal_*_20260120.txt`
   - 未整備項目は「保留」として除外し、理由を記録する
-  - DB（Supabase `symbols`）および定義ファイルへ正式登録を行う
-- **成果物**: `report_symbol_registration_Phase1.txt`
+  - **DB（Supabase `symbols`）および定義ファイルへ正式登録を行う**
+    - `value_type` はドラフトの提案値を正式採用する
+    - 必要に応じて `migrate_symbols_to_supabase.py` 等を使用し、整合性を確保する
+- **成果物**: `report_symbol_registration_Phase1.txt`（作成済み）
 - **記載内容**:
   - 登録した新規シンボル一覧（名称/種別/値型/出典）
   - 既存シンボル参照の一覧（no-op）
