@@ -70,3 +70,5 @@
 │ savoring_content_buffer: セーバリング（感謝・祈り）の対象となっている具体的な内容（例：「鮭の雑炊」）を一時保持するバッファ
 ┃ scheduled_events_list: カレンダーに配置された予定オブジェクトのリスト
 ┄ task_queue: 実行待ちのタスクインスタンスのキュー
+┅ measurement_session: 測定セッションの予定オブジェクト（type="measurement_session"）
+┆ intervention_transaction: 介入の事実と期待/実績の乖離を記録するトランザクション

@@ -10,10 +10,10 @@ Implementation Agent Manager が管理する業務チケットの一覧とステ
 - [Task] Data_Model_Agent_データモデル設計プロセス (Phase 1) - 1文形式の有効性確認
 - [Task] v1_alignment_20260111 (Loop 1) - v1方針転換と既存タスクのアーカイブ完了
 - [Task] v1_workflow_definition - Phase 1〜3 のワークフロー定義完了
+- [Task] Phase1_Foundation (2026/01/25) - Snapshot 01-20 整備完了
 
 ## 進行中
-- [Active] task_Phase1_Foundation.txt - 単一領域スナップショット作成フェーズ (v1_phase1.txt準拠)
-  - 状態: 各エージェントへユースケース提出を依頼中
+- [Active] task_Symbol_Agent_UnresolvedSymbols_Phase1.txt - 未整備シンボルの正本確定と登録
 
 ## 予定
 - [Pending] task_Phase2_Interactions.txt - 相互作用スナップショット作成

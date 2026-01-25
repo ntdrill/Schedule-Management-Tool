@@ -1,0 +1,23 @@
+# Task: Phase1 未整備シンボルの正本確定と登録
+
+## 現状の課題
+- `measurement_session` / `InterventionTransaction` / `ResourceArbitrator` / `state_preset_user_*` が未整備のまま残っている
+- `01_静的スナップショットの記述.txt` 内の `?_` プレースホルダに対応するシンボルが未確定
+
+## Assignment
+- **Assignee**: Symbol_Agent (@Symbol_Agent)
+- **期限**: 2026/01/27
+- **タスク**:
+  - 未整備シンボルの正本・登録先・Group を確定する
+    - `measurement_session`
+    - `InterventionTransaction`
+    - `ResourceArbitrator`
+    - `state_preset_user_*`
+  - Snapshot 19/20 の `?_` プレースホルダに対応するシンボルを定義する
+    - 参照: `Agent_workspace/data_model_agent/業務/report_snapshot_definition_Phase1.txt`
+  - 定義ファイルへ反映し、Supabase `symbols` に登録する
+    - `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`, `data/expression.txt`（必要に応じて）
+- **成果物**:
+  - `report_symbol_registration_Phase1_unresolved.txt`
+  - 更新された定義ファイル群
+

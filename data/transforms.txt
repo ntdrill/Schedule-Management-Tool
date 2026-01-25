@@ -35,6 +35,12 @@
 ↲ calc_efficiency_gap: 期待値と実績値からEfficiency Gapを算出する関数
 ↳ update_cleaning_skill_level: Efficiency Gapを入力し、熟練度パラメータを更新する関数
 ↴ calc_environment_pl_report: 期間内のネゲントロピーと消費エネルギーを集計しP/L指標を算出する関数
+↵ create_action_schedule: 選択行動（テンプレートID）から予定オブジェクトを生成する処理
+↶ compare_state_delta: 行動前後の状態差分を比較し差分結果を生成する処理
+↸ store_effectiveness: 主観評価スコアを実行オブジェクトへ保存する処理
+↹ store_evaluation_result: 評価結果を対象オブジェクトへ保存する処理
+↼ resource_arbitrator: 介入候補とユーザーリソースから実行/先送りを判定する調停処理
+↽ store_execution_record: 実行オブジェクトを実行記録リストへ保存する処理
 ≫ sequence_operator: (順次実行) 状態遷移や処理の順序を表す演算子
 ⊳ apply_operator: (適用) 関数や更新を状態に適用することを表す演算子
 ⫸ pipeline_operator: (パイプライン) 前の処理結果を次の処理の入力として渡す演算子

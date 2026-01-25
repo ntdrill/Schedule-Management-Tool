@@ -76,3 +76,8 @@
 ሤ threshold_measurement_capability_for_monitoring: セルフモニタリング可能となる測定能力の閾値
 ሥ ventilation_duration_min: 有効な換気とみなす最小実施時間 (10 分)
 ሦ ventilation_interval_limit: 作業継続に必要な換気間隔の上限 (1 時間)
+ሧ state_preset_user_standard: 期待状態プリセット（Standard）
+ረ state_preset_user_ready: 期待状態プリセット（Ready）
+ሩ state_preset_user_focus: 期待状態プリセット（Focus）
+ሪ state_preset_user_rest: 期待状態プリセット（Rest）
+ራ state_preset_user_sleep: 期待状態プリセット（Sleep）

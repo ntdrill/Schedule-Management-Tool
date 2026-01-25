@@ -1,0 +1,45 @@
+# レポート: Phase1 未整備シンボルの登録
+作成日: 2026/01/25
+担当: Symbol_Agent
+
+---
+## 作業結果（事実）
+### 1) 登録した新規シンボル（定義ファイル反映済み）
+#### Group B: 設定・テンプレートID（`data/constants.txt`）
+- `ሧ` state_preset_user_standard: 期待状態プリセット（Standard）
+- `ረ` state_preset_user_ready: 期待状態プリセット（Ready）
+- `ሩ` state_preset_user_focus: 期待状態プリセット（Focus）
+- `ሪ` state_preset_user_rest: 期待状態プリセット（Rest）
+- `ራ` state_preset_user_sleep: 期待状態プリセット（Sleep）
+
+#### Group D: 構造・枠（`data/variables.txt`）
+- `┅` measurement_session: 測定セッションの予定オブジェクト（type="measurement_session"）
+- `┆` intervention_transaction: 介入の事実と期待/実績の乖離を記録するトランザクション
+
+#### Group E: 変換・関数（`data/transforms.txt`）
+- `↵` create_action_schedule: 選択行動（テンプレートID）から予定オブジェクトを生成する処理
+- `↶` compare_state_delta: 行動前後の状態差分を比較し差分結果を生成する処理
+- `↸` store_effectiveness: 主観評価スコアを実行オブジェクトへ保存する処理
+- `↹` store_evaluation_result: 評価結果を対象オブジェクトへ保存する処理
+- `↼` resource_arbitrator: 介入候補とユーザーリソースから実行/先送りを判定する調停処理
+- `↽` store_execution_record: 実行オブジェクトを実行記録リストへ保存する処理
+
+### 2) スナップショット反映（記述更新）
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` の Snapshot 19/20 で `?_create_action_schedule` / `?_compare_state_delta` / `?_store_effectiveness` / `?_store_execution_record` / `?_store_evaluation_result` を該当シンボルへ置換
+
+---
+## 資料準拠（事実）
+- `measurement_session`: `docs/原典/データモデルに関する決定/予定オブジェクトの詳細.txt`
+- `intervention_transaction`: `docs/原典/データモデルに関する決定_2/測定について.md`
+- `resource_arbitrator`: `Agent_workspace/environment_state_agent/arbitration_layer.py`
+
+---
+## 提案/ドラフト
+- `state_preset_user_*`: `docs/readme/05_ドメイン知識・理論基盤.md` の「状態プリセット（ドラフト）」および `Agent_workspace/Task_Management/04_Archive/symbolization_from_proposal_user_state_agent_usecase_20260120.txt` の提案に基づく
+- Snapshot 19/20 の未整備関数: `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` と `Agent_workspace/data_model_agent/業務/report_snapshot_definition_Phase1.txt` の提案/ドラフト記述に基づく
+
+---
+## 未整備
+- Supabase `symbols` への登録は未実施（DB更新は未着手）
+- Snapshot 19/20 以外の `?_` プレースホルダは未対応（入力元/保存先/関数の確定待ち）
+

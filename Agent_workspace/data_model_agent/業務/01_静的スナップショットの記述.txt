@@ -615,7 +615,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 19: 対処行動の実行と評価（Action & Evaluation）
 
 ### Expression
-`(?_action_selected ⫸ (?_create_action_schedule(ሡ, ?_action_selected) ⟼ ┃_rec) ≫ (?_action_start ⫸ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_before) ⟼ ─_exec.state_before)) ≫ (?_action_end ⫸ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_after) ⟼ ─_exec.state_after) ≫ (?_compare_state_delta(─_exec.state_before, ─_exec.state_after) ⟼ ─_exec.delta_result) ≫ (?_store_effectiveness(?_effectiveness_score) ⟼ ─_exec.user_rating) ≫ (?_store_execution_record(─_exec) ⟼ ?_store_exec_ok)) ∴ ?_action_evaluated)`
+`(?_action_selected ⫸ (↵(ሡ, ?_action_selected) ⟼ ┃_rec) ≫ (?_action_start ⫸ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_before) ⟼ ─_exec.state_before)) ≫ (?_action_end ⫸ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_after) ⟼ ─_exec.state_after) ≫ (↶(─_exec.state_before, ─_exec.state_after) ⟼ ─_exec.delta_result) ≫ (↸(?_effectiveness_score) ⟼ ─_exec.user_rating) ≫ (↽(─_exec) ⟼ ?_store_exec_ok)) ∴ ?_action_evaluated)`
 
 ### Symbol Definitions
 *   `ሡ` (task_templates_dictionary): タスクテンプレート辞書
@@ -635,15 +635,15 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 
 ### Notes
 *   `?_action_selected`: ユーザーが選択した対処行動（テンプレート/ID）
-*   `?_create_action_schedule`: 選択行動から予定オブジェクトを生成する処理
+*   `↵` (create_action_schedule): 選択行動から予定オブジェクトを生成する処理
 *   `?_action_start`: 行動開始イベント
 *   `?_subj_input_before`: 行動開始時の主観入力
 *   `?_action_end`: 行動終了イベント
 *   `?_subj_input_after`: 行動終了時の主観入力
-*   `?_compare_state_delta`: 行動前後の状態差分を比較する処理
-*   `?_store_effectiveness`: 主観評価の格納処理
+*   `↶` (compare_state_delta): 行動前後の状態差分を比較する処理
+*   `↸` (store_effectiveness): 主観評価の格納処理
 *   `?_effectiveness_score`: 主観評価スコア（1-5）
-*   `?_store_execution_record`: 実行オブジェクトの保存処理
+*   `↽` (store_execution_record): 実行オブジェクトの保存処理
 *   `?_store_exec_ok`: 保存結果
 *   `?_action_evaluated`: 評価完了フラグ
 
@@ -655,7 +655,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 20: 状態の比較（Compare State）
 
 ### Expression
-`(?_compare_request ⫸ (↥(?_expected_state, ?_actual_state) ⟼ ─_evaluation_result) ≫ (?_store_evaluation_result(─_evaluation_result, ?_evaluation_target) ⟼ ?_store_ok) ∴ ?_comparison_done)`
+`(?_compare_request ⫸ (↥(?_expected_state, ?_actual_state) ⟼ ─_evaluation_result) ≫ (↹(─_evaluation_result, ?_evaluation_target) ⟼ ?_store_ok) ∴ ?_comparison_done)`
 
 ### Symbol Definitions
 *   `↥` (evaluate_task_effect): 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
@@ -669,7 +669,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `?_compare_request`: 比較要求イベント（UI操作/自動判定）
 *   `?_expected_state`: 期待状態スキーマ（Expected）
 *   `?_actual_state`: 実際状態スナップショット（Actual）
-*   `?_store_evaluation_result`: 評価結果保存処理
+*   `↹` (store_evaluation_result): 評価結果保存処理
 *   `?_evaluation_target`: 評価結果の保存先オブジェクト
 *   `?_store_ok`: 保存結果
 *   `?_comparison_done`: 比較完了フラグ

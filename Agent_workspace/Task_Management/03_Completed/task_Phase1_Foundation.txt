@@ -19,28 +19,31 @@
 - [x] Step 1: 親タスク作成 (Done)
 - [x] Step 2: 各エージェントへユースケース提出をアサイン (Done)
   - 提出状況:
-    - [x] User_State_Agent: `02_Active/proposal_user_state_agent_usecase.txt` (Approved)
-    - [x] Monitoring_State_Agent: `02_Active/proposal_monitoring_state_agent_usecase.txt` (Approved)
-    - [x] Environment_State_Agent: `02_Active/proposal_environment_state_agent_usecase.txt` (Approved)
+    - [x] User_State_Agent: `03_Completed/proposal_user_state_agent_usecase.txt` (Approved)
+    - [x] Monitoring_State_Agent: `03_Completed/proposal_monitoring_state_agent_usecase.txt` (Approved)
+    - [x] Environment_State_Agent: `03_Completed/proposal_environment_state_agent_usecase.txt` (Approved)
 - [x] Step 3: シンボル定義（ドラフト提出）(Done)
   - 担当: Symbol_Agent (@Symbol_Agent)
   - 入力: `02_Active/proposal_*.txt`
   - 成果物（ドラフト）:
-    - `02_Active/symbolization_from_proposal_user_state_agent_usecase_20260120.txt`
-    - `02_Active/symbolization_from_proposal_environment_state_agent_usecase_20260120.txt`
-    - `02_Active/symbolization_from_proposal_monitoring_state_agent_usecase_20260120.txt`
+    - `04_Archive/symbolization_from_proposal_user_state_agent_usecase_20260120.txt`
+    - `04_Archive/symbolization_from_proposal_environment_state_agent_usecase_20260120.txt`
+    - `04_Archive/symbolization_from_proposal_monitoring_state_agent_usecase_20260120.txt`
 - [x] Step 4: シンボル正式登録 (Done)
   - 担当: Symbol_Agent (@Symbol_Agent)
   - 内容: 承認済みドラフトに基づき、DBおよび定義ファイルへ正式登録
     - ローカル定義ファイル更新は完了
     - DB（Supabase `symbols`）登録は完了（value_typeを除外して登録）
     - 保留項目はPhase 1対象外として記録
-  - 成果物: `report_symbol_registration_Phase1.txt`
-- [ ] Step 5: 形式的スナップショット記述 (In Progress)
+  - 成果物: `03_Completed/report_symbol_registration_Phase1.txt`
+- [x] Step 5: 形式的スナップショット記述 (Done)
   - 担当: Data_Model_Agent (@Data_Model_Agent)
   - 内容: 確定したシンボルを用いて、ユースケースを論理式として記述
   - 入力: ユースケース提案書 + 確定シンボル定義
-  - 成果物: `report_snapshot_definition_Phase1.txt` (予定)
+  - 成果物:
+    - `Agent_workspace/data_model_agent/業務/report_snapshot_definition_Phase1.txt`
+    - `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`（Snapshot 01-20整備済み）
+  - 未整備: `measurement_session`, `InterventionTransaction`, `ResourceArbitrator`, `state_preset_user_*`, および `?_` プレースホルダの入力元/保存先
 
 ## 成果物
 1. 各エージェントからのユースケース提案書
@@ -53,6 +56,6 @@
 - **タスク**:
   - Phase1の進捗管理と承認
   - Symbol_Agent向けの正式登録タスクを実行に移す
-    - 参照: `02_Active/task_Symbol_Agent_SymbolRegistration_Phase1.txt`
+    - 参照: `03_Completed/task_Symbol_Agent_SymbolRegistration_Phase1.txt`
 - **成果物**: Phase1の承認記録および関連タスクの進行管理
 
