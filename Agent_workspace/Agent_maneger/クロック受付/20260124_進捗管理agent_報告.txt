@@ -1,0 +1,32 @@
+進捗報告: Data_Model_Agent進捗の共有
+
+報告日: 2026/01/24
+報告者: 進捗管理agent
+
+---
+
+## 資料準拠（事実）
+
+### 1) Data_Model_Agent 進捗（報告受領済み）
+- `進捗管理agent/進捗報告受付/20260124_Data_Model_Agent_進捗報告.txt` に以下が記載
+  - 形式的スナップショット記述の更新（Snapshot 02/03 の追記）
+  - ガイドライン更新（トリガー/条件明示、未定義記号 `?_n` の使用）
+  - ユースケースの分割コピー作成（`Agent_workspace/data_model_agent/業務/usecase_copies/`）
+
+### 2) 未整備事項（Data_Model_Agent報告の抜粋）
+- Snapshot 02/03 の未定義記号（`?_1`〜`?_5`）の入力元・保存先が未確定
+- expected_state を保持する正規オブジェクトが未確定
+
+---
+
+## 未整備
+- `?_1`〜`?_5` の具体化（Data_Model_Agent / Symbol_Agent 間で要調整）
+- expected_state の正規オブジェクト確定
+
+---
+
+## 提案/ドラフト
+- `report_snapshot_definition_Phase1.txt` の作成と提出を指示する。
+- 未定義記号の解決について、Data_Model_Agent と Symbol_Agent の協議タスクを起票する。
+
+

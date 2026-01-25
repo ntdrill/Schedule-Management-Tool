@@ -1,0 +1,59 @@
+# レポート: Phase1 形式的スナップショット記述
+作成日: 2026/01/25
+担当: Data_Model_Agent
+
+---
+
+## 資料準拠（事実）
+- 対象ユースケース:
+  - `Agent_workspace/Task_Management/02_Active/proposal_user_state_agent_usecase.txt`
+  - `Agent_workspace/Task_Management/02_Active/proposal_monitoring_state_agent_usecase.txt`
+  - `Agent_workspace/Task_Management/02_Active/proposal_environment_state_agent_usecase.txt`
+- 参照シンボル:
+  - `data/variables.txt`
+  - `data/transforms.txt`
+  - `data/constants.txt`
+  - `Agent_workspace/Task_Management/03_Completed/report_symbol_registration_Phase1.txt`
+- 記述先:
+  - `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`
+- 追加/整備済みスナップショット: Snapshot 01〜20
+
+### ユースケース対応（資料準拠）
+- User:
+  - UC-01 測定モード開始 → Snapshot 11
+  - UC-02 現在状態の記録 → Snapshot 02
+  - UC-03 対処行動の実行と評価 → Snapshot 19
+  - UC-04 状態の比較 → Snapshot 20
+- Monitoring:
+  - UC-M01 測定セッション開始 → Snapshot 11
+  - UC-M02 測定セッション終了 → Snapshot 12
+  - UC-M03 測定品質モニタリング → Snapshot 13
+  - UC-M04 測定疲労と制限管理 → Snapshot 14
+  - UC-M05 主観入力トリガー → Snapshot 15
+  - UC-M06 乖離・反応検知 → Snapshot 16
+  - UC-M07 デバイス接続管理 → Snapshot 17
+  - UC-M08 測定能力評価 → Snapshot 18
+- Environment:
+  - UC-01 カビ予兆への早期介入 → Snapshot 04
+  - UC-02 埃の戦略的先送り → Snapshot 05
+  - UC-03 汚れ性質に応じた清掃法選択 → Snapshot 06
+  - UC-04 空気質の閾値制御 → Snapshot 07
+  - UC-05 熟練度学習（風呂掃除） → Snapshot 08
+  - UC-06 ネゲントロピーP/L集計 → Snapshot 09
+  - UC-07 環境悪化の社会的波及阻止 → Snapshot 10
+
+---
+
+## 未整備
+- `measurement_session` の登録先と定義が未確定（`report_symbol_registration_Phase1.txt` の未整備欄に記載）
+- `InterventionTransaction` スキーマが未整備（P/L集計の前提）
+- `ResourceArbitrator` の定義が未整備
+- `state_preset_user_*` の登録先と正本が未確定
+- `01_静的スナップショットの記述.txt` 内の `?_` プレースホルダは入力元/関数/保存先が未整備
+
+---
+
+## 提案/ドラフト
+- 未整備シンボル（`measurement_session`, `InterventionTransaction`, `ResourceArbitrator`, `state_preset_user_*`）の登録方針を Symbol_Agent と合意し、正本を確定する
+- Snapshot 19/20 で使用した `?_create_action_schedule`, `?_compare_state_delta`, `?_store_effectiveness`, `?_store_evaluation_result` の対応シンボルを追加登録する
+
