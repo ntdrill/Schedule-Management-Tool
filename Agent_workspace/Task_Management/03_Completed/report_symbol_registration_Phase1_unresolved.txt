@@ -23,9 +23,11 @@
 - `↹` store_evaluation_result: 評価結果を対象オブジェクトへ保存する処理
 - `↼` resource_arbitrator: 介入候補とユーザーリソースから実行/先送りを判定する調停処理
 - `↽` store_execution_record: 実行オブジェクトを実行記録リストへ保存する処理
+- `⇀`〜`⟺` (check_humidity_high_continuous ほか70件): Snapshot 04〜18 の関数プレースホルダ対応分
 
 ### 2) スナップショット反映（記述更新）
 - `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` の Snapshot 19/20 で `?_create_action_schedule` / `?_compare_state_delta` / `?_store_effectiveness` / `?_store_execution_record` / `?_store_evaluation_result` を該当シンボルへ置換
+- 同ファイルの Snapshot 04〜18 で関数系プレースホルダを該当シンボルへ置換
 
 ---
 ## 資料準拠（事実）
@@ -41,5 +43,5 @@
 ---
 ## 未整備
 - Supabase `symbols` への登録は未実施（DB更新は未着手）
-- Snapshot 19/20 以外の `?_` プレースホルダは未対応（入力元/保存先/関数の確定待ち）
+- Snapshot 04〜18 の `?_` は関数のみ対応済みで、入力元/保存先/フラグは未対応
 

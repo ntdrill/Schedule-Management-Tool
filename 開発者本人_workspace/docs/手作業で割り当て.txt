@@ -1,0 +1,186 @@
+## Snapshot 09: ネゲントロピーP/L集計とレポート生成
+### Expression
+`(?_7, ?_8) ≫ (⇡(?_7, ?_8) ⟼ ?_9_out) ≫ (⇢(?_9_out) ⟼ ?_10_out) ≫ (↴(?_10_out) ⟼ ?_11) ≫ (⇣(?_11) ⟼ ?_12_out) ≫ (⇤(?_11) ⟼ ?_13_out) ≫ (⇥(?_11) ⟼ ?_14_out)`
+### Notes
+*   ꁮ`?_7`: 週末/振り返りタイミング到来イベント
+*   ꁯ`?_8`: ダッシュボード閲覧リクエスト
+*   ꁰ`?_9_out`: 期間内InterventionTransaction集合
+*   ꁱ`?_10_out`: 期間内集計結果
+*   ꁲ`?_11`: P/L指標（集計結果）
+*   ꁳ`?_12_out`: 格納結果
+*   ꁴ`?_13_out`: 適用結果
+*   ꁵ`?_14_out`: レポート表示出力
+---
+
+## Snapshot 10: 環境悪化の社会的波及阻止（来客対応）
+### Expression
+`(ꁀ, ?_14, ?_15) ≫ (⇦(ꁀ, ?_14, ?_15) ⟼ ?_16_out) ≫ (⇧(?_16_out) ⟼ ?_17_out) ≫ (⇨(?_17_out, ሡ) ⟼ ?_18_out) ≫ (⇩(?_18_out, ┄) ⟼ ┄) ≫ (⇪(?_18_out, ꁀ) ⟼ ꁀ) ≫ (⇫(ꀫ, ?_18_out) ⟼ ꀫ) ≫ (⇬(?_18_out) ⟼ ?_22_out)`
+### Notes
+*   ꁶ`?_14`: 来客予定（Social Event）
+*   ꁷ`?_15`: Social.Isolation 指標
+*   ꁸ`?_16_out`: 波及リスク判定結果
+*   ꁹ`?_17_out`: 介入優先度
+*   ꁺ`?_18_out`: 来客対応タスク
+*   ꁻ`?_22_out`: 通知/提示出力
+
+### Meaning (Description)
+RoomClutterと来客予定/孤立指標を入力として波及リスクを判定し、優先度を昇格し、来客対応タスクを選定してキューに投入し、そのタスク結果に基づいてRoomClutterを改善し、社会状態（来客受入可能フラグ）を更新し、必要に応じて通知/提示を行う流れを表す。
+
+---
+
+## Snapshot 11: 測定セッションの開始（Measurement Session Start）
+### Expression
+`(?_1_toggle_on ⫸ (⇭(ꀊ) ⟼ ?_session) ≫ (⇮(?_session) ⟼ ?_subscription) ≫ (↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (⇯(ᐗ, ꀴ) ⟼ ꀴ) ≫ (⇰(?_session) ⟼ ?_subjective_prompt) ≫ (⇱ ⟼ ꀙ) ∴ ?_measurement_started)`
+### Notes
+*   ꁼ`?_1_toggle_on`: ユーザーのON操作イベント
+*   ꁽ`?_session`: 生成された測定セッション
+*   ꁾ`?_subscription`: センサー購読状態
+*   ꁿ`?_subjective_prompt`: 主観入力プロンプト
+*   ꂀ`?_measurement_started`: 開始完了フラグ
+
+---
+
+## Snapshot 12: 測定セッションの終了（Measurement Session End）
+
+### Expression
+`(?_7_toggle_off ⫸ (⇲(?_session) ⟼ ?_session) ≫ (⇰(?_session) ⟼ ?_retrospective_prompt) ≫ (⇳(?_session) ⟼ ?_stats_saved) ≫ (⇴(?_session) ⟼ ?_recovery_started) ≫ (⇵ ⟼ ꀙ) ∴ ?_measurement_ended)`
+### Notes
+*   ꂁ`?_7_toggle_off`: ユーザーのOFF操作イベント
+*   ꂂ`?_session`: 対象測定セッション
+*   ꂃ`?_retrospective_prompt`: 振り返り入力プロンプト
+*   ꂅ`?_stats_saved`: 統計保存結果
+*   ꂆ`?_recovery_started`: 回復開始フラグ
+*   ꂇ`?_measurement_ended`: 終了完了フラグ
+### Meaning (Description)
+測定終了イベントからセッション完了、振り返り主観入力、統計保存、回復開始を実行し、測定モードをOFFにする流れを表す。
+
+---
+
+## Snapshot 13: 測定品質のモニタリング（Monitor Data Quality）
+
+### Expression
+`(?_13_sensor_stream ⫸ (⇶(?_15_noise, ?_16_loss, ?_17_device, ?_18_context) ⟼ ꀉ) ≫ (⇷(ꀊ) ⟼ ꀞ) ≫ (↯(ꀞ, ꀠ) ⟼ ?_20_continuity_ok) ≫ ((?_20_continuity_ok ?= false) ⫸ (⇸(ꀞ) ⟼ ?_21_out)) ∴ ?_quality_updated)`
+## Notes
+*   ꂈ`?_13_sensor_stream`: センサーストリーム入力
+*   ꂉ`?_15_noise`: ノイズ要素
+*   ꂊ`?_16_loss`: 欠損要素
+*   ꂋ`?_17_device`: デバイス要素
+*   ꂌ`?_18_context`: 文脈要素
+*   ꂍ`?_20_continuity_ok`: 継続性判定結果
+*   ꂎ`?_21_out`: 中断判定出力
+*   ꂏ`?_quality_updated`: 更新完了フラグ
+
+### Meaning (Description)
+センサーストリームを入力にCMQSを算出して品質スコアを更新し、最終有効時刻を更新したうえで継続性を判定し、必要なら中断判定を行う流れを表す。
+
+---
+
+## Snapshot 14: 測定疲労と制限管理（Manage Measurement Fatigue）
+
+### Expression
+`(?_22_time_tick ⫸ (⇹(ꀡ, ?_24_input_cost) ⟼ ꀟ) ≫ (⇺(ꀡ, ሏ) ⟼ ?_26_over_limit) ≫ ((?_26_over_limit ?= true) ⫸ (⇻(ꀟ, ሏ) ⟼ ?_27_out)) ∴ ?_fatigue_updated)`
+### Notes
+*   ꂐ`?_22_time_tick`: 時間経過イベント
+*   ꂑ`?_24_input_cost`: 入力コスト
+*   ꂒ`?_26_over_limit`: 超過フラグ
+*   ꂓ`?_27_out`: 警告出力
+*   ꂔ`?_fatigue_updated`: 更新完了フラグ
+
+### Meaning (Description)
+時間経過に応じて測定疲労を更新し、日次上限の超過を判定した場合に警告・推奨通知を行う流れを表す。
+
+---
+
+## Snapshot 15: 主観入力のトリガー（Trigger Subjective Input）
+
+### Expression
+`(?_28_event_or_interval ⫸ (⇼() ⟼ ?_ui) ≫ (⇽(?_ui) ⟼ ?_subj_input) ≫ (↪(ꀴ, ?_subj_input) ⟼ ─_user_state_log) ≫ (⇾(─_user_state_log) ⟼ ?_31_out) ∴ ?_subjective_input_done)`
+### Notes
+*   ꂕ`?_28_event_or_interval`: イベントまたは時間間隔
+*   ꂖ`?_subj_input`: 主観入力データ
+*   `─_user_state_log`: 生成されたユーザー状態履歴
+*   `⇾` (store_user_state): ユーザー状態保存処理
+*   ꂗ`?_31_out`: 保存結果
+*   ꂘ`?_subjective_input_done`: 完了フラグ
+
+### Meaning (Description)
+イベントまたは間隔で主観入力UIを提示し、入力を収集して状態履歴を生成・保存する流れを表す。
+
+---
+
+## Snapshot 16: 主観と客観の乖離・反応検知（Detect Discrepancy & Latency）
+### Expression
+`(?_32_input_ready ⫸ (↖(?_subj_input, ꀔ) ⟼ ꀏ) ≫ (⇿(ꀏ, ሢ) ⟼ ?_33_alert) ≫ (↰(ꀦ) ⟼ ?_34_latency_flags) ≫ (⟵(?_33_alert, ?_34_latency_flags) ⟼ ?_35_out) ∴ ?_discrepancy_checked)`
+### Notes
+*   ꂙ`?_32_input_ready`: 主観入力が揃った状態
+*   ꂚ`?_33_alert`: 乖離警告フラグ
+*   ꂛ`?_34_latency_flags`: 反応潜時フラグ群
+*   ꂜ`?_35_out`: 保存結果
+*   ꂝ`?_discrepancy_checked`: 検知完了フラグ
+
+### Meaning (Description)
+主観入力とセンサー値の乖離を算出し、閾値超過で警告フラグを立て、反応潜時を評価してフラグとして保存する流れを表す。
+
+---
+
+## Snapshot 17: デバイス接続の管理（Manage Device Connection）
+### Expression
+`(?_36_connectivity_event ⫸ (⟶(ꀍ, ?_36_connectivity_event) ⟼ ꀍ) ≫ (⟷(ꀍ) ⟼ ?_38_out) ≫ (⟸(?_38_out) ⟼ ꀉ) ∴ ?_connection_updated)`
+### Notes
+*   ꂞ`?_36_connectivity_event`: 接続イベント
+*   ꂟ`?_38_out`: 切断処理結果
+*   ꂠ`?_connection_updated`: 更新完了フラグ
+
+### Meaning (Description)
+接続イベントに基づき接続マップを更新し、切断時の処理を行い、品質スコアを低下させる流れを表す。
+
+---
+
+## Snapshot 18: 測定能力の評価（Evaluate Measurement Capability）
+### Expression
+`(?_40_eval_trigger ⫸ (→(ꀇ, ꀧ, ?_41_bio_factors) ⟼ ꀳ) ≫ (↱(ꀳ, ሤ) ⟼ ?_42_system_mode) ≫ (⟹(?_42_system_mode) ⟼ ?_43_out) ≫ (⟺(?_42_system_mode) ⟼ ?_44_out) ∴ ?_capability_evaluated)`
+### Notes
+*   ꂡ`?_40_eval_trigger`: 評価トリガー
+*   ꂢ`?_41_bio_factors`: 生理要因入力
+*   ꂣ`?_42_system_mode`: 判定されたシステムモード
+*   ꂤ`?_43_out`: 更新結果
+*   ꂥ`?_44_out`: 提案出力
+
+
+*   ꂦ`?_capability_evaluated`: 評価完了フラグ
+
+### Meaning (Description)
+認知資源・環境エントロピー・生理要因から測定能力を算出し、能力閾値に基づいてシステムモードを判定・更新し、必要な介入提案を生成する流れを表す。
+
+---
+
+## Snapshot 19: 対処行動の実行と評価（Action & Evaluation）
+
+### Expression
+`(?_action_selected ⫸ (↵(ሡ, ?_action_selected) ⟼ ┃_rec) ≫ (?_action_start ⫸ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_before) ⟼ ─_exec.state_before)) ≫ (?_action_end ⫸ (↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ?_subj_input_after) ⟼ ─_exec.state_after) ≫ (↶(─_exec.state_before, ─_exec.state_after) ⟼ ─_exec.delta_result) ≫ (↸(?_effectiveness_score) ⟼ ─_exec.user_rating) ≫ (↽(─_exec) ⟼ ?_store_exec_ok)) ∴ ?_action_evaluated)`
+### Notes
+*   ꂧ`?_action_selected`: ユーザーが選択した対処行動（テンプレート/ID）
+*   ꂨ`?_action_start`: 行動開始イベント
+*   ꂩ`?_subj_input_before`: 行動開始時の主観入力
+*   ꂪ`?_action_end`: 行動終了イベント
+*   ꂫ`?_subj_input_after`: 行動終了時の主観入力
+*   ꂬ`?_effectiveness_score`: 主観評価スコア（1-5
+*   ꂭ`?_store_exec_ok`: 保存結果
+*   ꂮ`?_action_evaluated`: 評価完了フラグ
+### Meaning (Description)
+対処行動の選択から開始・終了を経て、行動前後の状態差分と主観評価を実行オブジェクトに保存する流れを表す。
+
+---
+
+## Snapshot 20: 状態の比較（Compare State）
+### Expression
+`(?_compare_request ⫸ (↥(?_expected_state, ?_actual_state) ⟼ ─_evaluation_result) ≫ (↹(─_evaluation_result, ?_evaluation_target) ⟼ ?_store_ok) ∴ ?_comparison_done)`
+### Notes
+*   ꂯ`?_compare_request`: 比較要求イベント（UI操作/自動判定）
+*   ꂰ`?_expected_state`: 期待状態スキーマ（Expected）
+*   ꂱ`?_actual_state`: 実際状態スナップショット（Actual）
+*   ꂲ`?_evaluation_target`: 評価結果の保存先オブジェクト
+*   ꂳ`?_store_ok`: 保存結果
+*   ꂴ`?_comparison_done`: 比較完了フラグ
+### Meaning (Description)
+期待状態と実際状態を比較し、一致スコアと詳細評価を生成して保存する流れを表す。

@@ -81,3 +81,17 @@
 ሩ state_preset_user_focus: 期待状態プリセット（Focus）
 ሪ state_preset_user_rest: 期待状態プリセット（Rest）
 ራ state_preset_user_sleep: 期待状態プリセット（Sleep）
+ር mold_threshold_0_3: カビリスクの警戒閾値（0.3）
+ሮ target_mold_0_05: カビリスクの安全目標値（0.05）
+ሯ mold_intervention_template: カビ対策タスクのテンプレート
+ሰ energy_cost_small: 早期介入の小コスト
+ሱ dust_threshold_0_4: 埃蓄積の中程度閾値（0.4）
+ሲ activation_energy_cost: 掃除の固定コスト（起動コスト）
+ሳ reason_scale_economy_wait: 規模の経済待ちの理由コード
+ሴ kitchen_grime_threshold: キッチン汚れの許容上限
+ስ target_grime_0_1: 汚れ度の目標値（0.1）
+ሶ energy_cost_min: 最小エネルギーコスト
+ሷ air_quality_inflection_threshold: 空気質の変曲点閾値
+ሸ micro_intervention_templates: 微小介入タスクのテンプレート集合
+ሹ target_air_quality_safe: 空気質の安全目標値
+ሺ cleaning_methods: 利用可能な清掃メソッド一覧

@@ -1,22 +1,24 @@
 # Task: Phase1 未整備シンボルの正本確定と登録
 
 ## 現状の課題
-- `measurement_session` / `InterventionTransaction` / `ResourceArbitrator` / `state_preset_user_*` が未整備のまま残っている
-- `01_静的スナップショットの記述.txt` 内の `?_` プレースホルダに対応するシンボルが未確定
+- Supabase `symbols` への登録が未実施（未整備シンボル分）
+- Snapshot 04〜18 の `?_` プレースホルダは**関数のみ**対応済みで、入力元/保存先/フラグが未対応
+
+## 進捗（2026/01/25）
+- `report_symbol_registration_Phase1_unresolved.txt` を作成（定義ファイル反映・Snapshot 19/20 置換を実施済み）
+- `data/constants.txt` / `data/variables.txt` / `data/transforms.txt` への反映は完了
+- Snapshot 19/20 の `?_` プレースホルダはシンボル置換済み
+- Snapshot 04〜18 の**関数系**プレースホルダをシンボル置換済み
 
 ## Assignment
 - **Assignee**: Symbol_Agent (@Symbol_Agent)
 - **期限**: 2026/01/27
 - **タスク**:
-  - 未整備シンボルの正本・登録先・Group を確定する
-    - `measurement_session`
-    - `InterventionTransaction`
-    - `ResourceArbitrator`
-    - `state_preset_user_*`
-  - Snapshot 19/20 の `?_` プレースホルダに対応するシンボルを定義する
-    - 参照: `Agent_workspace/data_model_agent/業務/report_snapshot_definition_Phase1.txt`
-  - 定義ファイルへ反映し、Supabase `symbols` に登録する
-    - `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`, `data/expression.txt`（必要に応じて）
+  - Supabase `symbols` への登録を実施する（未整備シンボル分）
+  - Snapshot 04〜18 の入力元/保存先/フラグの `?_` プレースホルダに対応するシンボルを定義する
+    - 参照: `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`
+  - 定義ファイルへ反映し、必要に応じて Supabase 登録へ反映する
+    - `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`, `data/expression.txt`
 - **成果物**:
   - `report_symbol_registration_Phase1_unresolved.txt`
   - 更新された定義ファイル群

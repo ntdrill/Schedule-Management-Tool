@@ -41,6 +41,76 @@
 ↹ store_evaluation_result: 評価結果を対象オブジェクトへ保存する処理
 ↼ resource_arbitrator: 介入候補とユーザーリソースから実行/先送りを判定する調停処理
 ↽ store_execution_record: 実行オブジェクトを実行記録リストへ保存する処理
+⇀ check_humidity_high_continuous: 湿度が高い状態の継続判定（入力: 環境センサー）
+⇁ predict_mold_risk_exponential: カビリスクの指数的増大予測（入力: mold_risk, humidity_high）
+⇂ calc_marginal_utility: 限界効用算出（現在/将来コストから）
+⇃ judge_priority_critical: 優先度決定（Critical判定）
+⇄ create_intervention_schedule: 予定生成（優先度・テンプレート・時刻）
+⇅ reset_mold_risk_to_target: カビリスク更新（目標値へのリセット）
+⇆ generate_roi_log_entry: ROI/評価ログ生成
+⇇ apply_energy_cost: エネルギー消費反映
+⇈ extract_focus_state: ユーザー集中状態の抽出
+⇉ estimate_linear_cost: 線形増加コストの見積（DustAccumulation）
+⇊ estimate_roi: ROI見積（線形コストと固定コスト）
+⇋ judge_low_roi: 低ROI判定（集中状態を考慮）
+⇌ decide_reject_or_postpone: 棄却/延期の判定
+⇍ register_deferred_task: 延期タスクリストへの登録
+⇎ suppress_notification: 通知抑止処理
+⇏ extract_resistance_type: 汚れの性質（ResistanceType）の抽出
+⇐ evaluate_method_scores: メソッド適合度の評価
+⇑ select_best_method: 最適メソッド選定
+⇒ create_cleaning_schedule: 予定生成（メソッド・ツール・時刻）
+⇓ update_grime_to_target: 汚れ度更新（目標値への反映）
+⇔ generate_intervention_log_entry: 介入ログ生成（ネゲントロピー含む）
+⇕ log_energy_cost: エネルギーコスト記録
+⇖ update_cleaning_skill: 熟練度更新
+⇗ predict_air_quality_sigmoid_risk: 空気質のシグモイド劣化リスク予測
+⇘ extract_deep_focus_state: Deep Focus状態の抽出
+⇙ judge_threshold_control_needed: 閾値制御が必要かの判定
+⇚ create_micro_intervention_plan: 微小介入プラン生成
+⇛ create_micro_intervention_schedule: 予定生成（介入プラン・時刻）
+⇜ update_air_quality_to_target: 空気質更新（安全目標値への反映）
+⇝ generate_micro_intervention_roi_log_entry: ROI/評価ログ生成（微小介入）
+⇞ optimize_next_estimate: 次回見積最適化処理
+⇟ update_bath_cleanliness: BathCleanliness 更新処理
+⇠ generate_praise_feedback: 称賛フィードバック生成
+⇡ fetch_intervention_transactions: 期間内InterventionTransaction集合の取得処理
+⇢ aggregate_intervention_pl: 期間内集計（ネゲントロピー合計・消費エネルギー合計の算出）
+⇣ store_weekly_report: 週次レポート格納処理
+⇤ apply_self_efficacy_feedback: 自己効力感フィードバック適用処理
+⇥ render_report: レポート表示処理
+⇦ judge_spillover_risk: 波及リスク判定処理
+⇧ escalate_intervention_priority: 優先度昇格処理
+⇨ select_guest_response_task: 来客対応タスク選定処理
+⇩ enqueue_task: タスク投入処理
+⇪ update_room_clutter: RoomClutter 改善処理
+⇫ update_guest_acceptance_flag: 来客受入可能フラグ更新処理
+⇬ notify_or_prompt: 通知/提示処理
+⇭ create_measurement_session: 測定セッション生成処理
+⇮ start_sensor_subscription: センサー購読開始処理
+⇯ apply_sensor_habituation: ベースライン補正処理
+⇰ trigger_subjective_input: 主観入力トリガー処理
+⇱ set_measurement_mode_on: 測定モードON設定処理
+⇲ finalize_measurement_session: セッション完了処理
+⇳ store_measurement_stats: 統計保存処理
+⇴ start_fatigue_recovery: 疲労回復プロセス開始
+⇵ set_measurement_mode_off: 測定モードOFF設定処理
+⇶ calc_cmq_score: CMQS算出処理
+⇷ update_last_valid_timestamp: 最終有効時刻更新処理
+⇸ mark_interruption: 中断判定処理
+⇹ calc_measurement_fatigue: 測定疲労算出処理
+⇺ check_limit_exceeded: 上限超過判定処理
+⇻ issue_fatigue_warning: 警告・推奨通知処理
+⇼ show_state_input_ui: 状態入力UI提示処理
+⇽ collect_subjective_input: 主観入力収集処理
+⇾ store_user_state: ユーザー状態保存処理
+⇿ check_discrepancy_threshold: 乖離閾値判定処理
+⟵ store_flags: フラグ保存処理
+⟶ update_connection_map: 接続マップ更新処理
+⟷ handle_disconnect: 切断処理（再接続誘導含む）
+⟸ degrade_quality_score: 品質スコア低下処理
+⟹ update_system_mode: モード更新処理
+⟺ suggest_intervention: 介入提案処理
 ≫ sequence_operator: (順次実行) 状態遷移や処理の順序を表す演算子
 ⊳ apply_operator: (適用) 関数や更新を状態に適用することを表す演算子
 ⫸ pipeline_operator: (パイプライン) 前の処理結果を次の処理の入力として渡す演算子

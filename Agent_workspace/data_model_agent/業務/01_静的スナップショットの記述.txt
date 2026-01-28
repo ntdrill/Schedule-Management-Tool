@@ -61,7 +61,7 @@
 ## Snapshot 02: 現在状態の記録（センサー＋主観入力の統合）
 
 ### Expression
-`(↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ꀷ, ꀸ, ꀹ, ꀺ) ⟼ ─_user_state_log) ≫ ((?_1) ⫸ (?_2 ⟼ ─_user_state_log.expected_state))`
+`(↮(ꀴ, ꀵ, ꀶ) ⟼ ꀴ) ≫ (↪(ꀴ, ꀷ, ꀸ, ꀹ, ꀺ) ⟼ ─_user_state_log) ≫ ((ꁃ) ⫸ (ꁄ ⟼ ─_user_state_log.expected_state))`
 
 ### Symbol Definitions
 *   `↮` (update_state_from_sensor): センサーデータからユーザー状態を更新する関数
@@ -76,8 +76,8 @@
 *   `ꀹ` (focus_score): 集中度（1-5）
 *   `ꀺ` (fatigue_score): 疲労度（1-5）
 *   `─_user_state_log` (user_state_history_record): 生成されたユーザー状態履歴オブジェクト
-*   `?_1` (expected_state_selected): 期待状態が選択されているかの条件（未定義記号）
-*   `?_2` (expected_state_reference): 選択された期待状態の参照（未定義記号）
+*   `ꁃ` (expected_state_selected): 期待状態が選択されているかの条件
+*   `ꁄ` (expected_state_reference): 選択された期待状態の参照
 
 ### Meaning (Description)
 この記述は、現在のユーザー状態を「センサー値＋主観入力」で統合し、状態履歴として保存する。
@@ -91,7 +91,7 @@
 ## Snapshot 03: 期待状態と実際状態の比較評価
 
 ### Expression
-`(?_3 ⫸ ?_4) ≫ (↥(┃_expected, ─_actual) ⟼ ─_evaluation_result) ≫ (─_evaluation_result ⟼ ?_5.result)`
+`(ꁅ ⫸ ꁆ) ≫ (↥(┃_expected, ─_actual) ⟼ ─_evaluation_result) ≫ (─_evaluation_result ⟼ ꁇ.result)`
 
 ### Symbol Definitions
 *   `↥` (evaluate_task_effect): 期待状態と実際の状態を入力とし、一致スコアと詳細評価を出力する評価関数
@@ -99,9 +99,9 @@
 *   `─_actual` (actual_state_snapshot): 実際状態の履歴スナップショット
 *   `⟼` (assign_operator): 出力を変数に代入する演算子
 *   `─_evaluation_result` (evaluation_result): 一致スコアと詳細評価の構造化結果
-*   `?_3` (expected_state_source): 期待状態スキーマの入力元（未定義記号）
-*   `?_4` (actual_state_source): 実際状態スナップショットの入力元（未定義記号）
-*   `?_5` (evaluation_target_object): 評価結果の保存先オブジェクト（未定義記号）
+*   `ꁅ` (expected_state_source): 期待状態スキーマの入力元
+*   `ꁆ` (actual_state_source): 実際状態スナップショットの入力元
+*   `ꁇ` (evaluation_target_object): 評価結果の保存先オブジェクト
 
 ### Meaning (Description)
 この記述は、期待状態スキーマと実際状態スナップショットを比較し、評価結果を構造化して保存する。
@@ -115,7 +115,7 @@
 ## Snapshot 04: カビ予兆（指数関数的リスク）への早期介入
 
 ### Expression
-`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (?_1(ꀔ) ⟼ ?_humidity_high) ≫ ((ꀻ > ?_mold_threshold_0_3) ⫸ (?_2(ꀻ, ?_humidity_high) ⟼ ?_risk_projection) ≫ (?_3(?_risk_projection, ?_intervention_cost_now, ?_intervention_cost_future) ⟼ ?_marginal_utility) ≫ (?_4(?_marginal_utility, ?_user_resource_state) ⟼ ?_priority_critical) ≫ (?_5(?_priority_critical, ?_mold_intervention_template, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (?_6(ꀻ, ?_target_mold_0_05) ⟼ ꀻ) ≫ (?_7(?_marginal_utility) ⟼ ?_roi_log_entry) ≫ (?_8(?_user_energy, ?_energy_cost_small) ⟼ ?_user_energy_after) ∴ ?_mold_intervention_scheduled)`
+`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (⇀(ꀔ) ⟼ ꁈ) ≫ ((ꀻ > ር) ⫸ (⇁(ꀻ, ꁈ) ⟼ ꁉ) ≫ (⇂(ꁉ, ꁊ, ꁋ) ⟼ ꁌ) ≫ (⇃(ꁌ, ꁍ) ⟼ ꁎ) ≫ (⇄(ꁎ, ሯ, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (⇅(ꀻ, ሮ) ⟼ ꀻ) ≫ (⇆(ꁌ) ⟼ ꁏ) ≫ (⇇(ꁐ, ሰ) ⟼ ꁑ) ∴ ꁒ)`
 
 ### Symbol Definitions (Partial)
 *   `↮` (update_state_from_sensor): センサーデータから環境状態を更新する関数
@@ -132,32 +132,32 @@
 
 ### Notes
 *   `?_n` は未定義記号（入力元・関数・保存先の暫定）として記録。
-*   `?_1`: 湿度が高い状態の継続判定（入力: 環境センサー）
-*   `?_mold_threshold_0_3`: カビリスクの警戒閾値（0.3）
-*   `?_2`: カビリスクの指数的増大予測（入力: mold_risk, humidity_high）
-*   `?_intervention_cost_now`: 現時点の介入コスト
-*   `?_intervention_cost_future`: 放置時の将来介入コスト
-*   `?_3`: 限界効用算出（現在/将来コストから）
-*   `?_user_resource_state`: ユーザーの時間・体力などリソース状態
-*   `?_4`: 優先度決定（Critical判定）
-*   `?_mold_intervention_template`: カビ対策タスクのテンプレート
-*   `?_5`: 予定生成（優先度・テンプレート・時刻）
-*   `?_target_mold_0_05`: カビリスクの安全目標値（0.05）
-*   `?_6`: カビリスク更新（目標値へのリセット）
-*   `?_7`: ROI/評価ログ生成
-*   `?_roi_log_entry`: ROI記録エントリ
-*   `?_user_energy`: ユーザーのエネルギー残量
-*   `?_energy_cost_small`: 早期介入の小コスト
-*   `?_8`: エネルギー消費反映
-*   `?_user_energy_after`: 消費後のエネルギー残量
-*   `?_mold_intervention_scheduled`: 介入スケジュール完了フラグ
+*   `⇀` (check_humidity_high_continuous): 湿度が高い状態の継続判定（入力: 環境センサー）
+*   `ር` (mold_threshold_0_3): カビリスクの警戒閾値（0.3）
+*   `⇁` (predict_mold_risk_exponential): カビリスクの指数的増大予測（入力: mold_risk, humidity_high）
+*   `ꁊ` (intervention_cost_now): 現時点の介入コスト
+*   `ꁋ` (intervention_cost_future): 放置時の将来介入コスト
+*   `⇂` (calc_marginal_utility): 限界効用算出（現在/将来コストから）
+*   `ꁍ` (user_resource_state): ユーザーの時間・体力などリソース状態
+*   `⇃` (judge_priority_critical): 優先度決定（Critical判定）
+*   `ሯ` (mold_intervention_template): カビ対策タスクのテンプレート
+*   `⇄` (create_intervention_schedule): 予定生成（優先度・テンプレート・時刻）
+*   `ሮ` (target_mold_0_05): カビリスクの安全目標値（0.05）
+*   `⇅` (reset_mold_risk_to_target): カビリスク更新（目標値へのリセット）
+*   `⇆` (generate_roi_log_entry): ROI/評価ログ生成
+*   `ꁏ` (roi_log_entry): ROI記録エントリ
+*   `ꁐ` (user_energy): ユーザーのエネルギー残量
+*   `ሰ` (energy_cost_small): 早期介入の小コスト
+*   `⇇` (apply_energy_cost): エネルギー消費反映
+*   `ꁑ` (user_energy_after): 消費後のエネルギー残量
+*   `ꁒ` (mold_intervention_scheduled): 介入スケジュール完了フラグ
 
 ---
 
 ## Snapshot 05: 埃の線形蓄積に対する戦略的先送り
 
 ### Expression
-`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (?_1(ꀴ) ⟼ ?_focus_state) ≫ ((ꀼ >= ?_dust_threshold_0_4) ⫸ (?_2(ꀼ) ⟼ ?_linear_cost_projection) ≫ (?_3(?_linear_cost_projection, ?_activation_energy_cost) ⟼ ?_roi_estimate) ≫ (?_4(?_roi_estimate, ?_focus_state) ⟼ ?_low_roi) ≫ (?_5(?_low_roi) ⟼ ?_reject_postpone) ≫ (?_6(?_reject_postpone, ꀼ, ?_reason_scale_economy_wait) ⟼ ?_deferred_task_entry) ≫ (?_7(?_deferred_task_entry) ⟼ ?_notification_suppressed) ∴ ?_postpone_recorded)`
+`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (⇈(ꀴ) ⟼ ꁓ) ≫ ((ꀼ >= ሱ) ⫸ (⇉(ꀼ) ⟼ ꁔ) ≫ (⇊(ꁔ, ሲ) ⟼ ꁕ) ≫ (⇋(ꁕ, ꁓ) ⟼ ꁖ) ≫ (⇌(ꁖ) ⟼ ꁗ) ≫ (⇍(ꁗ, ꀼ, ሳ) ⟼ ꁘ) ≫ (⇎(ꁘ) ⟼ ꁙ) ∴ ꁚ)`
 
 ### Symbol Definitions (Partial)
 *   `↮` (update_state_from_sensor): センサーデータから環境状態を更新する関数
@@ -172,26 +172,26 @@
 
 ### Notes
 *   `?_n` は未定義記号（入力元・関数・保存先の暫定）として記録。
-*   `?_1`: ユーザー集中状態の抽出
-*   `?_dust_threshold_0_4`: 埃蓄積の中程度閾値（0.4）
-*   `?_2`: 線形増加コストの見積（DustAccumulation）
-*   `?_activation_energy_cost`: 掃除の固定コスト（起動コスト）
-*   `?_3`: ROI見積（線形コストと固定コスト）
-*   `?_4`: 低ROI判定（集中状態を考慮）
-*   `?_5`: 棄却/延期の判定
-*   `?_reason_scale_economy_wait`: 規模の経済待ちの理由コード
-*   `?_6`: 延期タスクリストへの登録
-*   `?_deferred_task_entry`: 延期エントリ
-*   `?_7`: 通知抑止処理
-*   `?_notification_suppressed`: 通知抑止結果
-*   `?_postpone_recorded`: 先送り記録完了フラグ
+*   `⇈` (extract_focus_state): ユーザー集中状態の抽出
+*   `ሱ` (dust_threshold_0_4): 埃蓄積の中程度閾値（0.4）
+*   `⇉` (estimate_linear_cost): 線形増加コストの見積（DustAccumulation）
+*   `ሲ` (activation_energy_cost): 掃除の固定コスト（起動コスト）
+*   `⇊` (estimate_roi): ROI見積（線形コストと固定コスト）
+*   `⇋` (judge_low_roi): 低ROI判定（集中状態を考慮）
+*   `⇌` (decide_reject_or_postpone): 棄却/延期の判定
+*   `ሳ` (reason_scale_economy_wait): 規模の経済待ちの理由コード
+*   `⇍` (register_deferred_task): 延期タスクリストへの登録
+*   `ꁘ` (deferred_task_entry): 延期エントリ
+*   `⇎` (suppress_notification): 通知抑止処理
+*   `ꁙ` (notification_suppressed): 通知抑止結果
+*   `ꁚ` (postpone_recorded): 先送り記録完了フラグ
 
 ---
 
 ## Snapshot 06: 汚れの性質に応じた清掃メソッド選択
 
 ### Expression
-`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ ((ꀽ > ?_kitchen_grime_threshold) ⫸ (?_1(ꀽ) ⟼ ?_resistance_type) ≫ (?_2(?_resistance_type, ?_cleaning_methods) ⟼ ?_method_scores) ≫ (?_3(?_method_scores) ⟼ ?_best_method) ≫ (?_4(?_best_method, ?_required_tools, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (?_5(ꀽ, ?_target_grime_0_1) ⟼ ꀽ) ≫ (?_6(?_best_method, ?_negentropy_gain) ⟼ ?_intervention_log_entry) ≫ (?_7(?_best_method, ?_energy_cost_min) ⟼ ?_energy_cost_logged) ≫ (?_8(?_intervention_log_entry, ?_best_method) ⟼ ?_cleaning_skill_update) ∴ ?_cleaning_method_task_scheduled)`
+`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ ((ꀽ > ሴ) ⫸ (⇏(ꀽ) ⟼ ꁛ) ≫ (⇐(ꁛ, ሺ) ⟼ ꁜ) ≫ (⇑(ꁜ) ⟼ ꁝ) ≫ (⇒(ꁝ, ꁞ, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (⇓(ꀽ, ስ) ⟼ ꀽ) ≫ (⇔(ꁝ, ꁟ) ⟼ ꁠ) ≫ (⇕(ꁝ, ሶ) ⟼ ꁡ) ≫ (⇖(ꁠ, ꁝ) ⟼ ꁢ) ∴ ꁣ)`
 
 ### Symbol Definitions (Partial)
 *   `↮` (update_state_from_sensor): センサーデータから環境状態を更新する関数
@@ -208,33 +208,33 @@
 
 ### Notes
 *   `?_n` は未定義記号（入力元・関数・保存先の暫定）として記録。
-*   `?_kitchen_grime_threshold`: キッチン汚れの許容上限
-*   `?_1`: 汚れの性質（ResistanceType）の抽出
-*   `?_cleaning_methods`: 利用可能な清掃メソッド一覧
-*   `?_2`: メソッド適合度の評価
-*   `?_method_scores`: メソッド適合度スコア
-*   `?_3`: 最適メソッド選定
-*   `?_best_method`: 選定された清掃メソッド
-*   `?_required_tools`: 必要ツール一覧
-*   `?_4`: 予定生成（メソッド・ツール・時刻）
-*   `?_target_grime_0_1`: 汚れ度の目標値（0.1）
-*   `?_5`: 汚れ度更新（目標値への反映）
-*   `?_negentropy_gain`: 期待ネゲントロピー量
-*   `?_6`: 介入ログ生成（ネゲントロピー含む）
-*   `?_intervention_log_entry`: 介入ログ
-*   `?_energy_cost_min`: 最小エネルギーコスト
-*   `?_7`: エネルギーコスト記録
-*   `?_energy_cost_logged`: エネルギー記録結果
-*   `?_8`: 熟練度更新
-*   `?_cleaning_skill_update`: 熟練度更新結果
-*   `?_cleaning_method_task_scheduled`: タスク生成完了フラグ
+*   `ሴ` (kitchen_grime_threshold): キッチン汚れの許容上限
+*   `⇏` (extract_resistance_type): 汚れの性質（ResistanceType）の抽出
+*   `ሺ` (cleaning_methods): 利用可能な清掃メソッド一覧
+*   `⇐` (evaluate_method_scores): メソッド適合度の評価
+*   `ꁜ` (method_scores): メソッド適合度スコア
+*   `⇑` (select_best_method): 最適メソッド選定
+*   `ꁝ` (best_method): 選定された清掃メソッド
+*   `ꁞ` (required_tools): 必要ツール一覧
+*   `⇒` (create_cleaning_schedule): 予定生成（メソッド・ツール・時刻）
+*   `ስ` (target_grime_0_1): 汚れ度の目標値（0.1）
+*   `⇓` (update_grime_to_target): 汚れ度更新（目標値への反映）
+*   `ꁟ` (negentropy_gain): 期待ネゲントロピー量
+*   `⇔` (generate_intervention_log_entry): 介入ログ生成（ネゲントロピー含む）
+*   `ꁠ` (intervention_log_entry): 介入ログ
+*   `ሶ` (energy_cost_min): 最小エネルギーコスト
+*   `⇕` (log_energy_cost): エネルギーコスト記録
+*   `ꁡ` (energy_cost_logged): エネルギー記録結果
+*   `⇖` (update_cleaning_skill): 熟練度更新
+*   `ꁢ` (cleaning_skill_update): 熟練度更新結果
+*   `ꁣ` (cleaning_method_task_scheduled): タスク生成完了フラグ
 
 ---
 
 ## Snapshot 07: 空気質の閾値制御による集中維持
 
 ### Expression
-`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (?_1(ꀾ) ⟼ ?_sigmoid_risk_projection) ≫ (?_2(ꀴ) ⟼ ?_deep_focus_state) ≫ ((?_sigmoid_risk_projection >= ?_air_quality_inflection_threshold) ⫸ (?_3(?_sigmoid_risk_projection, ?_deep_focus_state) ⟼ ?_threshold_control_needed) ≫ (?_4(?_threshold_control_needed, ?_micro_intervention_templates) ⟼ ?_micro_intervention_plan) ≫ (?_5(?_micro_intervention_plan, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (?_6(ꀾ, ?_target_air_quality_safe) ⟼ ꀾ) ≫ (?_7(?_micro_intervention_plan) ⟼ ?_roi_log_entry) ∴ ?_air_quality_stabilized)`
+`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (⇗(ꀾ) ⟼ ꁤ) ≫ (⇘(ꀴ) ⟼ ꁥ) ≫ ((ꁤ >= ሷ) ⫸ (⇙(ꁤ, ꁥ) ⟼ ꁦ) ≫ (⇚(ꁦ, ሸ) ⟼ ꁧ) ≫ (⇛(ꁧ, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┃) ≫ (⇜(ꀾ, ሹ) ⟼ ꀾ) ≫ (⇝(ꁧ) ⟼ ꁏ) ∴ ꁨ)`
 
 ### Symbol Definitions (Partial)
 *   `↮` (update_state_from_sensor): センサーデータから環境状態を更新する関数
@@ -252,29 +252,29 @@
 
 ### Notes
 *   `?_n` は未定義記号（入力元・関数・保存先の暫定）として記録。
-*   `?_1`: 空気質のシグモイド劣化リスク予測
-*   `?_sigmoid_risk_projection`: 予測された空気質リスク指標
-*   `?_2`: Deep Focus状態の抽出
-*   `?_deep_focus_state`: 深い集中状態フラグ
-*   `?_air_quality_inflection_threshold`: 空気質の変曲点閾値
-*   `?_3`: 閾値制御が必要かの判定
-*   `?_threshold_control_needed`: 閾値制御必要フラグ
-*   `?_micro_intervention_templates`: 微小介入タスクのテンプレート集合
-*   `?_4`: 微小介入プラン生成
-*   `?_micro_intervention_plan`: 生成された微小介入プラン
-*   `?_5`: 予定生成（介入プラン・時刻）
-*   `?_target_air_quality_safe`: 空気質の安全目標値
-*   `?_6`: 空気質更新（安全目標値への反映）
-*   `?_7`: ROI/評価ログ生成（微小介入）
-*   `?_roi_log_entry`: ROI記録エントリ
-*   `?_air_quality_stabilized`: 空気質安定化フラグ
+*   `⇗` (predict_air_quality_sigmoid_risk): 空気質のシグモイド劣化リスク予測
+*   `ꁤ` (sigmoid_risk_projection): 予測された空気質リスク指標
+*   `⇘` (extract_deep_focus_state): Deep Focus状態の抽出
+*   `ꁥ` (deep_focus_state): 深い集中状態フラグ
+*   `ሷ` (air_quality_inflection_threshold): 空気質の変曲点閾値
+*   `⇙` (judge_threshold_control_needed): 閾値制御が必要かの判定
+*   `ꁦ` (threshold_control_needed): 閾値制御必要フラグ
+*   `ሸ` (micro_intervention_templates): 微小介入タスクのテンプレート集合
+*   `⇚` (create_micro_intervention_plan): 微小介入プラン生成
+*   `ꁧ` (micro_intervention_plan): 生成された微小介入プラン
+*   `⇛` (create_micro_intervention_schedule): 予定生成（介入プラン・時刻）
+*   `ሹ` (target_air_quality_safe): 空気質の安全目標値
+*   `⇜` (update_air_quality_to_target): 空気質更新（安全目標値への反映）
+*   `⇝` (generate_micro_intervention_roi_log_entry): ROI/評価ログ生成（微小介入）
+*   `ꁏ` (roi_log_entry): ROI記録エントリ
+*   `ꁨ` (air_quality_stabilized): 空気質安定化フラグ
 
 ---
 
 ## Snapshot 08: 実績乖離による熟練度学習（風呂掃除）
 
 ### Expression
-`(?_1, ?_2, ?_3) ≫ (↲(?_2, ?_3) ⟼ ꁁ) ≫ (↳(ꁁ) ⟼ ꁂ) ≫ (?_4(ꁂ) ⟼ ?_4_out) ≫ (?_5(ꀿ, ?_3) ⟼ ꀿ) ≫ (?_6(?_4_out) ⟼ ?_6_out)`
+`(ꁩ, ꁪ, ꁫ) ≫ (↲(ꁪ, ꁫ) ⟼ ꁁ) ≫ (↳(ꁁ) ⟼ ꁂ) ≫ (⇞(ꁂ) ⟼ ꁬ) ≫ (⇟(ꀿ, ꁫ) ⟼ ꀿ) ≫ (⇠(ꁬ) ⟼ ꁭ)`
 
 ### Symbol Definitions
 *   `↲` (calc_efficiency_gap): 期待値と実績値からEfficiency Gapを算出する関数
@@ -286,14 +286,14 @@
 *   `⟼` (assign_operator): 代入
 
 ### Notes
-*   `?_1`: 風呂掃除完了イベント
-*   `?_2`: Expected Delta（期待汚れ減少量）
-*   `?_3`: Actual Delta（実績汚れ減少量）
-*   `?_4`: 次回見積最適化処理
-*   `?_4_out`: 次回見積最適化結果
-*   `?_5`: BathCleanliness 更新処理
-*   `?_6`: 称賛フィードバック生成
-*   `?_6_out`: 称賛フィードバック出力
+*   `ꁩ` (bath_cleaning_completed_event): 風呂掃除完了イベント
+*   `ꁪ` (expected_grime_delta): Expected Delta（期待汚れ減少量）
+*   `ꁫ` (actual_grime_delta): Actual Delta（実績汚れ減少量）
+*   `⇞` (optimize_next_estimate): 次回見積最適化処理
+*   `ꁬ` (next_estimate_result): 次回見積最適化結果
+*   `⇟` (update_bath_cleanliness): BathCleanliness 更新処理
+*   `⇠` (generate_praise_feedback): 称賛フィードバック生成
+*   `ꁭ` (praise_feedback_output): 称賛フィードバック出力
 
 ### Meaning (Description)
 風呂掃除完了イベントと期待/実績値からEfficiency Gapを算出し、熟練度を更新し、次回見積を最適化し、実績値に基づいてBathCleanlinessを更新し、称賛フィードバックを生成する流れを表す。
@@ -303,7 +303,7 @@
 ## Snapshot 09: ネゲントロピーP/L集計とレポート生成
 
 ### Expression
-`(?_7, ?_8) ≫ (?_9(?_7, ?_8) ⟼ ?_9_out) ≫ (?_10(?_9_out) ⟼ ?_10_out) ≫ (↴(?_10_out) ⟼ ?_11) ≫ (?_12(?_11) ⟼ ?_12_out) ≫ (?_13(?_11) ⟼ ?_13_out) ≫ (?_14(?_11) ⟼ ?_14_out)`
+`(?_7, ?_8) ≫ (⇡(?_7, ?_8) ⟼ ?_9_out) ≫ (⇢(?_9_out) ⟼ ?_10_out) ≫ (↴(?_10_out) ⟼ ?_11) ≫ (⇣(?_11) ⟼ ?_12_out) ≫ (⇤(?_11) ⟼ ?_13_out) ≫ (⇥(?_11) ⟼ ?_14_out)`
 
 ### Symbol Definitions
 *   `↴` (calc_environment_pl_report): 期間内のネゲントロピーと消費エネルギーを集計しP/L指標を算出する関数
@@ -311,19 +311,19 @@
 *   `⟼` (assign_operator): 代入
 
 ### Notes
-*   `?_7`: 週末/振り返りタイミング到来イベント
-*   `?_8`: ダッシュボード閲覧リクエスト
-*   `?_9`: 期間内InterventionTransaction集合の取得処理
-*   `?_9_out`: 期間内InterventionTransaction集合
-*   `?_10`: 期間内集計（ネゲントロピー合計・消費エネルギー合計の算出）
-*   `?_10_out`: 期間内集計結果
-*   `?_11`: P/L指標（集計結果）
-*   `?_12`: 週次レポート格納処理
-*   `?_12_out`: 格納結果
-*   `?_13`: 自己効力感フィードバック適用処理
-*   `?_13_out`: 適用結果
-*   `?_14`: レポート表示処理
-*   `?_14_out`: レポート表示出力
+*   ꁮ`?_7`: 週末/振り返りタイミング到来イベント
+*   ꁯ`?_8`: ダッシュボード閲覧リクエスト
+*   `⇡` (fetch_intervention_transactions): 期間内InterventionTransaction集合の取得処理
+*   ꁰ`?_9_out`: 期間内InterventionTransaction集合
+*   `⇢` (aggregate_intervention_pl): 期間内集計（ネゲントロピー合計・消費エネルギー合計の算出）
+*   ꁱ`?_10_out`: 期間内集計結果
+*   ꁲ`?_11`: P/L指標（集計結果）
+*   `⇣` (store_weekly_report): 週次レポート格納処理
+*   ꁳ`?_12_out`: 格納結果
+*   `⇤` (apply_self_efficacy_feedback): 自己効力感フィードバック適用処理
+*   ꁴ`?_13_out`: 適用結果
+*   `⇥` (render_report): レポート表示処理
+*   ꁵ`?_14_out`: レポート表示出力
 
 ### Meaning (Description)
 週末/振り返りタイミング到来と閲覧リクエストを受け、対象期間のトランザクション集合を取得し、期間内の集計を行った上でP/L指標を算出し、レポート格納・自己効力感フィードバック適用・表示までを行う流れを表す。
@@ -333,7 +333,7 @@
 ## Snapshot 10: 環境悪化の社会的波及阻止（来客対応）
 
 ### Expression
-`(ꁀ, ?_14, ?_15) ≫ (?_16(ꁀ, ?_14, ?_15) ⟼ ?_16_out) ≫ (?_17(?_16_out) ⟼ ?_17_out) ≫ (?_18(?_17_out, ሡ) ⟼ ?_18_out) ≫ (?_19(?_18_out, ┄) ⟼ ┄) ≫ (?_20(?_18_out, ꁀ) ⟼ ꁀ) ≫ (?_21(ꀫ, ?_18_out) ⟼ ꀫ) ≫ (?_22(?_18_out) ⟼ ?_22_out)`
+`(ꁀ, ?_14, ?_15) ≫ (⇦(ꁀ, ?_14, ?_15) ⟼ ?_16_out) ≫ (⇧(?_16_out) ⟼ ?_17_out) ≫ (⇨(?_17_out, ሡ) ⟼ ?_18_out) ≫ (⇩(?_18_out, ┄) ⟼ ┄) ≫ (⇪(?_18_out, ꁀ) ⟼ ꁀ) ≫ (⇫(ꀫ, ?_18_out) ⟼ ꀫ) ≫ (⇬(?_18_out) ⟼ ?_22_out)`
 
 ### Symbol Definitions
 *   `ꁀ` (room_clutter): 部屋の散らかり度
@@ -344,19 +344,19 @@
 *   `⟼` (assign_operator): 代入
 
 ### Notes
-*   `?_14`: 来客予定（Social Event）
-*   `?_15`: Social.Isolation 指標
-*   `?_16`: 波及リスク判定処理
-*   `?_16_out`: 波及リスク判定結果
-*   `?_17`: 優先度昇格処理
-*   `?_17_out`: 介入優先度
-*   `?_18`: 来客対応タスク選定処理
-*   `?_18_out`: 来客対応タスク
-*   `?_19`: タスク投入処理
-*   `?_20`: RoomClutter 改善処理
-*   `?_21`: 来客受入可能フラグ更新処理
-*   `?_22`: 通知/提示処理
-*   `?_22_out`: 通知/提示出力
+*   ꁶ`?_14`: 来客予定（Social Event）
+*   ꁷ`?_15`: Social.Isolation 指標
+*   `⇦` (judge_spillover_risk): 波及リスク判定処理
+*   ꁸ`?_16_out`: 波及リスク判定結果
+*   `⇧` (escalate_intervention_priority): 優先度昇格処理
+*   ꁹ`?_17_out`: 介入優先度
+*   `⇨` (select_guest_response_task): 来客対応タスク選定処理
+*   ꁺ`?_18_out`: 来客対応タスク
+*   `⇩` (enqueue_task): タスク投入処理
+*   `⇪` (update_room_clutter): RoomClutter 改善処理
+*   `⇫` (update_guest_acceptance_flag): 来客受入可能フラグ更新処理
+*   `⇬` (notify_or_prompt): 通知/提示処理
+*   ꁻ`?_22_out`: 通知/提示出力
 
 ### Meaning (Description)
 RoomClutterと来客予定/孤立指標を入力として波及リスクを判定し、優先度を昇格し、来客対応タスクを選定してキューに投入し、そのタスク結果に基づいてRoomClutterを改善し、社会状態（来客受入可能フラグ）を更新し、必要に応じて通知/提示を行う流れを表す。
@@ -366,7 +366,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 11: 測定セッションの開始（Measurement Session Start）
 
 ### Expression
-`(?_1_toggle_on ⫸ (?_2_create_measurement_session(ꀊ) ⟼ ?_session) ≫ (?_3_start_sensor_subscription(?_session) ⟼ ?_subscription) ≫ (↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (?_4_apply_sensor_habituation(ᐗ, ꀴ) ⟼ ꀴ) ≫ (?_5_trigger_subjective_input(?_session) ⟼ ?_subjective_prompt) ≫ (?_6_measurement_mode_on ⟼ ꀙ) ∴ ?_measurement_started)`
+`(?_1_toggle_on ⫸ (⇭(ꀊ) ⟼ ?_session) ≫ (⇮(?_session) ⟼ ?_subscription) ≫ (↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (⇯(ᐗ, ꀴ) ⟼ ꀴ) ≫ (⇰(?_session) ⟼ ?_subjective_prompt) ≫ (⇱ ⟼ ꀙ) ∴ ?_measurement_started)`
 
 ### Symbol Definitions
 *   `ꀊ` (current_timestamp): 現在時刻
@@ -381,16 +381,16 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_1_toggle_on`: ユーザーのON操作イベント
-*   `?_2_create_measurement_session`: 測定セッション生成処理
-*   `?_3_start_sensor_subscription`: センサー購読開始処理
-*   `?_4_apply_sensor_habituation`: ベースライン補正処理
-*   `?_5_trigger_subjective_input`: 主観入力トリガー処理
-*   `?_6_measurement_mode_on`: 測定モードON設定処理
-*   `?_session`: 生成された測定セッション
-*   `?_subscription`: センサー購読状態
-*   `?_subjective_prompt`: 主観入力プロンプト
-*   `?_measurement_started`: 開始完了フラグ
+*   ꁼ`?_1_toggle_on`: ユーザーのON操作イベント
+*   `⇭` (create_measurement_session): 測定セッション生成処理
+*   `⇮` (start_sensor_subscription): センサー購読開始処理
+*   `⇯` (apply_sensor_habituation): ベースライン補正処理
+*   `⇰` (trigger_subjective_input): 主観入力トリガー処理
+*   `⇱` (set_measurement_mode_on): 測定モードON設定処理
+*   ꁽ`?_session`: 生成された測定セッション
+*   ꁾ`?_subscription`: センサー購読状態
+*   ꁿ`?_subjective_prompt`: 主観入力プロンプト
+*   ꂀ`?_measurement_started`: 開始完了フラグ
 
 ### Meaning (Description)
 測定開始イベントから測定セッションを生成し、センサー購読を開始、状態更新と慣れ補正を行い、主観入力をトリガーして測定モードをONにする流れを表す。
@@ -400,7 +400,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 12: 測定セッションの終了（Measurement Session End）
 
 ### Expression
-`(?_7_toggle_off ⫸ (?_8_finalize_measurement_session(?_session) ⟼ ?_session) ≫ (?_9_trigger_subjective_input(?_session) ⟼ ?_retrospective_prompt) ≫ (?_10_store_measurement_stats(?_session) ⟼ ?_stats_saved) ≫ (?_11_start_fatigue_recovery(?_session) ⟼ ?_recovery_started) ≫ (?_12_measurement_mode_off ⟼ ꀙ) ∴ ?_measurement_ended)`
+`(?_7_toggle_off ⫸ (⇲(?_session) ⟼ ?_session) ≫ (⇰(?_session) ⟼ ?_retrospective_prompt) ≫ (⇳(?_session) ⟼ ?_stats_saved) ≫ (⇴(?_session) ⟼ ?_recovery_started) ≫ (⇵ ⟼ ꀙ) ∴ ?_measurement_ended)`
 
 ### Symbol Definitions
 *   `ꀙ` (is_measurement_mode): 測定モードフラグ
@@ -410,17 +410,17 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_7_toggle_off`: ユーザーのOFF操作イベント
-*   `?_8_finalize_measurement_session`: セッション完了処理
-*   `?_9_trigger_subjective_input`: 振り返り主観入力トリガー処理
-*   `?_10_store_measurement_stats`: 統計保存処理
-*   `?_11_start_fatigue_recovery`: 疲労回復プロセス開始
-*   `?_12_measurement_mode_off`: 測定モードOFF設定処理
-*   `?_session`: 対象測定セッション
-*   `?_retrospective_prompt`: 振り返り入力プロンプト
-*   `?_stats_saved`: 統計保存結果
-*   `?_recovery_started`: 回復開始フラグ
-*   `?_measurement_ended`: 終了完了フラグ
+*   ꂁ`?_7_toggle_off`: ユーザーのOFF操作イベント
+*   `⇲` (finalize_measurement_session): セッション完了処理
+*   `⇰` (trigger_subjective_input): 振り返り主観入力トリガー処理
+*   `⇳` (store_measurement_stats): 統計保存処理
+*   `⇴` (start_fatigue_recovery): 疲労回復プロセス開始
+*   `⇵` (set_measurement_mode_off): 測定モードOFF設定処理
+*   ꂂ`?_session`: 対象測定セッション
+*   ꂃ`?_retrospective_prompt`: 振り返り入力プロンプト
+*   ꂅ`?_stats_saved`: 統計保存結果
+*   ꂆ`?_recovery_started`: 回復開始フラグ
+*   ꂇ`?_measurement_ended`: 終了完了フラグ
 
 ### Meaning (Description)
 測定終了イベントからセッション完了、振り返り主観入力、統計保存、回復開始を実行し、測定モードをOFFにする流れを表す。
@@ -430,7 +430,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 13: 測定品質のモニタリング（Monitor Data Quality）
 
 ### Expression
-`(?_13_sensor_stream ⫸ (?_14_calc_cmq_score(?_15_noise, ?_16_loss, ?_17_device, ?_18_context) ⟼ ꀉ) ≫ (?_19_update_last_valid_timestamp(ꀊ) ⟼ ꀞ) ≫ (↯(ꀞ, ꀠ) ⟼ ?_20_continuity_ok) ≫ ((?_20_continuity_ok ?= false) ⫸ (?_21_mark_interruption(ꀞ) ⟼ ?_21_out)) ∴ ?_quality_updated)`
+`(?_13_sensor_stream ⫸ (⇶(?_15_noise, ?_16_loss, ?_17_device, ?_18_context) ⟼ ꀉ) ≫ (⇷(ꀊ) ⟼ ꀞ) ≫ (↯(ꀞ, ꀠ) ⟼ ?_20_continuity_ok) ≫ ((?_20_continuity_ok ?= false) ⫸ (⇸(ꀞ) ⟼ ?_21_out)) ∴ ?_quality_updated)`
 
 ### Symbol Definitions
 *   `ꀉ` (current_measurement_quality_score): 現在の測定品質スコア
@@ -445,17 +445,17 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `?=`: (未定義演算子) 等価判定
 
 ### Notes
-*   `?_13_sensor_stream`: センサーストリーム入力
-*   `?_14_calc_cmq_score`: CMQS算出処理
-*   `?_15_noise`: ノイズ要素
-*   `?_16_loss`: 欠損要素
-*   `?_17_device`: デバイス要素
-*   `?_18_context`: 文脈要素
-*   `?_19_update_last_valid_timestamp`: 最終有効時刻更新処理
-*   `?_20_continuity_ok`: 継続性判定結果
-*   `?_21_mark_interruption`: 中断判定処理
-*   `?_21_out`: 中断判定出力
-*   `?_quality_updated`: 更新完了フラグ
+*   ꂈ`?_13_sensor_stream`: センサーストリーム入力
+*   `⇶` (calc_cmq_score): CMQS算出処理
+*   ꂉ`?_15_noise`: ノイズ要素
+*   ꂊ`?_16_loss`: 欠損要素
+*   ꂋ`?_17_device`: デバイス要素
+*   ꂌ`?_18_context`: 文脈要素
+*   `⇷` (update_last_valid_timestamp): 最終有効時刻更新処理
+*   ꂍ`?_20_continuity_ok`: 継続性判定結果
+*   `⇸` (mark_interruption): 中断判定処理
+*   ꂎ`?_21_out`: 中断判定出力
+*   ꂏ`?_quality_updated`: 更新完了フラグ
 
 ### Meaning (Description)
 センサーストリームを入力にCMQSを算出して品質スコアを更新し、最終有効時刻を更新したうえで継続性を判定し、必要なら中断判定を行う流れを表す。
@@ -465,7 +465,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 14: 測定疲労と制限管理（Manage Measurement Fatigue）
 
 ### Expression
-`(?_22_time_tick ⫸ (?_23_calc_measurement_fatigue(ꀡ, ?_24_input_cost) ⟼ ꀟ) ≫ (?_25_check_limit_exceeded(ꀡ, ሏ) ⟼ ?_26_over_limit) ≫ ((?_26_over_limit ?= true) ⫸ (?_27_issue_fatigue_warning(ꀟ, ሏ) ⟼ ?_27_out)) ∴ ?_fatigue_updated)`
+`(?_22_time_tick ⫸ (⇹(ꀡ, ?_24_input_cost) ⟼ ꀟ) ≫ (⇺(ꀡ, ሏ) ⟼ ?_26_over_limit) ≫ ((?_26_over_limit ?= true) ⫸ (⇻(ꀟ, ሏ) ⟼ ?_27_out)) ∴ ?_fatigue_updated)`
 
 ### Symbol Definitions
 *   `ꀡ` (measurement_time_daily): 本日の累積測定時間
@@ -478,14 +478,14 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `?=`: (未定義演算子) 等価判定
 
 ### Notes
-*   `?_22_time_tick`: 時間経過イベント
-*   `?_23_calc_measurement_fatigue`: 測定疲労算出処理
-*   `?_24_input_cost`: 入力コスト
-*   `?_25_check_limit_exceeded`: 上限超過判定処理
-*   `?_26_over_limit`: 超過フラグ
-*   `?_27_issue_fatigue_warning`: 警告・推奨通知処理
-*   `?_27_out`: 警告出力
-*   `?_fatigue_updated`: 更新完了フラグ
+*   ꂐ`?_22_time_tick`: 時間経過イベント
+*   `⇹` (calc_measurement_fatigue): 測定疲労算出処理
+*   ꂑ`?_24_input_cost`: 入力コスト
+*   `⇺` (check_limit_exceeded): 上限超過判定処理
+*   ꂒ`?_26_over_limit`: 超過フラグ
+*   `⇻` (issue_fatigue_warning): 警告・推奨通知処理
+*   ꂓ`?_27_out`: 警告出力
+*   ꂔ`?_fatigue_updated`: 更新完了フラグ
 
 ### Meaning (Description)
 時間経過に応じて測定疲労を更新し、日次上限の超過を判定した場合に警告・推奨通知を行う流れを表す。
@@ -495,7 +495,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 15: 主観入力のトリガー（Trigger Subjective Input）
 
 ### Expression
-`(?_28_event_or_interval ⫸ (?_29_show_state_input_ui() ⟼ ?_ui) ≫ (?_30_collect_subjective_input(?_ui) ⟼ ?_subj_input) ≫ (↪(ꀴ, ?_subj_input) ⟼ ─_user_state_log) ≫ (?_31_store_user_state(─_user_state_log) ⟼ ?_31_out) ∴ ?_subjective_input_done)`
+`(?_28_event_or_interval ⫸ (⇼() ⟼ ?_ui) ≫ (⇽(?_ui) ⟼ ?_subj_input) ≫ (↪(ꀴ, ?_subj_input) ⟼ ─_user_state_log) ≫ (⇾(─_user_state_log) ⟼ ?_31_out) ∴ ?_subjective_input_done)`
 
 ### Symbol Definitions
 *   `ꀴ` (user_state_current): 現在のユーザー状態
@@ -507,14 +507,14 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_28_event_or_interval`: イベントまたは時間間隔
-*   `?_29_show_state_input_ui`: 状態入力UI提示処理
-*   `?_30_collect_subjective_input`: 主観入力収集処理
-*   `?_subj_input`: 主観入力データ
+*   ꂕ`?_28_event_or_interval`: イベントまたは時間間隔
+*   `⇼` (show_state_input_ui): 状態入力UI提示処理
+*   `⇽` (collect_subjective_input): 主観入力収集処理
+*   ꂖ`?_subj_input`: 主観入力データ
 *   `─_user_state_log`: 生成されたユーザー状態履歴
-*   `?_31_store_user_state`: ユーザー状態保存処理
-*   `?_31_out`: 保存結果
-*   `?_subjective_input_done`: 完了フラグ
+*   `⇾` (store_user_state): ユーザー状態保存処理
+*   ꂗ`?_31_out`: 保存結果
+*   ꂘ`?_subjective_input_done`: 完了フラグ
 
 ### Meaning (Description)
 イベントまたは間隔で主観入力UIを提示し、入力を収集して状態履歴を生成・保存する流れを表す。
@@ -524,7 +524,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 16: 主観と客観の乖離・反応検知（Detect Discrepancy & Latency）
 
 ### Expression
-`(?_32_input_ready ⫸ (↖(?_subj_input, ꀔ) ⟼ ꀏ) ≫ (?_33_check_discrepancy_threshold(ꀏ, ሢ) ⟼ ?_33_alert) ≫ (↰(ꀦ) ⟼ ?_34_latency_flags) ≫ (?_35_store_flags(?_33_alert, ?_34_latency_flags) ⟼ ?_35_out) ∴ ?_discrepancy_checked)`
+`(?_32_input_ready ⫸ (↖(?_subj_input, ꀔ) ⟼ ꀏ) ≫ (⇿(ꀏ, ሢ) ⟼ ?_33_alert) ≫ (↰(ꀦ) ⟼ ?_34_latency_flags) ≫ (⟵(?_33_alert, ?_34_latency_flags) ⟼ ?_35_out) ∴ ?_discrepancy_checked)`
 
 ### Symbol Definitions
 *   `ꀏ` (discrepancy_score_subjective_vs_sensor): 主観-客観乖離スコア
@@ -539,13 +539,13 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_32_input_ready`: 主観入力が揃った状態
-*   `?_33_check_discrepancy_threshold`: 乖離閾値判定処理
-*   `?_33_alert`: 乖離警告フラグ
-*   `?_34_latency_flags`: 反応潜時フラグ群
-*   `?_35_store_flags`: フラグ保存処理
-*   `?_35_out`: 保存結果
-*   `?_discrepancy_checked`: 検知完了フラグ
+*   ꂙ`?_32_input_ready`: 主観入力が揃った状態
+*   `⇿` (check_discrepancy_threshold): 乖離閾値判定処理
+*   ꂚ`?_33_alert`: 乖離警告フラグ
+*   ꂛ`?_34_latency_flags`: 反応潜時フラグ群
+*   `⟵` (store_flags): フラグ保存処理
+*   ꂜ`?_35_out`: 保存結果
+*   ꂝ`?_discrepancy_checked`: 検知完了フラグ
 
 ### Meaning (Description)
 主観入力とセンサー値の乖離を算出し、閾値超過で警告フラグを立て、反応潜時を評価してフラグとして保存する流れを表す。
@@ -555,7 +555,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 17: デバイス接続の管理（Manage Device Connection）
 
 ### Expression
-`(?_36_connectivity_event ⫸ (?_37_update_connection_map(ꀍ, ?_36_connectivity_event) ⟼ ꀍ) ≫ (?_38_handle_disconnect(ꀍ) ⟼ ?_38_out) ≫ (?_39_degrade_quality_score(?_38_out) ⟼ ꀉ) ∴ ?_connection_updated)`
+`(?_36_connectivity_event ⫸ (⟶(ꀍ, ?_36_connectivity_event) ⟼ ꀍ) ≫ (⟷(ꀍ) ⟼ ?_38_out) ≫ (⟸(?_38_out) ⟼ ꀉ) ∴ ?_connection_updated)`
 
 ### Symbol Definitions
 *   `ꀍ` (device_connection_status_map): デバイス接続マップ
@@ -566,12 +566,12 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_36_connectivity_event`: 接続イベント
-*   `?_37_update_connection_map`: 接続マップ更新処理
-*   `?_38_handle_disconnect`: 切断処理（再接続誘導含む）
-*   `?_38_out`: 切断処理結果
-*   `?_39_degrade_quality_score`: 品質スコア低下処理
-*   `?_connection_updated`: 更新完了フラグ
+*   ꂞ`?_36_connectivity_event`: 接続イベント
+*   `⟶` (update_connection_map): 接続マップ更新処理
+*   `⟷` (handle_disconnect): 切断処理（再接続誘導含む）
+*   ꂟ`?_38_out`: 切断処理結果
+*   `⟸` (degrade_quality_score): 品質スコア低下処理
+*   ꂠ`?_connection_updated`: 更新完了フラグ
 
 ### Meaning (Description)
 接続イベントに基づき接続マップを更新し、切断時の処理を行い、品質スコアを低下させる流れを表す。
@@ -581,7 +581,7 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 ## Snapshot 18: 測定能力の評価（Evaluate Measurement Capability）
 
 ### Expression
-`(?_40_eval_trigger ⫸ (→(ꀇ, ꀧ, ?_41_bio_factors) ⟼ ꀳ) ≫ (↱(ꀳ, ሤ) ⟼ ?_42_system_mode) ≫ (?_43_update_system_mode(?_42_system_mode) ⟼ ?_43_out) ≫ (?_44_suggest_intervention(?_42_system_mode) ⟼ ?_44_out) ∴ ?_capability_evaluated)`
+`(?_40_eval_trigger ⫸ (→(ꀇ, ꀧ, ?_41_bio_factors) ⟼ ꀳ) ≫ (↱(ꀳ, ሤ) ⟼ ?_42_system_mode) ≫ (⟹(?_42_system_mode) ⟼ ?_43_out) ≫ (⟺(?_42_system_mode) ⟼ ?_44_out) ∴ ?_capability_evaluated)`
 
 ### Symbol Definitions
 *   `ꀇ` (current_cognitive_resource_level): 認知リソース残量
@@ -596,16 +596,16 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_40_eval_trigger`: 評価トリガー
-*   `?_41_bio_factors`: 生理要因入力
-*   `?_42_system_mode`: 判定されたシステムモード
-*   `?_43_update_system_mode`: モード更新処理
-*   `?_43_out`: 更新結果
-*   `?_44_suggest_intervention`: 介入提案処理
-*   `?_44_out`: 提案出力
+*   ꂡ`?_40_eval_trigger`: 評価トリガー
+*   ꂢ`?_41_bio_factors`: 生理要因入力
+*   ꂣ`?_42_system_mode`: 判定されたシステムモード
+*   `⟹` (update_system_mode): モード更新処理
+*   ꂤ`?_43_out`: 更新結果
+*   `⟺` (suggest_intervention): 介入提案処理
+*   ꂥ`?_44_out`: 提案出力
 
 
-*   `?_capability_evaluated`: 評価完了フラグ
+*   ꂦ`?_capability_evaluated`: 評価完了フラグ
 
 ### Meaning (Description)
 認知資源・環境エントロピー・生理要因から測定能力を算出し、能力閾値に基づいてシステムモードを判定・更新し、必要な介入提案を生成する流れを表す。
@@ -634,18 +634,18 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_action_selected`: ユーザーが選択した対処行動（テンプレート/ID）
-*   `↵` (create_action_schedule): 選択行動から予定オブジェクトを生成する処理
-*   `?_action_start`: 行動開始イベント
-*   `?_subj_input_before`: 行動開始時の主観入力
-*   `?_action_end`: 行動終了イベント
-*   `?_subj_input_after`: 行動終了時の主観入力
+*   ꂧ`?_action_selected`: ユーザーが選択した対処行動（テンプレート/ID）
+*   ꂨ`↵` (create_action_schedule): 選択行動から予定オブジェクトを生成する処理
+*   ꂩ`?_action_start`: 行動開始イベント
+*   ꂪ`?_subj_input_before`: 行動開始時の主観入力
+*   ꂫ`?_action_end`: 行動終了イベント
+*   ꂬ`?_subj_input_after`: 行動終了時の主観入力
 *   `↶` (compare_state_delta): 行動前後の状態差分を比較する処理
 *   `↸` (store_effectiveness): 主観評価の格納処理
-*   `?_effectiveness_score`: 主観評価スコア（1-5）
+*   ꂭ`?_effectiveness_score`: 主観評価スコア（1-5）
 *   `↽` (store_execution_record): 実行オブジェクトの保存処理
-*   `?_store_exec_ok`: 保存結果
-*   `?_action_evaluated`: 評価完了フラグ
+*   ꂮ`?_store_exec_ok`: 保存結果
+*   ꂯ`?_action_evaluated`: 評価完了フラグ
 
 ### Meaning (Description)
 対処行動の選択から開始・終了を経て、行動前後の状態差分と主観評価を実行オブジェクトに保存する流れを表す。
@@ -666,13 +666,13 @@ RoomClutterと来客予定/孤立指標を入力として波及リスクを判�
 *   `∴` (result_operator): 結論
 
 ### Notes
-*   `?_compare_request`: 比較要求イベント（UI操作/自動判定）
-*   `?_expected_state`: 期待状態スキーマ（Expected）
-*   `?_actual_state`: 実際状態スナップショット（Actual）
+*   ꂰ`?_compare_request`: 比較要求イベント（UI操作/自動判定）
+*   ꂱ`?_expected_state`: 期待状態スキーマ（Expected）
+*   ꂲ`?_actual_state`: 実際状態スナップショット（Actual）
 *   `↹` (store_evaluation_result): 評価結果保存処理
-*   `?_evaluation_target`: 評価結果の保存先オブジェクト
-*   `?_store_ok`: 保存結果
-*   `?_comparison_done`: 比較完了フラグ
+*   ꂳ`?_evaluation_target`: 評価結果の保存先オブジェクト
+*   ꂴ`?_store_ok`: 保存結果
+*   ꂵ`?_comparison_done`: 比較完了フラグ
 
 ### Meaning (Description)
 期待状態と実際状態を比較し、一致スコアと詳細評価を生成して保存する流れを表す。
