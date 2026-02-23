@@ -366,6 +366,91 @@ L_total = L_valid × (
 
 ## 第5部: Mermaid図
 
+### 5-0. CEGIS構成図 + 評価オーバーレイ（元図の形を維持）
+
+元のCEGIS構成.mdの図（ノード名・接続・subgraph構造）をそのまま保持し、評価の観測点を点線で外側からかぶせた図。CEGISのフローは実線、評価の観測は点線で描き分けている。
+
+```mermaid
+flowchart TD
+    subgraph input [入力]
+        Problem["数学問題（自然言語）"]
+    end
+
+    subgraph formalization [形式化フェーズ]
+        DSFormalize["DeepSeek-Prover-V2-7B\n問題の形式化"]
+    end
+
+    subgraph cegisLoop [CEGISループ]
+        Synthesizer["合成器: DeepSeek-Prover-V2-7B\nLean4証明候補の生成"]
+        FOLCheck["FOL検証器: Z3/CVC5\n算術・代数的制約の高速チェック"]
+        HOLCheck["HOL検証器: Lean4 Type Checker\nMathlib活用の完全検証"]
+        CEFormat["反例フォーマッタ\n構造化フィードバック生成"]
+
+        Synthesizer --> FOLCheck
+        FOLCheck -->|"Pass"| HOLCheck
+        FOLCheck -->|"Fail + 反例"| CEFormat
+        HOLCheck -->|"Fail + エラー情報"| CEFormat
+        CEFormat -->|"次イテレーション"| Synthesizer
+    end
+
+    subgraph outputPhase [出力]
+        Extract["回答抽出\n数値解の取得"]
+        Answer["最終回答"]
+    end
+
+    Problem --> DSFormalize
+    DSFormalize --> Synthesizer
+    HOLCheck -->|"Pass（証明完了）"| Extract
+    Extract --> Answer
+
+    subgraph eval_cognitive ["認知能力評価の観測"]
+        obs_C3["C3: 問題再表象化\nC5: 抑制制御\nC6: 作動記憶"]
+        obs_C2["C2: 拡散的思考\nC5: 抑制制御\nC6: 作動記憶"]
+        obs_C1["C1: 認知的柔軟性\nC3: 問題再表象化\nC4: メタ認知\nC6: 作動記憶"]
+    end
+
+    subgraph eval_process ["プロセス評価の観測"]
+        obs_Pr_FOL["Pr1: バックトラック率\nPr2: 条件カバレッジ"]
+        obs_Pr_HOL["Pr3: 補題再利用率\nPr4: 依存距離\nPr5: 道具深度"]
+    end
+
+    subgraph eval_elegance ["エレガンス評価の観測"]
+        obs_E["E1: 短さ / E2: 局所性\nE3: 道具の軽さ / E4: 本質性\nE5: 必然性 / E6: 再利用性"]
+    end
+
+    DSFormalize -.->|"P0観測"| obs_C3
+    Synthesizer -.->|"P1観測"| obs_C2
+    CEFormat -.->|"P4観測"| obs_C1
+
+    FOLCheck -.->|"P2観測"| obs_Pr_FOL
+    HOLCheck -.->|"P3観測"| obs_Pr_HOL
+
+    Extract -.->|"P5: CHECKED後"| obs_E
+
+    subgraph portfolio ["P6: ポートフォリオ評価器"]
+        Evaluator["全軸スコア算出\n報酬/罰則変換\nフィードバック生成"]
+    end
+
+    obs_C3 -.-> Evaluator
+    obs_C2 -.-> Evaluator
+    obs_C1 -.-> Evaluator
+    obs_Pr_FOL -.-> Evaluator
+    obs_Pr_HOL -.-> Evaluator
+    obs_E -.-> Evaluator
+
+    Evaluator -.->|"Dense Reward\n（毎イテレーション）"| CEFormat
+    Evaluator -.->|"Result Reward\n（GRPO学習）"| DSFormalize
+    Answer --> Evaluator
+```
+
+**読み方**:
+- **実線** = CEGISの元のフロー（CEGIS構成.mdと同一）
+- **点線** = 評価の観測とフィードバック（本文書で追加した評価レイヤー）
+- 各プロセスから点線で接続された観測ノードが、そのプロセスで観測可能な評価指標を示す
+- P6（ポートフォリオ評価器）が全観測を集約し、Dense RewardとResult Rewardの2経路でフィードバックを返す
+
+---
+
 ### 5-1. プロセス × 評価項目の交差図（観測可能性）
 
 ```mermaid
