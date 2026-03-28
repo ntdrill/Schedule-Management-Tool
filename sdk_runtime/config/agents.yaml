@@ -1,0 +1,61 @@
+# PROPOSAL/DRAFT
+# Minimal schema:
+# - id: string (required)
+# - role: string (required)
+# - permissions: string (required, must match permissions.yaml roles)
+# - task_inbox: path (required)
+# - subscriptions: [taskfolder, progress, clock, inbox] (optional)
+version: 1
+agents:
+  - id: agent_manager
+    role: manager
+    permissions: manager
+    task_inbox: Agent_workspace/Agent_maneger/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: multi_agent_architect
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/Multi_Agent_Architect/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: data_model_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/data_model_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: environment_state_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/environment_state_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: user_state_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/user_state_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: organization_state_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/organization_state_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: symbol_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/symbol_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: ui_design_agent
+    role: agent
+    permissions: agent_write
+    task_inbox: Agent_workspace/ui_design_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+  - id: monitoring_state_agent
+    role: agent
+    permissions: read_only
+    task_inbox: Agent_workspace/monitoring_state_agent/Task_Inbox
+    subscriptions: [taskfolder, progress, clock, inbox]
+
+# Example (commented):
+# - id: agent_manager
+#   role: manager
+#   permissions: manager
+#   task_inbox: Agent_workspace/Agent_maneger/Task_Inbox
+#   subscriptions: [taskfolder, progress, clock, inbox]

@@ -1,0 +1,37 @@
+# report_symbol_definition_Phase2
+
+報告日: 2026/02/13  
+担当: Symbol_Agent
+
+## 資料準拠（事実）
+- Phase2 提案4件（user/env/social/monitoring interaction）から相互作用語彙を抽出。
+- 既存シンボルとして `user_measurement_capability`, `air_quality_internal`, `room_clutter`, `organization_entropy_s`, `pairing_edges` などを再利用可能と判断。
+
+## 提案/ドラフト（追加シンボル）
+- constants:
+  - `env_to_measurement_capability_coefficient`
+  - `thermal_cost_per_measurement`
+  - `recovery_delay_lag_coefficient`
+  - `social_isolation_threshold`
+  - `measurement_fatigue_threshold`
+  - `edge_disconnect_threshold`
+  - `edge_reconnect_threshold`
+- variables:
+  - `work_ready_boolean`
+  - `loneliness_critical_risk`
+  - `recovery_task_priority`
+  - `social_task_freeze_flag`
+  - `edge_reconnect_pending_signal`
+  - `measurement_session_quality`
+  - `measurement_continuation_rate`
+  - `visual_noise_level`
+  - `last_contact_timestamp`
+- transforms:
+  - `calc_env_to_measurement_impact`
+  - `judge_edge_disconnect`
+  - `judge_edge_reconnect`
+  - `judge_measurement_dropout_by_env`
+
+## 未整備
+- 係数・閾値の数値確定
+- 実測データに基づく変換式のキャリブレーション

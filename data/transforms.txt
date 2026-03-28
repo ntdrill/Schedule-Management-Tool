@@ -116,3 +116,11 @@
 ⫸ pipeline_operator: (パイプライン) 前の処理結果を次の処理の入力として渡す演算子
 ⟼ assign_operator: (代入) 出力結果を変数に束縛することを表す演算子
 ∴ result_operator: (結論) 最終的な判定結果や戻り値を表す記号
+ꄐ calc_env_to_measurement_impact: 環境状態を入力とし測定能力への影響量を算出する関数
+ꄑ judge_edge_disconnect: エッジ強度を入力とし解除判定を出力する関数
+ꄒ judge_edge_reconnect: 測定能力回復を入力とし再接続可否を判定する関数
+ꄓ judge_measurement_dropout_by_env: 環境状態を入力としドロップアウト確率を推定する関数
+ꄜ judge_exception_escalation: 再発回数と時間窓を入力とし介入強度の昇格可否を判定する関数
+ꄝ select_fallback_recovery_task: 無反応または失敗時に代替回復タスクを選択する関数
+ꄞ switch_to_subjective_mode: 測定品質劣化時に主観入力中心モードへ切替える関数
+ꄟ judge_measurement_restart_ready: 環境回復度と安定時間から測定再開可否を判定する関数

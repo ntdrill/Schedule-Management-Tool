@@ -1,0 +1,38 @@
+# Task: Data_Model_Agent 向け Phase3 複合スナップショット記述
+
+作成日: 2026/02/13  
+発行者: Agent_Manager
+
+## 目的（資料準拠）
+Phase3（Complex & Exception）のユースケースを、Phase1/Phase2 の成果物と更新済みシンボルを組み合わせて、制御構造を含む複合スナップショットとして記述する。
+
+## 入力資料
+- `Task_Management/02_Active/proposal_user_exception.txt`
+- `Task_Management/02_Active/proposal_env_exception.txt`
+- `Task_Management/02_Active/proposal_monitoring_exception.txt`
+- `Task_Management/02_Active/report_symbol_definition_Phase3.txt`
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`
+- `Agent_workspace/data_model_agent/業務/02_相互作用スナップショットの記述.txt`
+- `data/constants.txt`
+- `data/variables.txt`
+- `data/transforms.txt`
+
+## 実施内容
+1. Phase1/2 のスナップショットを部品として読み込む。  
+2. 例外ユースケースごとに、分岐・ループ・フォールバックを含む論理式を作成する。  
+3. 生成した式を `Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt` に追記する。  
+4. 提出報告を `Task_Management/02_Active/report_phase3_complex_snapshot.txt` として作成する。  
+5. 親タスク `task_Phase3_Complex.txt` に作業完了ログを追記する。  
+
+## 出力フォーマット
+- 「資料準拠（事実）」「提案/ドラフト」「未整備」を区別して記載すること。
+
+## ステータス
+- status: completed
+
+## 実行ログ
+- 2026/02/14: Step18: Phase1/Phase2 スナップショット（01_静的スナップショットの記述.txt, 02_相互作用スナップショットの記述.txt）を部品として読み込み。
+- 2026/02/14: Step19: Phase3 提案3件、report_symbol_definition_Phase3.txt、data/constants.txt、data/variables.txt、data/transforms.txt を読み込み。
+- 2026/02/14: Step20: ループ・分岐・例外を含む複合論理式を6件作成（P3-01〜P3-06）。
+- 2026/02/14: Step21: 03_複合スナップショットの記述.txt を新規作成。
+- 2026/02/14: Step22: report_phase3_complex_snapshot.txt を提出、task_Phase3_Complex.txt に完了ログを追記。

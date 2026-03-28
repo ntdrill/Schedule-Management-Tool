@@ -95,3 +95,14 @@
 ሸ micro_intervention_templates: 微小介入タスクのテンプレート集合
 ሹ target_air_quality_safe: 空気質の安全目標値
 ሺ cleaning_methods: 利用可能な清掃メソッド一覧
+ꄀ env_to_measurement_capability_coefficient: 環境状態から測定能力への影響係数
+ꄁ thermal_cost_per_measurement: 測定1単位あたりの熱エントロピー生成係数
+ꄂ recovery_delay_lag_coefficient: 環境改善後の測定能力回復遅延係数
+ꄃ social_isolation_threshold: 社会的孤立と判定する閾値
+ꄄ measurement_fatigue_threshold: 測定疲労による能力低下を判定する閾値
+ꄅ edge_disconnect_threshold: エッジ解除を判定する強度閾値
+ꄆ edge_reconnect_threshold: エッジ再接続を許可する強度閾値
+ꄔ critical_recurrence_window_hours: 危篤再発を同一系列として扱う時間窓（時間）
+ꄕ response_timeout_threshold_seconds: 介入通知に対する無反応判定の閾値（秒）
+ꄖ environment_recovery_min_threshold: 測定再開を許可する最低環境回復閾値
+ꄗ measurement_restart_min_stability: 測定再開前に必要な安定継続時間の閾値

@@ -1,0 +1,38 @@
+# report_symbol_definition_Phase3
+
+報告日: 2026/02/13  
+担当: Symbol_Agent
+
+## 資料準拠（事実）
+- 対象入力:
+  - `Task_Management/02_Active/proposal_user_exception.txt`
+  - `Task_Management/02_Active/proposal_env_exception.txt`
+  - `Task_Management/02_Active/proposal_monitoring_exception.txt`
+- 例外系ユースケースから、再発ループ・分岐・フォールバック・再開判定の語彙を抽出した。
+- 既存シンボルとして `measurement_fatigue_level`, `current_measurement_quality_score`, `task_queue`, `air_quality_internal`, `is_measurement_mode` などを再利用可能と判断した。
+- Phase3 用の不足シンボルを `data/constants.txt` / `data/variables.txt` / `data/transforms.txt` に追記した。
+
+## 提案/ドラフト（追加シンボル）
+
+### constants
+- `critical_recurrence_window_hours`
+- `response_timeout_threshold_seconds`
+- `environment_recovery_min_threshold`
+- `measurement_restart_min_stability`
+
+### variables
+- `critical_recurrence_count`
+- `fallback_mode_active`
+- `monitoring_degraded_mode`
+- `exception_route_selected`
+
+### transforms
+- `judge_exception_escalation`
+- `select_fallback_recovery_task`
+- `switch_to_subjective_mode`
+- `judge_measurement_restart_ready`
+
+## 未整備
+- 各閾値の実値（運用ログに基づくチューニング値）
+- 例外ルート選択の優先順位テーブル
+- 再発時の最大昇格段数と停止条件

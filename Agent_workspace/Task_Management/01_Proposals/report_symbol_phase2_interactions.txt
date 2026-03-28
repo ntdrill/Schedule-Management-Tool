@@ -1,0 +1,97 @@
+# Report: Phase2 相互作用シンボル抽出
+
+報告日: 2026/02/13
+報告者: Symbol_Agent
+対象:
+- proposal_user_interaction.txt
+- proposal_env_interaction.txt
+- proposal_social_interaction.txt
+- proposal_monitoring_interaction.txt
+
+---
+
+## 資料準拠（事実）
+
+- Phase2 提案4件から相互作用に関する語彙を抽出。
+- 既存シンボル候補として、以下の参照が妥当。
+  - user_measurement_capability
+  - measurement_fatigue_level
+  - accumulated_thermal_entropy_production
+  - air_quality_internal
+  - room_clutter
+  - current_measurement_quality_score
+  - organization_entropy_s
+  - pairing_edges
+  - social_state_current
+  - environment_state_current
+
+---
+
+## 提案/ドラフト（新規シンボル候補）
+
+### constants 候補
+- env_to_measurement_capability_coefficient
+- thermal_cost_per_measurement
+- recovery_delay_lag_coefficient
+- social_isolation_threshold
+- measurement_fatigue_threshold
+- edge_disconnect_threshold
+- edge_reconnect_threshold
+
+### variables 候補
+- work_ready_boolean
+- loneliness_critical_risk
+- recovery_task_priority
+- social_task_freeze_flag
+- edge_reconnect_pending_signal
+- measurement_session_quality
+- measurement_continuation_rate
+- visual_noise_level
+- last_contact_timestamp
+
+### transforms 候補
+- calc_env_to_measurement_impact
+- judge_edge_disconnect
+- judge_edge_reconnect
+- judge_measurement_dropout_by_env
+
+---
+
+## 未整備
+
+- 環境 -> 測定能力の変換係数
+- 社会的孤立の閾値
+- 回復遅延（ラグ）モデル
+- エッジ解除/再接続の具体閾値
+- 測定疲労の閾値・回復係数
+- 熱コストの定量式
+
+---
+
+## data/*.txt 追記ドラフト（提案/ドラフト）
+
+### constants.txt
+- env_to_measurement_capability_coefficient: 環境状態から測定能力への影響係数
+- thermal_cost_per_measurement: 測定1単位あたりの熱エントロピー生成係数
+- recovery_delay_lag_coefficient: 環境改善後の測定能力回復遅延係数
+- social_isolation_threshold: 社会的孤立と判定する閾値
+- measurement_fatigue_threshold: 測定疲労による能力低下を判定する閾値
+- edge_disconnect_threshold: エッジ解除を判定する強度閾値
+- edge_reconnect_threshold: エッジ再接続を許可する強度閾値
+
+### variables.txt
+- work_ready_boolean: 作業開始可能状態の判定結果
+- loneliness_critical_risk: 孤独由来の危篤リスクレベル
+- recovery_task_priority: リカバリー系タスクの優先度
+- social_task_freeze_flag: 社会タスク一時凍結フラグ
+- edge_reconnect_pending_signal: エッジ再接続保留シグナル
+- measurement_session_quality: 測定セッションの品質スコア
+- measurement_continuation_rate: 測定継続率
+- visual_noise_level: 視覚ノイズによる認知負荷レベル
+- last_contact_timestamp: 最終対人接触時刻
+
+### transforms.txt
+- calc_env_to_measurement_impact: 環境状態を入力とし測定能力への影響量を算出
+- judge_edge_disconnect: エッジ強度を入力とし解除判定を出力
+- judge_edge_reconnect: 測定能力回復を入力とし再接続可否を判定
+- judge_measurement_dropout_by_env: 環境状態を入力としドロップアウト確率を推定

@@ -1,0 +1,68 @@
+# Phase 5: スキーマ定義（Schema Definition）
+
+作成日: 2026/02/17
+ステータス: Completed
+作成者: Agent_Manager
+
+## 目的
+Phase 4 で抽出したクラス候補・変数候補・関数候補を、SwiftData の `@Model` 定義に変換し、v1 スコープで実装すべきデータモデル仕様書を生成する。
+
+## 入力
+- `Agent_workspace/data_model_agent/業務/04_構造抽出.txt`（クラス25件, 変数164件, 関数110件）
+- `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`
+- `docs/readme/03_バージョン別機能スコープ.md`
+
+## 出力
+- `Agent_workspace/data_model_agent/業務/05_スキーマ定義.txt`（SwiftData モデル仕様書）
+- `Task_Management/02_Active/report_schema_validation_Phase5.txt`（Symbol_Agent 検証報告）
+
+## 前提条件の解消
+
+### PRE-01: シンボル不一致の修正（2026/02/17 完了）
+- P3-06 の Expression と Symbol Definitions 内の `ꀀ` を `ꁀ`（room_clutter）に修正済み
+- variables.txt では `ꀀ = accumulated_thermal_entropy_production`、`ꁀ = room_clutter` であり、P3-06 の文脈は room_clutter が正しい
+
+### PRE-02: 提案/ドラフト要素の採否判定（2026/02/17 完了）
+| # | 要素 | 判定 | 理由 |
+|---|---|---|---|
+| 1 | P3-01: `↬` の第3引数に `recovery_task_priority` | v2延期 | select_recovery_task の仕様変更は大きく、v1 では固定優先度で対処 |
+| 2 | P3-02: `↰` 出力と閾値比較の整合性 | v1採用 | 反応潜時評価は v1 測定機能に直結。出力を Float(sec) に統一 |
+| 3 | P3-03: `user_measurement_capability_recovery_pending` | v1骨格 | MeasurementCapabilityStatus enum の一値として最小定義 |
+| 4 | P3-04: 換気不能判定の閾値定義 | v2延期 | 詳細環境センサー（CO2等）は v2 スコープ |
+| 5 | P3-04: `ሸ_air_purifier` | v2延期 | 空気清浄介入は v2 スコープ |
+| 6 | P3-05: 品質スコア ꀉ と閾値 ሤ の同一使用 | v1採用 | measurement_quality_threshold をプレースホルダー定数として追加 |
+| 7 | P3-06: `ꄖ`, `ꄗ` の実値 | v1プレースホルダー | 仮値で定義、運用ログ取得後に調整 |
+
+## Assignment
+
+### Data_Model_Agent（Step 5〜11, 15〜16）
+- v1 スコープ分析（25クラスの振り分け）
+- 永続モデル定義（@Model）、値型（struct）、列挙型（enum）、プロトコル定義
+- Symbol_Agent 検証結果を反映した最終版 `05_スキーマ定義.txt` 作成
+
+### Symbol_Agent（Step 12〜14）
+- Data_Model_Agent のスキーマ定義とシンボル辞書・構造図の整合性検証
+- `report_schema_validation_Phase5.txt` 作成
+
+## 進捗
+- [x] PRE-01: シンボル不一致修正完了 (2026/02/17)
+- [x] PRE-02: 提案/ドラフト採否判定完了 (2026/02/17)
+- [x] Data_Model_Agent: v1 スコープ分析・スキーマ定義完了 (2026/02/17)
+- [x] Symbol_Agent: 整合性検証完了（条件付き合格、FIX-01〜03 軽微修正） (2026/02/17)
+- [x] Data_Model_Agent: 最終版作成完了（FIX反映済み） (2026/02/17)
+- [x] Agent_Manager: 最終承認 (2026/02/17)
+
+## 完了報告
+- 完了日: 2026/02/17
+- 成果物:
+  - `Agent_workspace/data_model_agent/業務/05_スキーマ定義.txt`
+    - @Model v1必須: 7件（UserState, MeasurementSession, ExecutionRecord, UserStateHistoryRecord, EvaluationResult, ExpectedStateSchema, ActualStateSnapshot）
+    - @Model v1骨格: 4件（EnvironmentState, ScheduledEvent, DeviceConnectionStatusMap, EvaluationTargetObject）
+    - @Model v2延期: 14件
+    - struct: 3件、enum: 5件、protocol: 3件
+  - `Task_Management/02_Active/report_schema_validation_Phase5.txt`（Symbol_Agent 検証報告）
+- 特記事項:
+  - PRE-01（ꀀ/ꁀ不一致）は03_複合スナップショット、04_構造抽出の両方で修正済み
+  - PRE-02（提案/ドラフト7件）は全件判定済み、スキーマに反映
+  - 未整備事項U-01〜U-18: v2延期15件、v1プレースホルダー3件（U-12,13,14）
+  - Phase 6 への申し送り: デバイス分担決定、モデル統合検討（USHR/ASS統合、ETO/ER統合、SE必要性）

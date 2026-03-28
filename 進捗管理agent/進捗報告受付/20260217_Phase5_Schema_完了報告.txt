@@ -1,0 +1,47 @@
+# Phase 5 スキーマ定義 完了報告
+
+報告日: 2026/02/17
+報告者: Agent_Manager
+
+## 概要
+Phase 5（Schema Definition）が完了した。Phase 4 で抽出したクラス25件・変数164件・関数110件を v1 スコープで振り分け、SwiftData の @Model 定義を含むデータモデル仕様書を生成した。
+
+## 実行内容
+
+### 前提条件の解消
+1. PRE-01（シンボル不一致修正）: P3-06 および F-109 の `ꀀ` → `ꁀ` 修正完了
+2. PRE-02（提案/ドラフト7件の採否判定）: 全件判定完了（v1採用2件、v1骨格1件、v1プレースホルダー1件、v2延期3件）
+
+### v1 スコープ判定結果
+| カテゴリ | 件数 |
+|---|---|
+| v1 必須 | 7件（UserState, MeasurementSession, ExecutionRecord, UserStateHistoryRecord, EvaluationResult, ExpectedStateSchema, ActualStateSnapshot）|
+| v1 骨格 | 4件（EnvironmentState, ScheduledEvent, DeviceConnectionStatusMap, EvaluationTargetObject）|
+| v2 延期 | 14件 |
+
+### 定義した要素
+| 種別 | 件数 |
+|---|---|
+| @Model（v1 必須） | 7 |
+| @Model（v1 骨格） | 4 |
+| struct | 3（SensorSnapshot, SubjectiveInput, DeltaResult）|
+| enum（v1） | 5（MeasurementSessionStatus, ExpectedStatePreset, ScheduledEventStatus, MeasurementCapabilityStatus, MeasurementSessionQuality）|
+| protocol | 3（Timestamped, StatePersistable, StateSnapshotConvertible）|
+| v1 プレースホルダー定数 | 6件（AppConstants）|
+
+### 検証結果
+Symbol_Agent による整合性検証: 条件付き合格
+- 軽微修正3件（FIX-01〜03）を反映済み
+- Phase 4 側修正1件（P4-FIX-01: F-109 のシンボル修正）も反映済み
+
+## ファイル配置
+- 成果物: `Agent_workspace/data_model_agent/業務/05_スキーマ定義.txt`
+- 検証報告: `Task_Management/03_Completed/report_schema_validation_Phase5.txt`
+- 親タスク: `Task_Management/03_Completed/task_Phase5_Schema.txt`
+- アーカイブ: `Task_Management/04_Archive/Phase5_Schema_20260217/`（3ファイル）
+
+## Phase 6 への申し送り事項
+1. デバイス分担の決定（Watch vs iPhone のセンサー取得元、データ同期方式）
+2. モデル統合の検討（UserStateHistoryRecord/ActualStateSnapshot 統合、EvaluationTargetObject/ExecutionRecord 統合、ScheduledEvent の v1 必要性）
+3. MeasurementSession の Timestamped プロトコル準拠対応
+4. 未整備事項U-01〜U-18: v2延期15件、v1プレースホルダー3件

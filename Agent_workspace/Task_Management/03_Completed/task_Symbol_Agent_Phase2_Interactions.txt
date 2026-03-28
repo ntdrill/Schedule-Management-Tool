@@ -1,0 +1,36 @@
+# Task: Phase2 相互作用ユースケースのシンボル定義
+
+## 現状
+- Phase2 ステップ1として、相互作用ユースケース提案4件が `01_Proposals/` へ提出済み。
+  - `proposal_user_interaction.txt`
+  - `proposal_env_interaction.txt`
+  - `proposal_social_interaction.txt`
+  - `proposal_monitoring_interaction.txt`
+- 次工程として、提案内容を形式記述で利用可能なシンボルへ正規化する必要がある。
+
+## Assignment
+- **Assignee**: Symbol_Agent (@Symbol_Agent)
+- **期限**: 2026/02/16
+- **タスク**:
+  - 上記4提案を読解し、相互作用で必要となる定数/変数/変換シンボルを抽出する
+  - 既存シンボルと照合し、重複は参照、新規は採番して定義する
+  - 新規シンボルを定義ファイルへ反映する
+    - `data/constants.txt`
+    - `data/variables.txt`
+    - `data/transforms.txt`
+    - 必要に応じて `data/expression.txt`
+  - DB正本（Supabase `symbols`）との整合を確保する
+- **成果物**:
+  - `report_symbol_phase2_interactions.txt`（提出先: `Task_Management/01_Proposals/`）
+
+## 完了時の報告先
+- `進捗管理agent/進捗報告受付/`
+- `Agent_workspace/Agent_maneger/クロック受付/`（資料準拠の事実のみ）
+
+## 進捗ログ
+- 2026/02/13: Symbol_Agent 実行結果として `report_symbol_phase2_interactions.txt` を `01_Proposals/` へ提出。
+
+## 完了報告
+- 完了日: 2026/02/13
+- 進捗報告: `進捗管理agent/進捗報告受付/20260213_Phase2_Interactions_完了報告.txt`
+- クロック報告: `Agent_workspace/Agent_maneger/クロック受付/20260213_Phase2_Interactions_クロック.txt`

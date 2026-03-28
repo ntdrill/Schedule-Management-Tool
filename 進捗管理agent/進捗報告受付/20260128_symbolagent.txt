@@ -1,0 +1,21 @@
+進捗報告です。
+
+## 資料準拠（事実）
+- `data/variables.txt` にて、`?_` 由来の値名を **Phase1用の一意名**として確定・反映済み。
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt` の `?_` を **確定シンボルへ置換**済み。
+- Supabase `symbols` へ **新規登録のみ**実施済み。  
+  - Total local records: 406  
+  - Existing records: 193  
+  - New records to insert: 214  
+  - Insert completed: 成功
+- `Agent_workspace/Agent_maneger/クロック受付/20260128_SymbolAgent_Reassignment_Log_Phase1.txt` を更新済み。
+
+## 未整備
+- 旧シンボルの **Deprecated 付与**は未実施。
+- `記号.txt` の **使用可能範囲の明文化**は未実施。
+
+## 提案/ドラフト（次の作業候補）
+- 旧シンボルの廃止フラグ付与（必要なら別タスク化）。
+- `記号.txt` に新規範囲（`ꃀ` 以降）の利用方針を明記。
+
+この続きの作業指示をいただければ進めます。

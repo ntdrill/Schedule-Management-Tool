@@ -1,0 +1,130 @@
+# Report: Phase2 相互作用スナップショット記述
+
+作成日: 2026/02/13  
+担当: Data_Model_Agent
+
+## ケース1: 環境悪化 -> ユーザー状態低下
+
+### 資料準拠（事実）
+- 環境エントロピー増加は測定能力低下を通じてユーザー状態悪化に波及する。
+- expectedState / actualState / evaluationResult による前後比較で評価する。
+
+### スナップショット記述
+state_before:
+- environment_state_current: 悪化
+- room_clutter: 上昇
+- air_quality_internal: 悪化
+- user_measurement_capability: 初期値
+
+transform:
+- calc_env_to_measurement_impact(environment_state_current, env_to_measurement_capability_coefficient)
+
+state_after:
+- user_measurement_capability: 低下
+- work_ready_boolean: false
+
+### シンボル参照
+既存: user_measurement_capability, room_clutter, air_quality_internal, environment_state_current  
+新規候補: calc_env_to_measurement_impact, env_to_measurement_capability_coefficient, work_ready_boolean
+
+### 提案/ドラフト
+- 環境->測定能力の変換を transforms に追加して形式化する。
+
+---
+
+## ケース2: 換気不足 -> AirQuality悪化 -> 測定品質低下
+
+### 資料準拠（事実）
+- 環境状態は独立オブジェクトとして管理される。
+- 環境エントロピー上昇は測定能力低下を引き起こす。
+
+### スナップショット記述
+state_before:
+- 調理後に換気介入なし
+- air_quality_internal: 閾値付近
+- current_measurement_quality_score: 初期値
+
+transform:
+- predict_air_quality_sigmoid_risk(air_quality_internal)
+- calc_measurement_quality_impact(sigmoid_risk_projection, current_measurement_quality_score)
+
+state_after:
+- air_quality_internal: 悪化
+- current_measurement_quality_score: 低下
+- measurement_session_quality: 低下
+
+### シンボル参照
+既存: air_quality_internal, current_measurement_quality_score, predict_air_quality_sigmoid_risk  
+新規候補: measurement_session_quality
+
+### 提案/ドラフト
+- 環境変数と測定品質を結ぶ定量式は未整備のため暫定定義とする。
+
+---
+
+## ケース3: 測定能力喪失下の接触増加 -> 社会状態悪化
+
+### 資料準拠（事実）
+- 組織状態は相互測定エッジの集合として扱う。
+- 測定能力喪失時に対人接触を増やすとノイズ増となる可能性がある。
+
+### スナップショット記述
+state_before:
+- user_measurement_capability: 閾値以下
+- pairing_edges: 既存エッジあり
+- social_state_current: 対人介入過多
+
+transform:
+- judge_edge_disconnect(pairing_edges, edge_disconnect_threshold)
+- social_task_freeze_flag <- true
+
+state_after:
+- social_task_freeze_flag: ON
+- pairing_edges: 弱化または解除方向
+
+### シンボル参照
+既存: user_measurement_capability, pairing_edges, social_state_current  
+新規候補: judge_edge_disconnect, social_task_freeze_flag, edge_disconnect_threshold
+
+### 提案/ドラフト
+- エッジ解除判定を transforms に追加して社会干渉を明示化する。
+
+---
+
+## ケース4: 測定疲労蓄積 -> 測定能力低下
+
+### 資料準拠（事実）
+- 測定は認知資源を消費し、測定疲労を蓄積する。
+- 測定能力低下は組織エッジ維持にも悪影響を与える。
+
+### スナップショット記述
+state_before:
+- measurement_time_daily: 高
+- measurement_fatigue_level: 上昇前
+- user_measurement_capability: 初期値
+
+transform:
+- calc_measurement_fatigue(measurement_time_daily, input_cost)
+- if measurement_fatigue_level >= measurement_fatigue_threshold then capability_down
+
+state_after:
+- measurement_fatigue_level: 上昇
+- user_measurement_capability: 低下
+
+### シンボル参照
+既存: measurement_fatigue_level, user_measurement_capability, calc_measurement_fatigue  
+新規候補: measurement_fatigue_threshold
+
+### 提案/ドラフト
+- 測定疲労閾値を constants に追加し、能力低下判定を規格化する。
+
+---
+
+## 未整備
+- 環境->測定能力変換の係数
+- 社会的孤立の閾値
+- 回復遅延モデル
+- 環境変数と測定品質の定量式
+- エッジ解除/再接続の具体閾値
+- 測定疲労の閾値・回復係数
+- 熱コストの定量式

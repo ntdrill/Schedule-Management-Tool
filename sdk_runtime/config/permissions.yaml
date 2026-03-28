@@ -1,0 +1,35 @@
+# PROPOSAL/DRAFT
+# Minimal schema:
+# roles:
+#   <permission_id>: <profile_name_or_description>
+version: 1
+roles:
+  manager:
+    description: full workspace access
+    workspace: write
+    allowed_paths: []
+    denied_paths: [".git", ".cursor"]
+    tools: []
+  agent_write:
+    description: limited write for agents
+    workspace: write
+    allowed_paths: ["Agent_workspace", "進捗管理agent", "docs", "data", "sdk_runtime"]
+    denied_paths: [".git", ".cursor"]
+    tools: []
+  read_only:
+    description: read only
+    workspace: read
+    allowed_paths: []
+    denied_paths: [".git", ".cursor"]
+    tools: []
+  tools_only:
+    description: tools execution only
+    workspace: read
+    allowed_paths: ["sdk_runtime/tools", "Agent_workspace/Agent_maneger/scripts"]
+    denied_paths: [".git", ".cursor"]
+    tools: []
+
+# Example (commented):
+# roles:
+#   manager: workspace_write
+#   read_only: workspace_read

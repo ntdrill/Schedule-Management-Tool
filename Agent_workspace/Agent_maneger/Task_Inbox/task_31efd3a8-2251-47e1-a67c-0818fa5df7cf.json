@@ -1,0 +1,18 @@
+{
+  "id": "task_31efd3a8-2251-47e1-a67c-0818fa5df7cf",
+  "type": "watch_event",
+  "created_at": "2026-02-08T09:56:05.435163+00:00",
+  "source": "orchestrator",
+  "payload": {
+    "watcher": "inbox:Agent_maneger",
+    "event_id": "31efd3a8-2251-47e1-a67c-0818fa5df7cf",
+    "created_at": "2026-02-08T09:56:05.432814+00:00",
+    "added": [
+      "/Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Agent_maneger/Task_Inbox/task_26615d8c-bf2f-4906-a746-289ff55122cb.json",
+      "/Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Agent_maneger/Task_Inbox/task_228c034a-ee7d-4b45-b26a-d90f6c16289c.json",
+      "/Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Agent_maneger/Task_Inbox/task_bc8cff43-f990-404d-ac8a-d99f3cff1095.json"
+    ],
+    "removed": [],
+    "modified": []
+  }
+}

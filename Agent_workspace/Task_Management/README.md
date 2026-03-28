@@ -22,9 +22,10 @@ Agent_Managerによって承認され、現在実行中のタスク。
 ### 3. 03_Completed (完了)
 完了したタスクのアーカイブ。
 - **完了ルール**:
-  - 実装とテストが終了したら移動させる。
-  - 完了報告（成果物へのリンクなど）をファイル末尾に追記する。
+  - 実装とテストが終了したら成果物をまとめる。
+  - **進捗管理agentへの報告を行う**（報告ファイルを提出）。
+  - ファイルを `03_Completed` へ移動させる。
+  - 完了報告（成果物へのリンク、進捗報告ファイル名など）をファイル末尾に追記する。
 
 ## 運用フロー
-Propose -> (Manager Review) -> Active -> (Execute) -> Complete
-
+Propose -> (Manager Review) -> Active -> (Execute) -> **Report to Progress Agent** -> Complete

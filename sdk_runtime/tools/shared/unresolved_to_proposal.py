@@ -1,0 +1,49 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import List
+
+from sdk_runtime.orchestrator.permissions import DEFAULT_ROLE, ensure_write
+from sdk_runtime.runtime_paths import path_in_repo
+
+
+def run() -> str:
+    manager_dir = path_in_repo("Agent_workspace", "Agent_maneger")
+    clock_dir = manager_dir / "クロック受付"
+    out_path = manager_dir / "data" / "unresolved_proposals_draft.md"
+
+    lines: List[str] = []
+    lines.append("# 未整備からの提案ドラフト")
+    lines.append("")
+
+    if clock_dir.exists():
+        files = list(clock_dir.glob("*.txt"))
+        files.sort()
+        for path in files:
+            items = _extract_unresolved(path.read_text(encoding="utf-8"))
+            if not items:
+                continue
+            lines.append(f"## {path.name}")
+            for item in items:
+                lines.append(f"- {item}")
+            lines.append("")
+
+    if ensure_write(out_path, DEFAULT_ROLE, "unresolved_proposals_draft"):
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text("\n".join(lines), encoding="utf-8")
+
+    return f"Wrote: {out_path}"
+
+
+def _extract_unresolved(content: str) -> List[str]:
+    lines = content.splitlines()
+    items: List[str] = []
+    in_section = False
+    for line in lines:
+        if line.strip().startswith("##"):
+            header = line.strip().lstrip("#").strip()
+            in_section = header == "未整備"
+            continue
+        if in_section and line.strip().startswith(("-", "・")):
+            items.append(line.strip())
+    return items
