@@ -96,7 +96,7 @@
   - **進捗管理**: Git 操作権限を持つ唯一の存在。
   - **Data_Model_Agent**: プロジェクト直下の `data` と `data_backup` を編集できる唯一の存在。
   - **全エージェント**: プロジェクト直下の `docs` は編集禁止（読み取り専用）。
-  - **Multi_Agent_Architect**: `Agent Workflow Queue` への追加が可能。
+  - **Multi_Agent_Architect**: `Agent_Workflow_Queue` への追加が可能。
 
 ### 4.5 コミュニティ共有（情報共有）
 - 特定のエージェント間でのみコミュニケーションファイルを共有する仕組み（チャネル）が必要。
@@ -212,9 +212,9 @@
 - `/Users/numaoryuutarou/codex-smoke/report_v5.md`
 
 ### ワークフロー/運用
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase1.txt`
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase2.txt`
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase3.txt`
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt`
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase2.txt`
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase3.txt`
 - `Agent_workspace/Task_Management/README.md`
 - `Agent_workspace/Agent_maneger/docs/README.md`
 
@@ -316,7 +316,7 @@
 - Git操作は進捗管理のみ
 - `data`/`data_backup` はData_Model_Agentのみ編集
 - プロジェクト直下の`docs`は編集禁止
-- Multi_Agent_ArchitectはAgent Workflow Queueに追加可
+- Multi_Agent_ArchitectはAgent_Workflow_Queueに追加可
 
 ### 8.5 コミュニティ共有
 - community_a: Multi_Agent_Architect + Agent_Manager
@@ -484,7 +484,7 @@ Agent_workspace/
 ### 12.4 下層→上層の意見回収案
 - 進捗管理が定期サマリーを `.channels` に配布
 - 専門家/設計が `.channels` から提案→`01_Proposals` 投入
-- Multi_Agent_Architect が `Agent Workflow Queue` に差し込み要求
+- Multi_Agent_Architect が `Agent_Workflow_Queue` に差し込み要求
 
 ### 12.5 優先順位案
 1. 共有ツール + 権限基盤

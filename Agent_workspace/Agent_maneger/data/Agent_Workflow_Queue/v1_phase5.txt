@@ -43,7 +43,7 @@
 
 ---
 
-## Agent Workflow Queue (Phase 5: Schema Definition)
+## Agent_Workflow_Queue (Phase 5: Schema Definition)
 
 ### セットアップ（Step 1〜4）
 

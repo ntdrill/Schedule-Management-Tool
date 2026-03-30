@@ -39,7 +39,7 @@
 |:---|:---|
 | **目的** | Phase 1〜8の開発フローと現在の進捗を把握 |
 | **含める内容** | 各Phaseの目的・入出力・担当エージェント、全体フロー図 |
-| **情報源** | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/` 内のファイル群 |
+| **情報源** | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/` 内のファイル群 |
 
 ### 5. ドメイン知識・理論基盤（Domain Knowledge）
 | 項目 | 内容 |

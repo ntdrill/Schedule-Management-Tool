@@ -13,7 +13,7 @@
 
 ---
 
-## Agent Workflow Queue (Phase 4: Structure Extraction)
+## Agent_Workflow_Queue (Phase 4: Structure Extraction)
 
 1. **Agent_Manager**: `Task_Management/02_Active` に親タスク `task_Phase4_Structure.txt` を作成する
 2. **Agent_Manager**: Phase 1〜3 の成果物（スナップショット群および `data/` 内のシンボル辞書）を参照可能な状態にする

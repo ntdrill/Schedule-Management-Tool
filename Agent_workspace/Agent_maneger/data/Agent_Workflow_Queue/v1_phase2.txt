@@ -13,7 +13,7 @@
 
 ---
 
-## Agent Workflow Queue (Phase 2: Interactions)
+## Agent_Workflow_Queue (Phase 2: Interactions)
 
 1. **Agent_Manager**: `Task_Management/02_Active` に親タスク `task_Phase2_Interactions.txt` を作成する
 2. **Agent_Manager**: Phase 1 の成果物（スナップショット）を参照可能な状態にする

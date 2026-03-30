@@ -70,7 +70,7 @@
 
 **提案/ドラフト（追加の流用/編集候補）**  
 - `Agent_workspace/Agent_maneger/docs/agent_list.txt`（エージェント定義の元データとして流用候補）  
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase1.txt`、`v1_phase2.txt`、`v1_phase3.txt`、`phase3以降のphase.txt`（ワークフロー定義をSDK側の実行計画へ反映する候補）  
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt`、`v1_phase2.txt`、`v1_phase3.txt`、`phase3以降のphase.txt`（ワークフロー定義をSDK側の実行計画へ反映する候補）  
 - `Agent_workspace/Agent_maneger/業務/*.txt`、`進捗管理agent/業務/*.txt`（監視/クロック/報告/権限運用の文章をSDK運用ルールへ統合する候補）  
 - `Agent_workspace/Task_Management/01_Proposals/proposal_by_Multi_Agent_Architect_Automation_Architecture.txt`（自動化設計の提案資料として流用候補）  
 - `開発者本人_workspace/プロンプト集/*.txt`（プロンプトフロー/事前資料の素材として流用候補）  

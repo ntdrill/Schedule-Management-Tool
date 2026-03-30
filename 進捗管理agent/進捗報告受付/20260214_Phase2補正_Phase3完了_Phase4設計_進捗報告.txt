@@ -52,7 +52,7 @@
 | proposal_env_exception.txt | `Task_Management/03_Completed/` |
 | proposal_monitoring_exception.txt | `Task_Management/03_Completed/` |
 | Phase3_Complex_20260213 アーカイブ | `Task_Management/04_Archive/Phase3_Complex_20260213/` |
-| v1_phase4.txt | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/` |
+| v1_phase4.txt | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/` |
 | data/constants.txt（Phase2+3追記分） | `data/` |
 | data/variables.txt（Phase2+3追記分） | `data/` |
 | data/transforms.txt（Phase2+3追記分） | `data/` |

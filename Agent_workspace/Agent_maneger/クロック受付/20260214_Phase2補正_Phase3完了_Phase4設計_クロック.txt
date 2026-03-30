@@ -27,5 +27,5 @@
 - `Task_Management/02_Active` は 0 件
 
 ### Phase4
-- `Agent Workflow Queue/v1_phase4.txt` 作成済み（20ステップ）
+- `Agent_Workflow_Queue/v1_phase4.txt` 作成済み（20ステップ）
 - 実行は未着手

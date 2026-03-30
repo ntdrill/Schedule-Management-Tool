@@ -4,7 +4,7 @@
 開発ワークフロー `v1_phase1.txt` に基づき、システムの基礎となる単一領域（User, Environment, Social）のユースケースを収集し、形式的スナップショット（論理式）として定義する。
 
 ## 参照
-- ワークフロー定義: `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase1.txt`
+- ワークフロー定義: `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt`
 - 理論基盤: `docs/readme/05_ドメイン知識・理論基盤.md`
 
 ## 担当と役割 (Assignment)
