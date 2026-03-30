@@ -1,0 +1,59 @@
+# 進捗報告: SDK移行_運用準備進捗
+
+報告日: 2026/02/08
+報告者: Multi_Agent_Architect
+指示元: 開発者本人による遂行命令
+
+---
+
+## 本日の実施内容
+
+### 1. マルチエージェントアーキテクチャのSDK移行基盤（資料準拠/事実）
+- `sdk_runtime/` 配下に Orchestrator/Watcher/Config/Logs/State/TaskInbox仕様の最小実装を追加
+- 監視差分のイベント化、Task_Inbox への配布、スナップショット保存まで実装
+
+### 2. 監視/配布条件の定義（資料準拠/事実）
+- watcher別フィルタ（min_changes/include/exclude）と dispatch フィルタ（ignore_sources/max_events）を設定ファイルに反映
+- dispatch ループ回避のため `ignore_sources: [inbox]` を設定
+
+### 3. 常駐起動スクリプト整備（資料準拠/事実）
+- launchd / tmux の起動・停止スクリプトを追加
+- `python3 -m sdk_runtime.orchestrator.main --run` に統一
+
+### 4. 動作確認（資料準拠/事実）
+- `python3 -m sdk_runtime.orchestrator.main --dispatch` を実行し、イベント生成と配布の完了を確認
+- `python3 -m sdk_runtime.orchestrator.main --run --max-loops 1` で常駐ループの最小動作を確認
+- `python3 -m sdk_runtime.orchestrator.main --poll-once` でイベント生成を確認
+
+---
+
+## 成果物
+
+| ファイル | 場所 |
+| :--- | :--- |
+| Orchestrator本体 | `sdk_runtime/orchestrator/main.py` |
+| 配布/イベント処理 | `sdk_runtime/orchestrator/dispatch.py` / `sdk_runtime/orchestrator/events.py` |
+| 設定 | `sdk_runtime/config/agents.yaml` / `sdk_runtime/config/permissions.yaml` / `sdk_runtime/config/thresholds.yaml` |
+| Task_Inbox仕様 | `sdk_runtime/docs/task_inbox_format.md` |
+| 常駐起動（launchd） | `sdk_runtime/ops/launchd/` |
+| 常駐起動（tmux） | `sdk_runtime/ops/tmux/` |
+| Task_Inbox 実フォルダ | `Agent_workspace/Agent_maneger/Task_Inbox/.gitkeep` |
+
+---
+
+## 得られた知見（資料準拠/事実）
+- `inbox:*` の監視は配布ループになり得るため、dispatch 側の `ignore_sources` が必須
+- モジュール実行は `python3 -m sdk_runtime.orchestrator.main` に統一した方が安定
+
+---
+
+## 次のアクション
+- [ ] （提案/ドラフト）`permissions.yaml` の権限プロファイル具体化
+- [ ] （提案/ドラフト）`thresholds.yaml` の実運用値チューニング
+- [ ] （提案/ドラフト）常駐運用方式（launchd/tmux）をプロジェクト標準として確定
+
+---
+
+## ステータス
+**完了**: SDK移行の最小運用基盤（監視/配布/常駐起動）までの実装と動作確認  
+**次**: 権限・閾値・運用方式の確定（提案/ドラフト）

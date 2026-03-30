@@ -1,0 +1,631 @@
+# Phase 4 シンボル抽出・照合報告
+
+作成日: 2026/02/17
+担当: Symbol_Agent
+
+## 凡例
+- **資料準拠**: スナップショットの Symbol Definitions に明記されているもの
+- **提案/ドラフト**: スナップショット内で「提案/ドラフト」と注記されているもの（※印で表示）
+- 演算子（≫, ⫸, ⟼, ∴, ⊳, ?=, ?!=, ∧）は「記法」として扱い、動詞リストには含めない
+
+---
+
+## 1. 名詞（データ実体）の抽出結果
+
+### 1.1 既定義（constants.txt / variables.txt に登録済み）
+
+#### 1.1.1 定数（constants.txt）— スナップショットで使用された 29 件
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ህ | critical_state_definitions | Sn01, P3-01 | 危篤状態の判定基準集合 |
+| ሡ | task_templates_dictionary | Sn01,10,19, P3-01,02,06 | タスクテンプレート辞書（リカバリー/来客/行動選択） |
+| ᐗ | sensor_habituation_factor | Sn11 | センサー慣れ補正係数 |
+| ር | mold_threshold_0_3 | Sn04 | カビリスク警戒閾値 |
+| ሮ | target_mold_0_05 | Sn04 | カビリスク安全目標値 |
+| ሯ | mold_intervention_template | Sn04 | カビ対策タスクテンプレート |
+| ሰ | energy_cost_small | Sn04 | 早期介入の小コスト |
+| ሱ | dust_threshold_0_4 | Sn05 | 埃蓄積の中程度閾値 |
+| ሲ | activation_energy_cost | Sn05 | 掃除の固定コスト（起動コスト） |
+| ሳ | reason_scale_economy_wait | Sn05 | 規模の経済待ちの理由コード |
+| ሴ | kitchen_grime_threshold | Sn06 | キッチン汚れの許容上限 |
+| ስ | target_grime_0_1 | Sn06 | 汚れ度の目標値 |
+| ሶ | energy_cost_min | Sn06 | 最小エネルギーコスト |
+| ሷ | air_quality_inflection_threshold | Sn07, P2-02, P3-04 | 空気質の変曲点閾値 |
+| ሸ | micro_intervention_templates | Sn07, P3-04 | 微小介入タスクのテンプレート集合 |
+| ሹ | target_air_quality_safe | Sn07, P3-04 | 空気質の安全目標値 |
+| ሺ | cleaning_methods | Sn06 | 利用可能な清掃メソッド一覧 |
+| ꄀ | env_to_measurement_capability_coefficient | P2-01 | 環境→測定能力の影響係数 |
+| ꄄ | measurement_fatigue_threshold | P2-04 | 測定疲労による能力低下閾値 |
+| ꄅ | edge_disconnect_threshold | P2-03 | エッジ解除判定の強度閾値 |
+| ꄔ | critical_recurrence_window_hours | P3-01 | 危篤再発同一系列の時間窓 |
+| ꄕ | response_timeout_threshold_seconds | P3-02 | 無反応判定の閾値（秒） |
+| ꄖ | environment_recovery_min_threshold | P3-06 | 測定再開の最低環境回復閾値 |
+| ꄗ | measurement_restart_min_stability | P3-06 | 測定再開前の安定継続時間閾値 |
+| ሤ | threshold_measurement_capability_for_monitoring | Sn18, P2-01, P3-03,05 | モニタリング可能な測定能力閾値 |
+| ሏ | measurement_limit_daily_max | Sn14 | 1日の測定時間推奨上限 |
+| ሢ | threshold_discrepancy_for_dissociation_alert | Sn16 | 乖離警告閾値 |
+| ሓ | noise_limit_concentration_db | P3-04, P3-06 | 騒音閾値 |
+| ሂ | clutter_stress_threshold_count | P3-06 | 散らかり閾値 |
+
+#### 1.1.2 変数（variables.txt）— 状態オブジェクト（3 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀴ | user_state_current | Sn01,02,05,07,11,15,16,19, P3-01,03 | ユーザー状態オブジェクト（状態更新・統合の中心） |
+| ꀓ | environment_state_current | Sn04,05,06,07, P2-01,02, P3-04,06 | 環境状態オブジェクト |
+| ꀫ | social_state_current | Sn10 | 社会的状態（来客受入フラグ更新） |
+
+#### 1.1.3 変数 — センサー/入力値（7 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀔ | environmental_sensor_raw | Sn01,02,04,05,06,07,11,16, P3-01,04 | 環境センサー生値 |
+| ꀵ | heart_rate_bpm | Sn02, Sn19 | 心拍数 |
+| ꀶ | hrv_ms | Sn02, Sn19 | 心拍変動 |
+| ꀷ | valence_score | Sn02 | 主観的快‐不快 |
+| ꀸ | arousal_score | Sn02 | 覚醒度 |
+| ꀹ | focus_score | Sn02 | 集中度 |
+| ꀺ | fatigue_score | Sn02 | 疲労度 |
+
+#### 1.1.4 変数 — 環境メトリクス（8 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀻ | mold_risk | Sn04 | カビ発生リスク |
+| ꀼ | dust_accumulation | Sn05 | 埃の蓄積度 |
+| ꀽ | kitchen_grime | Sn06 | キッチン汚れ度 |
+| ꀾ | air_quality_internal | Sn07, P2-02, P3-04 | 室内空気質 |
+| ꀿ | bath_cleanliness | Sn08 | 風呂場の清潔度 |
+| ꁀ | room_clutter | Sn10, P3-06 | 部屋の散らかり度 |
+| ꀗ | external_air_quality_index | P3-04 | 外気の質（換気可否判定） |
+| ꀘ | external_noise_level_db | P3-06 | 外部騒音レベル |
+
+#### 1.1.5 変数 — ユーザーメトリクス/測定関連（14 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀏ | discrepancy_score_subjective_vs_sensor | Sn01,16, P3-01 | 主観-客観乖離スコア |
+| ꀈ | current_critical_state | Sn01, P3-01,02 | 検知された危篤状態 |
+| ꀇ | current_cognitive_resource_level | Sn18, P3-03 | 認知リソース残量 |
+| ꀧ | room_entropy_s | Sn18, P3-03 | 部屋のエントロピー |
+| ꀳ | user_measurement_capability | Sn18, P2-01,03,04, P3-03 | 測定能力スコア |
+| ꀉ | current_measurement_quality_score | Sn13,17, P3-05 | 測定品質スコア |
+| ꀦ | response_latency_to_feedback | Sn16, P3-02 | 反応潜時 |
+| ꀟ | measurement_fatigue_level | Sn14, P2-04, P3-03,05 | 測定疲労レベル |
+| ꀡ | measurement_time_daily | Sn14, P2-04 | 本日の累積測定時間 |
+| ꀞ | last_valid_measurement_timestamp | Sn13 | 最終有効測定時刻 |
+| ꀠ | measurement_gap_tolerance_seconds | Sn13 | 許容ギャップ秒数 |
+| ꀤ | probability_of_recovery | P2-02 | 測定状態への復旧確率 |
+| ꁁ | efficiency_gap | Sn08 | 期待-実績の乖離 |
+| ꁂ | cleaning_skill_level | Sn08 | 掃除熟練度 |
+
+#### 1.1.6 変数 — 組織/社会メトリクス（2 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀢ | organization_entropy_s | P2-03 | 組織エントロピー |
+| ━ | pairing_edges | P2-03 | 測定ペアリングのエッジリスト |
+
+#### 1.1.7 変数 — 環境判定中間値（18 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꁈ | humidity_high | Sn04 | 湿度高状態継続判定結果 |
+| ꁉ | mold_risk_projection | Sn04 | カビリスク指数増大予測値 |
+| ꁊ | intervention_cost_now | Sn04 | 現時点の介入コスト |
+| ꁋ | intervention_cost_future | Sn04 | 将来介入コスト |
+| ꁌ | marginal_utility | Sn04 | 限界効用 |
+| ꁎ | priority_critical | Sn04 | Critical判定結果 |
+| ꁓ | focus_state | Sn05 | ユーザー集中状態フラグ |
+| ꁔ | linear_cost_projection | Sn05 | 線形コスト見積 |
+| ꁕ | roi_estimate | Sn05 | ROI見積 |
+| ꁖ | low_roi | Sn05 | 低ROI判定結果 |
+| ꁗ | reject_postpone | Sn05 | 棄却/延期判定 |
+| ꁛ | resistance_type | Sn06 | 汚れの性質 |
+| ꁜ | method_scores | Sn06 | メソッド適合度スコア |
+| ꁝ | best_method | Sn06 | 選定された清掃メソッド |
+| ꁞ | required_tools | Sn06 | 必要ツール一覧 |
+| ꁤ | sigmoid_risk_projection | Sn07, P2-02 | 空気質リスク指標 |
+| ꁥ | deep_focus_state | Sn07 | 深い集中状態フラグ |
+| ꁦ | threshold_control_needed | Sn07 | 閾値制御必要フラグ |
+
+#### 1.1.8 変数 — リソース/コスト（3 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꁍ | user_resource_state | Sn04 | ユーザーリソース状態 |
+| ꁐ | user_energy | Sn04 | エネルギー残量 |
+| ꁑ | user_energy_after | Sn04 | 消費後エネルギー残量 |
+
+#### 1.1.9 変数 — 期待状態関連（5 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꁃ | expected_state_selected | Sn02 | 期待状態選択条件 |
+| ꁄ | expected_state_reference | Sn02 | 期待状態参照 |
+| ꁅ | expected_state_source | Sn03 | 期待状態スキーマの入力元 |
+| ꁆ | actual_state_source | Sn03 | 実際状態の入力元 |
+| ꁇ | evaluation_target_object | Sn03 | 評価結果の保存先 |
+
+#### 1.1.10 変数 — リスト/キュー/コレクション（5 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ┃ | scheduled_events_list | Sn04,06,07 | 予定オブジェクトのリスト |
+| ┄ | task_queue | Sn10, P3-02,04,06 | 実行待ちタスクキュー |
+| ─ | execution_records_list | Sn15 | 実行記録リスト |
+| ꁧ | micro_intervention_plan | Sn07, P3-04 | 微小介入プラン |
+| ꂓ | state_input_ui | Sn15 | 状態入力UI |
+
+#### 1.1.11 変数 — 記録/ログ/結果（16 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꁏ | roi_log_entry | Sn04,07 | ROI記録エントリ |
+| ꁠ | intervention_log_entry | Sn06 | 介入ログ |
+| ꁟ | negentropy_gain | Sn06 | 期待ネゲントロピー量 |
+| ꁡ | energy_cost_logged | Sn06 | エネルギー記録結果 |
+| ꁢ | cleaning_skill_update | Sn06 | 熟練度更新結果 |
+| ꁘ | deferred_task_entry | Sn05 | 延期エントリ |
+| ꁪ | expected_grime_delta | Sn08 | 期待汚れ減少量 |
+| ꁫ | actual_grime_delta | Sn08 | 実績汚れ減少量 |
+| ꁬ | next_estimate_result | Sn08 | 次回見積最適化結果 |
+| ꁭ | praise_feedback_output | Sn08 | 称賛フィードバック出力 |
+| ꁰ | intervention_transactions_period | Sn09 | 期間内トランザクション集合 |
+| ꁱ | intervention_pl_summary | Sn09 | 期間内集計結果 |
+| ꁲ | pl_metrics | Sn09 | P/L指標 |
+| ꁳ | weekly_report_store_result | Sn09 | 週次レポート格納結果 |
+| ꁴ | self_efficacy_feedback_result | Sn09 | 自己効力感フィードバック結果 |
+| ꁵ | report_display_output | Sn09 | レポート表示出力 |
+
+#### 1.1.12 変数 — タスク/介入/通知（5 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꁹ | intervention_priority | Sn10, P3-04 | 介入優先度 |
+| ꁺ | guest_response_task | Sn10 | 来客対応タスク |
+| ꁻ | notification_output | Sn10 | 通知/提示出力 |
+| ꁙ | notification_suppressed | Sn05 | 通知抑止結果 |
+| ꁸ | spillover_risk_result | Sn10 | 波及リスク判定結果 |
+
+#### 1.1.13 変数 — イベント/トリガー/タイムスタンプ（8 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀊ | current_timestamp | Sn01,04,06,07,11,13,19, P3-01,02,04,06 | 現在時刻（予定生成・実行開始に使用） |
+| ꁼ | measurement_toggle_on_event | Sn11 | 測定ON操作イベント |
+| ꁩ | bath_cleaning_completed_event | Sn08 | 風呂掃除完了イベント |
+| ꁮ | weekly_review_event | Sn09 | 振り返りタイミング到来 |
+| ꁯ | dashboard_view_request | Sn09 | ダッシュボード閲覧リクエスト |
+| ꁶ | social_event | Sn10 | 来客予定 |
+| ꁷ | social_isolation_index | Sn10 | Social.Isolation 指標 |
+| ꀚ | is_measurement_state_active | Sn01 | 測定状態維持フラグ（ꀚ_restored のベース） |
+
+#### 1.1.14 変数 — フラグ/モード（14 件）
+
+| シンボル | 名称 | 出現箇所 | スナップショットでの用途 |
+|---|---|---|---|
+| ꀙ | is_measurement_mode | Sn11,12,14, P3-03,05,06 | 測定モードフラグ |
+| ꄇ | work_ready_boolean | P2-01, P3-06 | 作業開始可能状態 |
+| ꄊ | social_task_freeze_flag | P2-03 | 社会タスク一時凍結フラグ |
+| ꄉ | recovery_task_priority | P3-01 | リカバリー系タスクの優先度 |
+| ꄌ | measurement_session_quality | P2-02, P3-06 | 測定セッション品質 |
+| ꄍ | measurement_continuation_rate | （P2関連） | 測定継続率 |
+| ꄘ | critical_recurrence_count | P3-01 | 危篤再発回数カウンタ |
+| ꄙ | fallback_mode_active | P3-02, P3-05 | フォールバックモード稼働状態 |
+| ꄚ | monitoring_degraded_mode | P3-03, P3-05 | 主観入力中心モード状態 |
+| ꄛ | exception_route_selected | P3-01,02,03 | 選択された例外処理ルート |
+| ꁒ | mold_intervention_scheduled | Sn04 | 介入スケジュール完了フラグ |
+| ꁚ | postpone_recorded | Sn05 | 先送り記録完了フラグ |
+| ꁣ | cleaning_method_task_scheduled | Sn06 | タスク生成完了フラグ |
+| ꁨ | air_quality_stabilized | Sn07 | 空気質安定化フラグ |
+
+#### 1.1.15 変数 — Phase1 スナップショット固有インスタンス（53 件）
+
+以下は Snapshot 11〜20 で導入された、Phase1 記述時の具体的なイベント/入出力変数。
+variables.txt に `phase1_` プレフィックスで登録済み。
+
+| シンボル | 名称 | 出現箇所 | 用途区分 |
+|---|---|---|---|
+| ꂳ | phase1_measurement_session | Sn11,12 | セッションオブジェクト |
+| ꂴ | phase1_sensor_subscription | Sn11 | 購読状態 |
+| ꂵ | phase1_subjective_prompt | Sn11 | 主観入力プロンプト |
+| ꂶ | phase1_measurement_started | Sn11 | 開始完了フラグ |
+| ꂷ | phase1_measurement_toggle_off_event | Sn12 | OFF操作イベント |
+| ꂸ | phase1_retrospective_prompt | Sn12 | 振り返り入力プロンプト |
+| ꂹ | phase1_measurement_stats_saved | Sn12 | 統計保存結果 |
+| ꂺ | phase1_recovery_started | Sn12 | 回復開始フラグ |
+| ꂻ | phase1_measurement_ended | Sn12 | 終了完了フラグ |
+| ꂼ | phase1_sensor_stream | Sn13 | センサーストリーム入力 |
+| ꂽ | phase1_noise_factor | Sn13 | ノイズ要素 |
+| ꂾ | phase1_loss_factor | Sn13 | 欠損要素 |
+| ꂿ | phase1_device_factor | Sn13 | デバイス要素 |
+| ꃀ | phase1_context_factor | Sn13 | 文脈要素 |
+| ꃁ | phase1_continuity_ok | Sn13 | 継続性判定結果 |
+| ꃂ | phase1_interruption_mark_result | Sn13 | 中断判定出力 |
+| ꃃ | phase1_quality_updated | Sn13 | 品質更新完了フラグ |
+| ꃄ | phase1_time_tick_event | Sn14, P3-03 | 時間経過イベント |
+| ꃅ | phase1_input_cost | Sn14, P2-04 | 入力コスト |
+| ꃆ | phase1_over_limit | Sn14 | 超過フラグ |
+| ꃇ | phase1_fatigue_warning_output | Sn14 | 警告出力 |
+| ꃈ | phase1_fatigue_updated | Sn14 | 疲労更新完了フラグ |
+| ꃉ | phase1_subjective_input_trigger_event | Sn15 | 主観入力トリガーイベント |
+| ꃊ | phase1_subjective_input | Sn15,16 | 主観入力データ |
+| ꃋ | phase1_user_state_store_result | Sn15 | 状態保存結果 |
+| ꃌ | phase1_subjective_input_done | Sn15 | 主観入力完了フラグ |
+| ꃍ | phase1_subjective_input_ready | Sn16 | 入力準備完了 |
+| ꃎ | phase1_discrepancy_alert_flag | Sn16 | 乖離警告フラグ |
+| ꃏ | phase1_latency_flags | Sn16, P3-02 | 反応潜時フラグ群 |
+| ꃐ | phase1_latency_flags_store_result | Sn16 | 潜時フラグ保存結果 |
+| ꃑ | phase1_discrepancy_checked | Sn16 | 検知完了フラグ |
+| ꃒ | phase1_connectivity_event | Sn17, P3-05 | 接続イベント |
+| ꃓ | phase1_disconnect_handle_result | Sn17 | 切断処理結果 |
+| ꃔ | phase1_connection_updated | Sn17 | 接続更新完了フラグ |
+| ꃕ | phase1_capability_eval_trigger | Sn18 | 評価トリガー |
+| ꃖ | phase1_bio_factors | Sn18, P3-03 | 生理要因入力 |
+| ꃗ | phase1_system_mode | Sn18 | 判定されたシステムモード |
+| ꃘ | phase1_system_mode_update_result | Sn18 | モード更新結果 |
+| ꃙ | phase1_intervention_suggestion_output | Sn18 | 介入提案出力 |
+| ꃚ | phase1_capability_evaluated | Sn18 | 評価完了フラグ |
+| ꃛ | phase1_action_selected | Sn19 | 選択した対処行動 |
+| ꃜ | phase1_action_start | Sn19 | 行動開始イベント |
+| ꃝ | phase1_subjective_input_before | Sn19 | 行動前の主観入力 |
+| ꃞ | phase1_action_end | Sn19 | 行動終了イベント |
+| ꃟ | phase1_subjective_input_after | Sn19 | 行動後の主観入力 |
+| ꃠ | phase1_effectiveness_score | Sn19 | 主観評価スコア |
+| ꃡ | phase1_execution_record_store_result | Sn19 | 実行記録保存結果 |
+| ꃢ | phase1_action_evaluated | Sn19 | 評価完了フラグ |
+| ꃣ | phase1_compare_request | Sn20 | 比較要求イベント |
+| ꃤ | phase1_expected_state | Sn20 | 期待状態スキーマ |
+| ꃥ | phase1_actual_state | Sn20 | 実際状態スナップショット |
+| ꃦ | phase1_evaluation_target | Sn20 | 評価結果の保存先 |
+| ꃧ | phase1_evaluation_store_result | Sn20 | 評価保存結果 |
+| ꃨ | phase1_comparison_done | Sn20 | 比較完了フラグ |
+
+---
+
+### 1.2 未定義（スナップショット内で使用、辞書に個別登録なし）
+
+#### 1.2.1 サフィックス付きインスタンス（ベースシンボルは登録済み、サフィックス付き形式は未登録）
+
+| スナップショット内記号 | 推定名称 | 出現箇所 | 分類候補 |
+|---|---|---|---|
+| ┃_rec | scheduled_event（個別予定オブジェクト） | Sn01,04,06,07,19, P3-01,02,04,06 | 変数（┃ リストの要素型として型定義が必要） |
+| ─_exec | execution_record（個別実行オブジェクト） | Sn01,19, P3-01,02 | 変数（─ リストの要素型として型定義が必要） |
+| ─_user_state_log | user_state_history_record（状態履歴レコード） | Sn02, Sn15 | 変数（状態履歴の個別レコード） |
+| ┃_expected | expected_state_schema（期待状態スキーマ） | Sn03 | 変数（期待状態の構造化オブジェクト） |
+| ─_actual | actual_state_snapshot（実際状態スナップショット） | Sn03 | 変数（実際状態の構造化オブジェクト） |
+| ─_evaluation_result | evaluation_result（評価結果オブジェクト） | Sn03, Sn20 | 変数（一致スコア+詳細評価の構造体） |
+| ┃_fallback | fallback_scheduled_event（フォールバック予定） | P3-02 | 変数（代替回復タスクの予定オブジェクト） |
+| ꀚ_restored | measurement_state_restored（測定状態正常復帰フラグ） | Sn01, P3-01 | 変数（Boolean: 正常復帰確認結果） |
+| ሸ_air_purifier | air_purifier_intervention_template（空気清浄テンプレート） | P3-04 | 定数（※提案/ドラフト: ሸ の要素として提案） |
+
+#### 1.2.2 フィールドアクセス（オブジェクトプロパティ、型定義に必要）
+
+| スナップショット内記号 | 推定名称 | 出現箇所 | 所属オブジェクト |
+|---|---|---|---|
+| ꀴ.subjective | user_state_subjective_component | Sn01, P3-01 | user_state_current の主観データ部分 |
+| ─_exec.state_after | execution_state_after | Sn01,19, P3-01 | execution_record の実行後状態 |
+| ─_exec.state_before | execution_state_before | Sn19 | execution_record の実行前状態 |
+| ─_exec.result | execution_evaluation_result | Sn01, P3-01 | execution_record の評価結果 |
+| ─_exec.delta_result | execution_delta_result | Sn19 | execution_record の状態差分 |
+| ─_exec.user_rating | execution_user_rating | Sn19 | execution_record の主観評価 |
+| ┃_rec.expected | scheduled_event_expected_state | Sn01, P3-01 | scheduled_event の期待状態 |
+| ꁇ.result | evaluation_target_result_field | Sn03 | evaluation_target_object の結果フィールド |
+| ─_user_state_log.expected_state | user_state_log_expected_state | Sn02 | user_state_history_record の期待状態 |
+
+#### 1.2.3 インライン表現・提案/ドラフト状態
+
+| スナップショット内記号 | 推定名称 | 出現箇所 | 備考 |
+|---|---|---|---|
+| user_measurement_capability_recovery_pending | 測定能力回復待ち状態 | P3-03 | ※提案/ドラフト: user_measurement_capability の特殊値として提案。正式な状態列挙は未定義 |
+| restart_ready | 測定再開可否判定結果 | P3-06 | ※提案/ドラフト: judge_measurement_restart_ready の出力。Boolean |
+| ꀀ（P3-06 での使用） | room_clutter（シンボル不一致の疑い） | P3-06 | ⚠ 注意: variables.txt では ꀀ=accumulated_thermal_entropy_production、room_clutter は ꁀ。P3-06 の Symbol Definitions で ꀀ=room_clutter と記述されているが、ꁀ の誤記の可能性あり |
+
+---
+
+### 1.3 新規候補（Meaningから推測される暗黙のデータ実体）
+
+| 推定名称 | 根拠 | 分類候補 |
+|---|---|---|
+| scheduled_event_type（予定オブジェクト型定義） | ┃_rec が多数のスナップショットで使用されるが、expected/state_after 等のフィールドを持つ型としての定義がない | クラス候補 |
+| execution_record_type（実行オブジェクト型定義） | ─_exec が state_before/state_after/result/delta_result/user_rating をフィールドに持つが、型定義がない | クラス候補 |
+| user_state_history_record_type（状態履歴型定義） | ─_user_state_log が expected_state を持つが、型定義がない | クラス候補 |
+| evaluation_result_type（評価結果型定義） | ─_evaluation_result が一致スコア+詳細評価を含む構造だが、フィールド定義がない | クラス候補 |
+| intervention_intensity_table（介入強度テーブル） | P3-01 未整備: 再発回数に応じた介入強度テーブルが参照されているが未定義 | 定数候補 |
+| recovery_loop_exit_condition（回復専用ループ終了条件） | P3-03 未整備: 回復専用ループの終了条件が未定義 | 定数候補 |
+| ventilation_feasibility_criteria（換気実行可否基準） | P3-04 未整備: 換気不能の具体的判定条件（外気質・騒音・その他）が未定義 | 定数候補 |
+| subjective_mode_exit_condition（主観モード終了条件） | P3-05 未整備: 主観入力中心モードの終了条件が未定義 | 定数候補 |
+| sensor_reconnect_auto_flow（センサー再接続フロー） | P3-05 未整備: センサー再接続時の自動復帰フロー | 変数候補（状態機械） |
+| measurement_quality_threshold（測定品質閾値） | P3-05 提案: 品質スコア ꀉ と能力閾値 ሤ が異なる可能性。品質専用閾値が必要か | 定数候補 |
+
+---
+
+## 2. 動詞（処理・変換）の抽出結果
+
+### 2.1 既定義（transforms.txt に登録済み）— 97 件
+
+#### 2.1.1 状態更新系（8 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↮ | update_state_from_sensor | Sn01,02,04,05,06,07,11,19, P3-01,04 |
+| ↪ | merge_state_snapshot | Sn01,02,15,19, P3-01 |
+| ⇅ | reset_mold_risk_to_target | Sn04 |
+| ⇓ | update_grime_to_target | Sn06 |
+| ⇜ | update_air_quality_to_target | Sn07, P3-04 |
+| ⇟ | update_bath_cleanliness | Sn08 |
+| ⇪ | update_room_clutter | Sn10 |
+| ⇫ | update_guest_acceptance_flag | Sn10 |
+
+#### 2.1.2 算出/計算系（12 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↖ | calc_subjective_objective_discrepancy | Sn01,16, P3-01 |
+| → | calc_measurement_capability | Sn18, P3-03 |
+| ↲ | calc_efficiency_gap | Sn08 |
+| ↴ | calc_environment_pl_report | Sn09 |
+| ⇂ | calc_marginal_utility | Sn04 |
+| ⇶ | calc_cmq_score | Sn13 |
+| ⇹ | calc_measurement_fatigue | Sn14, P2-04, P3-03 |
+| ꄐ | calc_env_to_measurement_impact | P2-01 |
+| ⇉ | estimate_linear_cost | Sn05 |
+| ⇊ | estimate_roi | Sn05 |
+| ⇢ | aggregate_intervention_pl | Sn09 |
+| ⇡ | fetch_intervention_transactions | Sn09 |
+
+#### 2.1.3 判定/評価系（18 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↞ | detect_critical_state | Sn01, P3-01 |
+| ↥ | evaluate_task_effect | Sn01,03,20, P3-01 |
+| ↯ | validate_measurement_continuity | Sn13 |
+| ↰ | eval_response_latency | Sn16, P3-02 |
+| ↱ | judge_system_mode_by_capability | Sn18 |
+| ⇀ | check_humidity_high_continuous | Sn04 |
+| ⇁ | predict_mold_risk_exponential | Sn04 |
+| ⇃ | judge_priority_critical | Sn04 |
+| ⇋ | judge_low_roi | Sn05 |
+| ⇌ | decide_reject_or_postpone | Sn05 |
+| ⇐ | evaluate_method_scores | Sn06 |
+| ⇑ | select_best_method | Sn06 |
+| ⇗ | predict_air_quality_sigmoid_risk | Sn07, P2-02, P3-04 |
+| ⇙ | judge_threshold_control_needed | Sn07 |
+| ⇿ | check_discrepancy_threshold | Sn16 |
+| ⇺ | check_limit_exceeded | Sn14 |
+| ꄑ | judge_edge_disconnect | P2-03 |
+| ꄓ | judge_measurement_dropout_by_env | P2-02 |
+
+#### 2.1.4 生成/作成系（10 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↬ | select_recovery_task | Sn01, P3-01 |
+| ↛ | convert_schedule_to_execution | Sn01,19, P3-01,02 |
+| ↵ | create_action_schedule | Sn19 |
+| ⇄ | create_intervention_schedule | Sn04 |
+| ⇒ | create_cleaning_schedule | Sn06 |
+| ⇚ | create_micro_intervention_plan | Sn07, P3-04 |
+| ⇛ | create_micro_intervention_schedule | Sn07, P3-04, P3-06 |
+| ⇭ | create_measurement_session | Sn11 |
+| ⇨ | select_guest_response_task | Sn10, P3-06 |
+| ⇩ | enqueue_task | Sn10, P3-02,04,06 |
+
+#### 2.1.5 保存/記録系（10 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↸ | store_effectiveness | Sn19 |
+| ↹ | store_evaluation_result | Sn20 |
+| ↽ | store_execution_record | Sn19 |
+| ⟵ | store_flags | Sn16 |
+| ⇣ | store_weekly_report | Sn09 |
+| ⇳ | store_measurement_stats | Sn12 |
+| ⇾ | store_user_state | Sn15 |
+| ⇆ | generate_roi_log_entry | Sn04 |
+| ⇔ | generate_intervention_log_entry | Sn06 |
+| ⇝ | generate_micro_intervention_roi_log_entry | Sn07 |
+
+#### 2.1.6 抽出/変換系（5 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⇈ | extract_focus_state | Sn05 |
+| ⇘ | extract_deep_focus_state | Sn07 |
+| ⇏ | extract_resistance_type | Sn06 |
+| ↶ | compare_state_delta | Sn19 |
+| ⇞ | optimize_next_estimate | Sn08 |
+
+#### 2.1.7 通知/表示/フィードバック系（7 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⇎ | suppress_notification | Sn05 |
+| ⇬ | notify_or_prompt | Sn10 |
+| ⇻ | issue_fatigue_warning | Sn14 |
+| ⇥ | render_report | Sn09 |
+| ⇤ | apply_self_efficacy_feedback | Sn09 |
+| ⇠ | generate_praise_feedback | Sn08 |
+| ⟺ | suggest_intervention | Sn18 |
+
+#### 2.1.8 測定管理系（12 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⇮ | start_sensor_subscription | Sn11 |
+| ⇯ | apply_sensor_habituation | Sn11 |
+| ⇰ | trigger_subjective_input | Sn11,12 |
+| ⇱ | set_measurement_mode_on | Sn11, P3-06 |
+| ⇲ | finalize_measurement_session | Sn12 |
+| ⇴ | start_fatigue_recovery | Sn12 |
+| ⇵ | set_measurement_mode_off | Sn12, P3-03,05,06 |
+| ⇷ | update_last_valid_timestamp | Sn13 |
+| ⇸ | mark_interruption | Sn13 |
+| ⇼ | show_state_input_ui | Sn15 |
+| ⇽ | collect_subjective_input | Sn15 |
+| ⟸ | degrade_quality_score | Sn17, P3-05 |
+
+#### 2.1.9 デバイス/接続管理系（3 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⟶ | update_connection_map | Sn17, P3-05 |
+| ⟷ | handle_disconnect | Sn17, P3-05 |
+| ⟹ | update_system_mode | Sn18 |
+
+#### 2.1.10 組織/社会系（2 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ↭ | update_organization_entropy | P2-03 |
+| ⇦ | judge_spillover_risk | Sn10, P3-06 |
+
+#### 2.1.11 リスク管理/優先度系（4 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⇧ | escalate_intervention_priority | Sn10 |
+| ⇇ | apply_energy_cost | Sn04 |
+| ⇕ | log_energy_cost | Sn06 |
+| ⇖ | update_cleaning_skill | Sn06 |
+
+#### 2.1.12 延期/登録系（2 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ⇍ | register_deferred_task | Sn05 |
+| ↳ | update_cleaning_skill_level | Sn08 |
+
+#### 2.1.13 Phase3 追加（例外処理系）（4 件）
+
+| シンボル | 名称 | 出現箇所 |
+|---|---|---|
+| ꄜ | judge_exception_escalation | P3-01 |
+| ꄝ | select_fallback_recovery_task | P3-02 |
+| ꄞ | switch_to_subjective_mode | P3-03, P3-05 |
+| ꄟ | judge_measurement_restart_ready | P3-06 |
+
+---
+
+### 2.2 未定義（スナップショット内で使用、辞書に登録なし）
+
+スナップショットの Expression 内で明示的に呼び出される関数・変換で、transforms.txt に未登録のものは **0 件** である。
+全ての明示的な処理記号は Phase1〜Phase3 のシンボル定義作業で transforms.txt に登録済み。
+
+※ ただし、以下の暗黙的な操作がインライン記述で存在する（名前付き関数ではない）:
+
+| スナップショット内記述 | 推定処理 | 出現箇所 | 備考 |
+|---|---|---|---|
+| `ꄘ ⟼ ꄘ+1` | critical_recurrence_count のインクリメント | P3-01 | 代入演算子で記述。専用変換は未定義 |
+| `ꄉ ⟼ ꄉ↑` | recovery_task_priority の昇格 | P3-01 | 記法上の「↑」で表現。専用変換は未定義 |
+| `ꄌ ⟼ low` | measurement_session_quality の低設定 | P3-06 | リテラル代入。専用変換は未定義 |
+| `ꄇ ⟼ false` | work_ready_boolean のリセット | P3-06 | リテラル代入。専用変換は未定義 |
+| `ꁹ ⟼ Critical` | intervention_priority の Critical 設定 | P3-04 | リテラル代入。専用変換は未定義 |
+| `ꀤ ↑` | probability_of_recovery の上昇 | P2-02 | 記法上の「↑」。変化量の算出処理は未定義 |
+| `ꄌ ↓` | measurement_session_quality の低下 | P2-02 | 記法上の「↓」。低下量の算出処理は未定義 |
+| `ꀢ ↑` | organization_entropy_s の上昇 | P2-03 | 記法上の「↑」。変化量の算出処理は未定義 |
+| `ꀳ ↓` | user_measurement_capability の低下 | P2-04 | 記法上の「↓」。低下量の算出処理は未定義 |
+
+---
+
+### 2.3 新規候補（Meaningから推測される暗黙の処理）
+
+| 推定名称 | 根拠 |
+|---|---|
+| increment_recurrence_count（再発カウントインクリメント） | P3-01: `ꄘ ⟼ ꄘ+1` がインライン記述。カウンタ更新の専用関数があると再利用性が向上 |
+| escalate_recovery_priority（優先度昇格処理） | P3-01: `ꄉ ⟼ ꄉ↑` がインライン。昇格ロジック（段数制限含む）を関数化すべき |
+| suppress_ventilation_task（換気タスク抑止処理） | P3-04 Meaning: 換気不能時に「通常換気タスクを抑止」とあるが、抑止する専用変換がない |
+| reset_work_ready_flag（作業可能フラグリセット） | P3-06: `ꄇ ⟼ false` のインライン代入。環境悪化時のフラグ制御を関数化 |
+| set_session_quality_level（セッション品質設定） | P3-06: `ꄌ ⟼ low` のインライン代入。品質レベルの明示的設定処理 |
+| evaluate_simultaneous_threshold_breach（同時閾値超過判定） | P3-06: `(ꀘ > ሓ) ∧ (ꀀ > ሂ)` を単一関数化。複合条件の再利用に有用 |
+| validate_recovery_completion（回復完了検証） | Sn01/P3-01 Meaning: 介入後に再度 ↞ を実行して正常確認する複合チェックが暗黙的に行われている |
+| calc_recovery_probability_change（復旧確率変化量算出） | P2-02: `ꀤ ↑` の変化量が未定義。復旧確率の算出ロジックが必要 |
+| calc_measurement_capability_degradation（測定能力低下量算出） | P2-04: `ꀳ ↓` の低下量が未定義。疲労→能力低下の数理モデルが必要 |
+
+---
+
+## 3. 照合サマリー
+
+| カテゴリ | 名詞数 | 動詞数 |
+|---|---|---|
+| 既定義 | 185 | 97 |
+| 未定義 | 21 | 9（インライン操作） |
+| 新規候補 | 10 | 9 |
+
+### 内訳
+
+**名詞 既定義 185件の内訳:**
+- constants.txt 登録済み: 29 件
+- variables.txt 登録済み（コア）: 103 件
+- variables.txt 登録済み（phase1_ プレフィックス）: 53 件
+
+**名詞 未定義 21件の内訳:**
+- サフィックス付きインスタンス（型未定義）: 9 件
+- フィールドアクセス（プロパティ未定義）: 9 件
+- インライン/提案状態/シンボル不一致: 3 件
+
+**動詞 既定義 97件の内訳:**
+- 状態更新系: 8, 算出/計算系: 12, 判定/評価系: 18
+- 生成/作成系: 10, 保存/記録系: 10, 抽出/変換系: 5
+- 通知/表示系: 7, 測定管理系: 12, デバイス/接続系: 3
+- 組織/社会系: 2, リスク/優先度系: 4, 延期/登録系: 2
+- Phase3 例外処理系: 4
+
+---
+
+## 4. 特記事項
+
+### 4.1 シンボル不一致の疑い
+- P3-06 の Expression で `ꀀ` が `room_clutter` として使用されているが、variables.txt では `ꀀ = accumulated_thermal_entropy_production` であり、`room_clutter` は `ꁀ` として登録されている。P3-06 の記述は `ꁀ` の誤記の可能性が高い。要確認。
+
+### 4.2 提案/ドラフト要素一覧
+以下はスナップショット内で「提案/ドラフト」と明記されている要素:
+1. **P3-01**: `↬` の第3引数に `recovery_task_priority` を渡す拡張（select_recovery_task の仕様変更）
+2. **P3-02**: `↰` の出力と閾値比較の整合性（eval_response_latency の出力形式）
+3. **P3-03**: `user_measurement_capability_recovery_pending`（user_measurement_capability の特殊値）
+4. **P3-04**: 換気不能判定の閾値定義（external_air_quality_index と noise_limit_concentration_db の組合せ）
+5. **P3-04**: `ሸ_air_purifier`（micro_intervention_templates の空気清浄用要素）
+6. **P3-05**: 品質スコア `ꀉ` と閾値 `ሤ` の同一使用（測定品質と測定能力の閾値差異）
+7. **P3-06**: `ꄖ`, `ꄗ` の実値定義
+
+### 4.3 未整備事項（スナップショットで明記された未定義項目）
+1. 再発回数に応じた介入強度テーブル（P3-01）
+2. `ꄘ+1` の更新タイミング定義（P3-01）
+3. `critical_recurrence_window_hours` の実値（P3-01）
+4. 無反応時のエスカレーション境界条件（P3-02）
+5. `response_timeout_threshold_seconds` の実値（P3-02）
+6. 回復専用ループの終了条件（P3-03）
+7. 測定疲労と睡眠不足の重複判定閾値（P3-03）
+8. 換気不能の具体的判定条件（P3-04）
+9. 代替介入選択の優先順位モデル（P3-04）
+10. 主観入力中心モードの終了条件（P3-05）
+11. センサー再接続時の自動復帰フロー（P3-05）
+12. 再開判定の最低回復条件の実値（P3-06）
+13. `environment_recovery_min_threshold`, `measurement_restart_min_stability` の実値（P3-06）
+14. 環境→測定能力変換の実係数値（P2 未整備）
+15. 測定品質と環境変動の定量式（P2 未整備）
+16. エッジ解除/再接続の実閾値（P2 未整備）
+17. 回復遅延の数理モデル（P2 未整備）
+
+---
+
+## 5. 構造抽出への推奨
+
+Data_Model_Agent が次の Step 12〜16（候補リスト構造化）を行う際の推奨事項:
+
+1. **型定義の優先**: 未定義 1.2.1 のサフィックス付きインスタンス（┃_rec, ─_exec, ─_user_state_log, ─_evaluation_result）は、クラス候補として型定義を優先すべき。これらはスナップショット横断で頻出し、フィールドアクセス（1.2.2）の受け手となっている。
+
+2. **フィールド定義の統合**: 1.2.2 のフィールドアクセスは、対応する型定義に統合する。特に `execution_record` は state_before/state_after/result/delta_result/user_rating の 5 フィールドを持つ最も複雑な型。
+
+3. **インライン操作の関数化検討**: 2.2 のインライン操作のうち、P3-01 のカウントインクリメントと優先度昇格は、複合フローで頻出するため関数化を推奨。
+
+4. **シンボル不一致の解消**: 4.1 の `ꀀ` / `ꁀ` 不一致は、Data_Model_Agent の構造化前に解消すべき。
+
+5. **提案/ドラフトの分離**: 4.2 の提案要素は、確定分と明確に分離して管理すべき。
+
+---
+
+以上

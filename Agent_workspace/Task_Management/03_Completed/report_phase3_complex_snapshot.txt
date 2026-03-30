@@ -1,0 +1,45 @@
+# report_phase3_complex_snapshot
+
+報告日: 2026/02/14
+担当: Data_Model_Agent
+
+## 資料準拠（事実）
+- 入力資料: `task_Data_Model_Agent_Phase3_Complex_Snapshot.txt`, Phase1/Phase2 スナップショット、Phase3 提案3件、`report_symbol_definition_Phase3.txt`, `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`
+- Phase3 複合スナップショットを `Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt` に新規作成した。
+- 各スナップショットに「資料準拠（事実）」「Expression」「提案/ドラフト」「未整備」を区別して記載した。
+
+## 提出成果物
+
+### 追加したスナップショット件数
+6 件
+
+### 対象ユースケースと対応表
+
+| スナップショットID | 対象ユースケース | 提案元 |
+|-------------------|------------------|--------|
+| P3-01 | UC-E1 危篤再発ループ | proposal_user_exception |
+| P3-02 | UC-E2 無反応による回復失敗 | proposal_user_exception |
+| P3-03 | UC-E3 測定不能状態の長期化 | proposal_user_exception |
+| P3-04 | UC-E1 換気不能による空気質悪化カスケード | proposal_env_exception |
+| P3-05 | UC-E1 センサー断続切断 | proposal_monitoring_exception |
+| P3-06 | UC-E3 環境ノイズ急増による測定中断 | proposal_env_exception |
+
+### 構成要素
+- ループ: P3-01（再発判定の繰り返し）
+- 分岐: P3-01, P3-02, P3-03, P3-04, P3-05, P3-06（条件判定による分岐）
+- 例外フォールバック: P3-02, P3-03, P3-04, P3-05, P3-06
+- 再開判定: P3-06（judge_measurement_restart_ready）
+
+### Phase3 追加シンボル使用状況
+- constants: ꄔ, ꄕ, ꄖ, ꄗ
+- variables: ꄘ, ꄙ, ꄚ, ꄛ
+- transforms: ꄜ, ꄝ, ꄞ, ꄟ
+
+## 未整備（残課題）
+- 各閾値の実値（運用ログに基づくチューニング値）
+- 例外ルート選択の優先順位テーブル
+- 再発時の最大昇格段数と停止条件
+- Social_State_Agent の Phase3 提出要否
+- 例外ユースケースの評価基準（採否ルール）
+- proposal_monitoring_exception UC-E2 欠損連鎖、UC-E3 測定疲労超過の複合スナップショット（任意）
+- proposal_env_exception UC-E2 介入失敗による再汚染（任意）

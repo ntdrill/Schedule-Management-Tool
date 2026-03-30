@@ -1,0 +1,49 @@
+# Phase 4: 構造抽出（Structure Extraction）
+
+作成日: 2026/02/17
+ステータス: Completed
+作成者: Agent_Manager
+
+## 目的
+Phase 1〜3 のスナップショット群から「名詞（データ実体）」と「動詞（処理・変換）」を抽出し、クラス候補・変数候補・関数候補リストを生成する。
+
+## 入力
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`（Snapshot 01〜20）
+- `Agent_workspace/data_model_agent/業務/02_相互作用スナップショットの記述.txt`（P2-01〜P2-04）
+- `Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt`（P3-01〜P3-06）
+- `data/constants.txt`（108件）
+- `data/variables.txt`（204件）
+- `data/transforms.txt`（126件）
+
+## 出力
+- `Task_Management/02_Active/report_symbol_extraction_Phase4.txt`（Symbol_Agent）
+- `Agent_workspace/data_model_agent/業務/04_構造抽出.txt`（Data_Model_Agent）
+
+## Assignment
+
+### Symbol_Agent（Step 4〜10）
+- スナップショット群から「名詞（データ実体）」を抽出してリスト化
+- スナップショット群から「動詞（処理・変換）」を抽出してリスト化
+- 既存シンボル辞書と照合し、既定義・未定義・新規候補を分類
+- `report_symbol_extraction_Phase4.txt` を作成
+
+### Data_Model_Agent（Step 12〜16）
+- Symbol_Agent の抽出報告とスナップショット群を読み込み
+- 名詞を「クラス候補」と「変数候補」に分類
+- 動詞を「関数候補」に分類
+- `04_構造抽出.txt` にリストを記述
+
+## 進捗
+- [x] Symbol_Agent: シンボル抽出・照合完了 (2026/02/17)
+- [x] Data_Model_Agent: 候補リスト構造化完了 (2026/02/17)
+- [x] Agent_Manager: 最終承認 (2026/02/17)
+
+## 完了報告
+- 完了日: 2026/02/17
+- 成果物:
+  - `Agent_workspace/data_model_agent/業務/04_構造抽出.txt`（クラス25件、変数164件、関数110件）
+  - `Task_Management/03_Completed/report_symbol_extraction_Phase4.txt`（名詞216件、動詞115件の照合レポート）
+- 特記事項:
+  - シンボル不一致（ꀀ/ꁀ）の解消が次フェーズ前に必要
+  - 未整備事項18件（U-01〜U-18）は Phase 5 以降で対処
+  - 提案/ドラフト要素7件はレビュー待ち

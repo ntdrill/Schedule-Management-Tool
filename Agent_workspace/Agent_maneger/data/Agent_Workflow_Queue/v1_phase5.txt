@@ -1,0 +1,145 @@
+**Phase 5: スキーマ定義（Schema Definition）** のワークフロー。
+
+---
+
+## Phase 5 の定義
+
+| 項目 | 内容 |
+| :--- | :--- |
+| **目的** | Phase 4 で抽出したクラス候補・変数候補・関数候補を、SwiftData の `@Model` 定義に変換し、v1 スコープで実装すべきデータモデル仕様書を生成する |
+| **入力** | Phase 4 の `04_構造抽出.txt`（クラス25件, 変数164件, 関数110件）、`data/constants.txt`, `data/variables.txt`, `data/transforms.txt`、v1 スコープ定義（`docs/readme/03_バージョン別機能スコープ.md`） |
+| **出力** | `Agent_workspace/data_model_agent/業務/05_スキーマ定義.txt`（SwiftData モデル仕様書） |
+| **担当** | Data_Model_Agent（主担当）、Symbol_Agent（整合性検証） |
+
+---
+
+## 前提条件（Phase 5 開始前に解消すべき事項）
+
+| # | 項目 | 内容 | 対処者 |
+|:---|:---|:---|:---|
+| PRE-01 | シンボル不一致の修正 | P3-06 の `ꀀ`（accumulated_thermal_entropy_production）→ `ꁀ`（room_clutter）の誤記を修正 | Symbol_Agent |
+| PRE-02 | 提案/ドラフト要素の採否判定 | Phase 4 特記事項 5.2 の7件について、v1 スキーマに含めるか判定 | Agent_Manager |
+
+---
+
+## 設計方針
+
+### 技術制約（資料準拠）
+- **SwiftData** (`@Model` マクロ) を使用（`docs/readme/01_プロジェクト概要.md` 準拠）
+- **Local First**: サーバー不要、データは端末内に保存
+- **Watch Centric**: ユーザー状態の測定と簡易入力は Watch 単体で完結
+- デバイス分担の詳細は Phase 6 で決定するため、Phase 5 ではデバイス非依存のモデル定義に留める
+
+### v1 スコープ判定基準
+- v1 コア機能（測定ON/OFF、対処行動の記録・評価、ログ閲覧、ローカル通知、期待状態の選択）に必要なクラスを **必須** とする
+- v2 以降の機能（タイムラインUI、LLM連携、iCloud同期、社会的状態管理、危篤状態自動検知）に専用のクラスは **骨格のみ** または **スキップ** とする
+- 未整備事項（U-01〜U-18）のうち実値未定義の定数は、仮値またはプレースホルダーとして定義する
+
+### 分類ガイドライン
+- **永続モデル（@Model）**: SwiftData で永続化するオブジェクト（状態履歴、実行記録、測定セッション等）
+- **値型（struct）**: 計算中間値、一時的なスコア、フラグ群
+- **列挙型（enum）**: 状態種別、優先度レベル、システムモード
+- **プロトコル**: 共通インターフェース（状態オブジェクトの共通性など）
+
+---
+
+## Agent_Workflow_Queue (Phase 5: Schema Definition)
+
+### セットアップ（Step 1〜4）
+
+1. **Agent_Manager**: `Task_Management/02_Active` に親タスク `task_Phase5_Schema.txt` を作成する
+2. **Symbol_Agent**: PRE-01（シンボル不一致）を修正する。`Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt` の P3-06 において `ꀀ` を `ꁀ` に修正し、修正内容を `task_Phase5_Schema.txt` に追記する
+3. **Agent_Manager**: PRE-02（提案/ドラフト要素7件）の採否を判定し、`task_Phase5_Schema.txt` に判定結果を記録する
+4. **Agent_Manager**: `task_Phase5_Schema.txt` 内で、Data_Model_Agent に「v1 スコープのスキーマ定義」を、Symbol_Agent に「整合性検証」をアサインする
+
+### v1 スコープ分析（Step 5〜7）
+
+5. **Data_Model_Agent**: `04_構造抽出.txt` を読み込み、v1 コア機能に必要なクラスを特定する。判定基準: v1 実装機能（測定モード管理、期待状態入力、対処行動と評価、データ収集と紐付け、通知）に直接関わるか
+6. **Data_Model_Agent**: クラス候補25件を以下の3カテゴリに振り分ける:
+   - **v1 必須**: v1 コア機能に直接必要（`@Model` として完全定義）
+   - **v1 骨格**: v1 で存在は必要だがフィールドは最小限（`@Model` として骨格定義）
+   - **v2 延期**: v1 では不要（定義スキップ、コメントで予約）
+7. **Data_Model_Agent**: 変数候補164件と関数候補110件について、v1 必須クラスに属するもののみを対象として絞り込む。`task_Phase5_Schema.txt` にスコープ判定結果を追記する
+
+### 永続モデル定義（Step 8〜11）
+
+8. **Data_Model_Agent**: v1 必須クラスの SwiftData `@Model` 定義を作成する。各クラスについて以下を記述する:
+   - クラス名（Swift 命名規則準拠）
+   - `@Model` 宣言
+   - プロパティ一覧（型、デフォルト値、Optional/Required）
+   - `@Relationship` 宣言（他モデルとの関連）
+   - Phase 4 のクラス番号（C-xx）との対応
+9. **Data_Model_Agent**: v1 骨格クラスの最小限 `@Model` 定義を作成する（将来拡張用のプレースホルダーフィールドを含む）
+10. **Data_Model_Agent**: 値型（struct）と列挙型（enum）の定義を作成する。Phase 4 の変数候補から型が Enum / struct と判定されたもの（V-79 reject_postpone, V-98 recovery_task_priority, V-99 measurement_session_quality, V-104 exception_route_selected 等）を対象とする
+11. **Data_Model_Agent**: プロトコル定義を作成する。UserState / EnvironmentState / SocialState に共通する `StateObject` プロトコルなど、共通性があるクラス群のインターフェースを抽出する
+
+### 整合性検証（Step 12〜14）
+
+12. **Symbol_Agent**: Data_Model_Agent が作成したスキーマ定義を読み込み、Phase 4 の `04_構造抽出.txt` および `data/*.txt` のシンボル辞書と照合する
+13. **Symbol_Agent**: 以下の整合性を検証する:
+    - スキーマのプロパティ名がシンボル辞書の変数名と一致するか
+    - Phase 4 のクラス間関係図（Section 4）がスキーマの `@Relationship` と整合するか
+    - v1 必須に分類されたクラスが、v1 コア機能のスナップショット（Sn01〜20）をカバーしているか
+    - 未整備事項（U-01〜U-18）のうちスキーマに影響するものが適切にプレースホルダー化されているか
+14. **Symbol_Agent**: `Task_Management/02_Active` に `report_schema_validation_Phase5.txt` を作成し、検証結果（合格/不合格/要修正の項目リスト）を報告する。`task_Phase5_Schema.txt` に「整合性検証完了」を追記する
+
+### 成果物作成（Step 15〜16）
+
+15. **Data_Model_Agent**: Symbol_Agent の検証結果を反映し、`Agent_workspace/data_model_agent/業務/05_スキーマ定義.txt` に最終版を記述する。以下のセクションを含める:
+    - v1 スコープ判定表（全25クラスの振り分け結果）
+    - 永続モデル定義（`@Model` クラス一覧、フィールド、関連）
+    - 値型・列挙型定義
+    - プロトコル定義
+    - ER 図（テキスト形式のエンティティ関連図）
+    - 未整備事項への対処（仮値/プレースホルダーの一覧）
+    - Phase 6 への申し送り事項（デバイス分担に影響する設計判断）
+16. **Data_Model_Agent**: `task_Phase5_Schema.txt` に作業完了を追記する
+
+### 完了処理（Step 17〜20）
+
+17. **Agent_Manager**: 成果物（`05_スキーマ定義.txt`）と検証報告（`report_schema_validation_Phase5.txt`）を確認し、最終承認を行う
+18. **Agent_Manager**: `Task_Management/02_Active` 内の `report_schema_validation_Phase5.txt` を `Task_Management/03_Completed` に移動する
+19. **Agent_Manager**: 親タスク `task_Phase5_Schema.txt` を `Task_Management/03_Completed` に移動する
+20. **Agent_Manager**: 完了したファイル群を `Task_Management/04_Archive/Phase5_Schema_[日付]/` にアーカイブする
+
+---
+
+## Phase 1〜5 の全体比較
+
+| 観点 | Phase 1 | Phase 2 | Phase 3 | Phase 4 | Phase 5 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **焦点** | 単一領域の処理 | 複数領域間の影響 | ループ・分岐・例外 | スナップショットからの逆引き | 候補リストからの型定義 |
+| **入力** | ユースケース提案 | Phase 1 + 相互作用提案 | Phase 1・2 + 例外提案 | Phase 1〜3 スナップショット | Phase 4 候補リスト |
+| **出力** | 静的スナップショット | 相互作用スナップショット | 複合スナップショット | クラス/変数/関数候補リスト | SwiftData モデル仕様書 |
+| **主担当** | Symbol + Data_Model | Symbol + Data_Model | Symbol + Data_Model | Symbol + Data_Model | Data_Model（主）+ Symbol（検証） |
+| **性質** | 抽象（設計） | 抽象（設計） | 抽象（設計） | 具象化（構造化） | 具象化（型定義） |
+| **成果物** | `01_静的スナップショット` | `02_相互作用スナップショット` | `03_複合スナップショット` | `04_構造抽出` | `05_スキーマ定義` |
+| **ステップ数** | 24 | 27 | 27 | 20 | 20 |
+
+---
+
+## 05_スキーマ定義.txt の推奨構成
+
+```
+# Phase 5: スキーマ定義（Schema Definition）
+
+## 1. v1 スコープ判定表
+| クラス | カテゴリ | 根拠 |
+
+## 2. 永続モデル定義（@Model）
+### 2.1 v1 必須モデル
+### 2.2 v1 骨格モデル
+
+## 3. 値型定義（struct）
+
+## 4. 列挙型定義（enum）
+
+## 5. プロトコル定義
+
+## 6. ER 図（テキスト形式）
+
+## 7. 未整備事項への対処
+| # | 項目 | 対処方法（仮値/プレースホルダー/v2延期） |
+
+## 8. Phase 6 への申し送り事項
+```

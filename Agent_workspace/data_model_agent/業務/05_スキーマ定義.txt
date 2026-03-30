@@ -1,0 +1,1079 @@
+# Phase 5: スキーマ定義（Schema Definition）
+
+作成日: 2026/02/17
+担当: Data_Model_Agent
+ステータス: 最終版（Symbol_Agent 検証済み、FIX-01〜03 反映済み）
+
+## 区分ルール
+- **資料準拠**: スナップショット・シンボル辞書に根拠があるもの
+- **提案/ドラフト**: PRE-02 で採否判定済みの反映、または推測に基づくもの
+- **未整備**: 根拠資料に「未整備」と明記されている項目
+
+---
+
+## 1. v1 スコープ判定表
+
+判定基準:
+- v1 コア機能: 測定ON/OFF、対処行動の記録・評価、ログ閲覧、ローカル通知、期待状態の選択
+- v2 以降: タイムラインUI、LLM推論、iCloud同期、社会的状態管理、危篤閾値自動検知、CO2詳細センサー、代替行動自動提案
+
+| # | クラス名 | カテゴリ | 根拠 |
+|---|---|---|---|
+| C-01 | UserState | **v1 必須** | 資料準拠: 全フロー横断の中心オブジェクト。測定データ（心拍・HRV）と主観入力（快不快・覚醒度・集中度・疲労度）を保持。Sn01〜19, P3-01,03 |
+| C-02 | EnvironmentState | **v1 骨格** | 資料準拠: 温度・湿度のセンサーデータはv1で収集。ただし詳細な環境介入ロジック（カビ判定・空気質分析等）はv2。Sn04〜07 |
+| C-03 | SocialState | **v2 延期** | 資料準拠: 社会的状態の管理はv2機能（03_バージョン別機能スコープ.md §4）。Sn10 |
+| C-04 | ScheduledEvent | **v1 骨格** | 資料準拠: v1では対処行動の選択参照としての骨格が必要。本格的なカレンダースケジューリングはv2。Sn01,04,06,07,19 |
+| C-05 | ExecutionRecord | **v1 必須** | 資料準拠: 対処行動の記録・評価の中核モデル。行動の開始/終了、前後状態、主観評価を保持。Sn01,19 |
+| C-06 | UserStateHistoryRecord | **v1 必須** | 資料準拠: ログ閲覧機能の中核。状態スナップショットの時系列記録。Sn02, Sn15 |
+| C-07 | EvaluationResult | **v1 必須** | 資料準拠: 対処行動の効果評価結果を保持。期待-実績の一致スコア。Sn03, Sn20 |
+| C-08 | MeasurementSession | **v1 必須** | 資料準拠: 測定ON/OFFの中核モデル。セッションのライフサイクル管理。Sn11, Sn12 |
+| C-09 | ExpectedStateSchema | **v1 必須** | 資料準拠: 期待状態の選択機能の中核。プリセット（Standard/Ready/Focus/Rest/Sleep）の定義。Sn03 |
+| C-10 | ActualStateSnapshot | **v1 必須** | 資料準拠: 評価時の実際状態スナップショット。↥(evaluate_task_effect) の第2引数。Sn03 |
+| C-11 | FallbackScheduledEvent | **v2 延期** | 資料準拠: 危篤状態回復の代替タスク。危篤閾値自動検知はv2。P3-02 |
+| C-12 | MicroInterventionPlan | **v2 延期** | 資料準拠: 環境介入の自動プラン生成はv2。Sn07, P3-04 |
+| C-13 | RoiLogEntry | **v2 延期** | 資料準拠: ROI分析はv2の高度判断処理。Sn04, Sn07 |
+| C-14 | InterventionLogEntry | **v2 延期** | 資料準拠: 詳細な介入ログ（ネゲントロピー計算含む）はv2。Sn06 |
+| C-15 | DeferredTaskEntry | **v2 延期** | 資料準拠: タスク延期・棄却判定はv2のスケジューリング機能。Sn05 |
+| C-16 | PlMetrics | **v2 延期** | 資料準拠: P/L指標の集計分析はv2。Sn09 |
+| C-17 | InterventionPlSummary | **v2 延期** | 資料準拠: 介入集計はPlMetricsの前段でありv2。Sn09 |
+| C-18 | DeviceConnectionStatusMap | **v1 骨格** | 資料準拠: センサー接続状態の管理。v1ではHealthKit/SwitchBotの基本接続管理が必要。Sn17 |
+| C-19 | UserResourceState | **v2 延期** | 資料準拠: ユーザーリソース（エネルギー・時間）管理はv2のスケジューリングに付随。Sn04 |
+| C-20 | EvaluationTargetObject | **v1 骨格** | 資料準拠: 評価結果の格納先コンテナ。Sn03での .result フィールドアクセス。v1では最小限 |
+| C-21 | GuestResponseTask | **v2 延期** | 資料準拠: 来客対応は社会的状態管理（v2）に付随。Sn10 |
+| C-22 | InterventionIntensityTable | **v2 延期** | 未整備: 再発回数→介入強度テーブル。危篤閾値自動検知はv2。P3-01 |
+| C-23 | RecoveryLoopExitCondition | **v2 延期** | 未整備: 回復ループ終了条件。危篤状態管理はv2。P3-03 |
+| C-24 | VentilationFeasibilityCriteria | **v2 延期** | 未整備: 換気実行可否基準。詳細環境センサーはv2。P3-04 |
+| C-25 | SubjectiveModeExitCondition | **v2 延期** | 未整備: 主観モード終了条件。高度なモード管理はv2。P3-05 |
+
+**判定サマリー**: v1 必須 7件 / v1 骨格 4件 / v2 延期 14件
+
+---
+
+## 2. 永続モデル定義（@Model）
+
+### 2.1 v1 必須モデル
+
+---
+
+#### 2.1.1 UserState（C-01）
+
+資料準拠: ꀴ, Sn01〜19, P3-01,03
+
+ユーザーの現在状態。センサーデータと主観入力を統合保持する中心エンティティ。
+v1 ではシングルトン的に「最新状態」を1レコードとして保持し、変化時に UserStateHistoryRecord へスナップショットを追記する。
+
+```swift
+@Model
+final class UserState {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+
+    // --- センサーデータ（V-05, V-06）---
+    var heartRateBpm: Double?           // ꀵ 心拍数 (bpm)
+    var hrvMs: Double?                  // ꀶ 心拍変動 (ms)
+
+    // --- 主観入力（V-07〜V-10）---
+    var valenceScore: Double?           // ꀷ 快-不快 [1-5]
+    var arousalScore: Double?           // ꀸ 覚醒度 [1-5]
+    var focusScore: Double?             // ꀹ 集中度 [1-5]
+    var fatigueScore: Double?           // ꀺ 疲労度 [1-5]
+
+    // --- 測定状態フラグ（V-47）---
+    var isMeasurementStateActive: Bool = false  // ꀚ
+
+    // --- v1 骨格フィールド ---
+    var measurementCapability: Double?  // ꀳ 測定能力スコア (v1骨格)
+    var measurementCapabilityStatusRaw: String = "normal"
+        // MeasurementCapabilityStatus の rawValue 格納
+
+    // --- Relationship ---
+    @Relationship(deleteRule: .cascade, inverse: \UserStateHistoryRecord.userState)
+    var historyRecords: [UserStateHistoryRecord] = []
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | V-40 |
+| heartRateBpm | Double? | Optional | nil | V-05 |
+| hrvMs | Double? | Optional | nil | V-06 |
+| valenceScore | Double? | Optional | nil | V-07 |
+| arousalScore | Double? | Optional | nil | V-08 |
+| focusScore | Double? | Optional | nil | V-09 |
+| fatigueScore | Double? | Optional | nil | V-10 |
+| isMeasurementStateActive | Bool | Required | false | V-47 |
+| measurementCapability | Double? | Optional | nil | V-23 (v1骨格) |
+| measurementCapabilityStatusRaw | String | Required | "normal" | V-110 (PRE-02 #3) |
+
+---
+
+#### 2.1.2 MeasurementSession（C-08）
+
+資料準拠: ꂳ, Sn11, Sn12
+
+測定ON/OFF のライフサイクルモデル。ユーザーがトグルで開始→終了する1セッションを表す。
+
+```swift
+@Model
+final class MeasurementSession {
+    var id: UUID = UUID()
+    var startTimestamp: Date = Date()
+    var endTimestamp: Date?
+    var statusRaw: String = "active"    // MeasurementSessionStatus.rawValue
+
+    // --- 測定時間管理（V-27, V-28）---
+    var measurementTimeDailyMinutes: Double = 0.0  // ꀡ 本日累積測定時間 (min)
+    var lastValidMeasurementTimestamp: Date?        // ꀞ 最終有効測定時刻
+
+    // --- v1 骨格フィールド ---
+    var measurementQualityScore: Double?    // ꀉ 品質スコア (v1骨格)
+    var measurementFatigueLevel: Double?    // ꀟ 測定疲労 (v1骨格)
+    var isMeasurementMode: Bool = true      // ꀙ 測定モードフラグ
+
+    // --- Relationship ---
+    @Relationship(deleteRule: .cascade, inverse: \ExecutionRecord.measurementSession)
+    var executionRecords: [ExecutionRecord] = []
+
+    @Relationship(deleteRule: .cascade, inverse: \UserStateHistoryRecord.measurementSession)
+    var stateRecords: [UserStateHistoryRecord] = []
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| startTimestamp | Date | Required | Date() | — |
+| endTimestamp | Date? | Optional | nil | — |
+| statusRaw | String | Required | "active" | — |
+| measurementTimeDailyMinutes | Double | Required | 0.0 | V-27 |
+| lastValidMeasurementTimestamp | Date? | Optional | nil | V-28 |
+| measurementQualityScore | Double? | Optional | nil | V-24 (v1骨格) |
+| measurementFatigueLevel | Double? | Optional | nil | V-26 (v1骨格) |
+| isMeasurementMode | Bool | Required | true | V-95 |
+
+---
+
+#### 2.1.3 ExecutionRecord（C-05）
+
+資料準拠: ─_exec, Sn01,19, P3-01,02
+
+対処行動の実行記録。行動の開始/終了時刻、前後の状態スナップショット、評価結果を保持する。
+
+```swift
+@Model
+final class ExecutionRecord {
+    var id: UUID = UUID()
+    var actionTemplateId: String = ""
+    var actionName: String = ""
+    var startTimestamp: Date = Date()
+    var endTimestamp: Date?
+
+    // --- 主観評価（Sn19: ꃠ phase1_effectiveness_score）---
+    var userRating: Double?             // [1-5] ユーザー主観効果評価
+
+    // --- Relationship ---
+    var measurementSession: MeasurementSession?
+
+    @Relationship(deleteRule: .nullify)
+    var stateBefore: UserStateHistoryRecord?    // 行動前スナップショット
+
+    @Relationship(deleteRule: .nullify)
+    var stateAfter: UserStateHistoryRecord?     // 行動後スナップショット
+
+    @Relationship(deleteRule: .cascade)
+    var evaluationResult: EvaluationResult?
+
+    // delta_result は stateAfter - stateBefore から算出可能なため
+    // v1 では永続プロパティとせず、算出プロパティとして実装する
+    // var deltaResult: DeltaResult? → computed or transient
+
+    init(actionTemplateId: String, actionName: String) {
+        self.actionTemplateId = actionTemplateId
+        self.actionName = actionName
+    }
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| actionTemplateId | String | Required | "" | — |
+| actionName | String | Required | "" | — |
+| startTimestamp | Date | Required | Date() | — |
+| endTimestamp | Date? | Optional | nil | — |
+| userRating | Double? | Optional | nil | V-157 |
+| measurementSession | MeasurementSession? | Optional | nil | — |
+| stateBefore | UserStateHistoryRecord? | Optional | nil | — |
+| stateAfter | UserStateHistoryRecord? | Optional | nil | — |
+| evaluationResult | EvaluationResult? | Optional | nil | — |
+
+---
+
+#### 2.1.4 UserStateHistoryRecord（C-06）
+
+資料準拠: ─_user_state_log, Sn02, Sn15
+
+ユーザー状態のスナップショット履歴。ログ閲覧の中核データ。
+センサー値と主観入力を特定時点で凍結して保存する。
+
+```swift
+@Model
+final class UserStateHistoryRecord {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+
+    // --- センサースナップショット ---
+    var heartRateBpm: Double?           // ꀵ
+    var hrvMs: Double?                  // ꀶ
+
+    // --- 主観スナップショット ---
+    var valenceScore: Double?           // ꀷ [1-5]
+    var arousalScore: Double?           // ꀸ [1-5]
+    var focusScore: Double?             // ꀹ [1-5]
+    var fatigueScore: Double?           // ꀺ [1-5]
+
+    // --- 環境スナップショット（v1骨格: 温度・湿度のみ）---
+    var temperature: Double?
+    var humidity: Double?
+
+    // --- 期待状態参照 ---
+    var expectedStateId: String?        // 選択中の期待状態プリセットID
+
+    // --- コンテキスト ---
+    var isMeasurementActive: Bool = false
+    var recordTypeRaw: String = "periodic"  // "periodic" | "actionBefore" | "actionAfter"
+
+    // --- Relationship ---
+    var userState: UserState?
+    var measurementSession: MeasurementSession?
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | — |
+| heartRateBpm | Double? | Optional | nil | V-05 |
+| hrvMs | Double? | Optional | nil | V-06 |
+| valenceScore | Double? | Optional | nil | V-07 |
+| arousalScore | Double? | Optional | nil | V-08 |
+| focusScore | Double? | Optional | nil | V-09 |
+| fatigueScore | Double? | Optional | nil | V-10 |
+| temperature | Double? | Optional | nil | (C-02 由来) |
+| humidity | Double? | Optional | nil | (C-02 由来) |
+| expectedStateId | String? | Optional | nil | V-91 |
+| isMeasurementActive | Bool | Required | false | V-47 |
+| recordTypeRaw | String | Required | "periodic" | — |
+
+---
+
+#### 2.1.5 EvaluationResult（C-07）
+
+資料準拠: ─_evaluation_result, Sn03, Sn20
+
+期待状態と実際状態の比較評価結果。↥(evaluate_task_effect) の出力。
+
+```swift
+@Model
+final class EvaluationResult {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+    var matchScore: Double = 0.0        // 一致スコア [0.0-1.0]
+    var detailEvaluationJson: String?   // 詳細評価（JSON エンコード）
+    var expectedStateId: String?        // 比較元の期待状態ID
+    var notes: String?                  // ユーザーメモ（v1 拡張用）
+
+    init(matchScore: Double) {
+        self.matchScore = matchScore
+    }
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | — |
+| matchScore | Double | Required | 0.0 | — |
+| detailEvaluationJson | String? | Optional | nil | — |
+| expectedStateId | String? | Optional | nil | — |
+| notes | String? | Optional | nil | — |
+
+---
+
+#### 2.1.6 ExpectedStateSchema（C-09）
+
+資料準拠: ┃_expected, Sn03
+
+期待状態のプリセット定義。v1 ではシステム提供のプリセット（Standard / Ready / Focus / Rest / Sleep）を初期シードとして提供する。
+定数 ሧ〜ራ（state_preset_user_*）に対応。
+
+```swift
+@Model
+final class ExpectedStateSchema {
+    var id: UUID = UUID()
+    var name: String = ""
+    var presetTypeRaw: String = "standard"  // ExpectedStatePreset.rawValue
+    var displayOrder: Int = 0
+    var isSystemPreset: Bool = true
+
+    // 期待する状態ベクトル（v1: 簡易定義、v2: 詳細ベクトル）
+    var targetValenceRange: String?     // "3-5" 等の範囲表記
+    var targetArousalRange: String?
+    var targetFocusRange: String?
+    var targetFatigueRange: String?
+    var descriptionText: String?
+
+    // v2 用プレースホルダー
+    var stateVectorJson: String?        // 詳細な状態ベクトル（v2で利用）
+
+    init(name: String, presetType: String) {
+        self.name = name
+        self.presetTypeRaw = presetType
+    }
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| name | String | Required | "" | — |
+| presetTypeRaw | String | Required | "standard" | ሧ〜ራ |
+| displayOrder | Int | Required | 0 | — |
+| isSystemPreset | Bool | Required | true | — |
+| targetValenceRange | String? | Optional | nil | — |
+| targetArousalRange | String? | Optional | nil | — |
+| targetFocusRange | String? | Optional | nil | — |
+| targetFatigueRange | String? | Optional | nil | — |
+| descriptionText | String? | Optional | nil | — |
+| stateVectorJson | String? | Optional | nil | (v2用) |
+
+初期シードデータ:
+| プリセット名 | presetTypeRaw | 定数 | 概要 |
+|---|---|---|---|
+| 標準 | "standard" | ሧ state_preset_user_standard | 通常の覚醒状態 |
+| 準備完了 | "ready" | ረ state_preset_user_ready | 作業開始可能状態 |
+| 集中 | "focus" | ሩ state_preset_user_focus | 深い集中状態 |
+| 休息 | "rest" | ሪ state_preset_user_rest | 意識的な休息状態 |
+| 睡眠 | "sleep" | ራ state_preset_user_sleep | 入眠準備/睡眠中 |
+
+---
+
+#### 2.1.7 ActualStateSnapshot（C-10）
+
+資料準拠: ─_actual, Sn03
+
+評価時の実際状態スナップショット。↥(evaluate_task_effect) の第2引数として使用。
+UserStateHistoryRecord と構造は類似するが、評価専用の凍結コピーとして独立保持する。
+
+```swift
+@Model
+final class ActualStateSnapshot {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+
+    // センサー値
+    var heartRateBpm: Double?
+    var hrvMs: Double?
+
+    // 主観値
+    var valenceScore: Double?
+    var arousalScore: Double?
+    var focusScore: Double?
+    var fatigueScore: Double?
+
+    // 環境値（v1骨格）
+    var temperature: Double?
+    var humidity: Double?
+
+    // ソース情報
+    var sourceDescription: String?      // ꁆ actual_state_source
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | V-xx対応 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | — |
+| heartRateBpm | Double? | Optional | nil | V-05 |
+| hrvMs | Double? | Optional | nil | V-06 |
+| valenceScore | Double? | Optional | nil | V-07 |
+| arousalScore | Double? | Optional | nil | V-08 |
+| focusScore | Double? | Optional | nil | V-09 |
+| fatigueScore | Double? | Optional | nil | V-10 |
+| temperature | Double? | Optional | nil | — |
+| humidity | Double? | Optional | nil | — |
+| sourceDescription | String? | Optional | nil | V-93 |
+
+---
+
+### 2.2 v1 骨格モデル
+
+---
+
+#### 2.2.1 EnvironmentState（C-02）
+
+資料準拠: ꀓ, Sn04〜07
+
+v1 では温度・湿度の基本センサーデータのみ保持する骨格定義。
+詳細な環境メトリクス（カビリスク・埃蓄積・キッチン汚れ・空気質・風呂清潔度・散らかり度）はv2で追加。
+
+```swift
+@Model
+final class EnvironmentState {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+
+    // --- v1: 基本センサーデータ ---
+    var temperature: Double?            // 室温
+    var humidity: Double?               // 湿度
+
+    // --- v2 で追加予定（プレースホルダー）---
+    // var moldRisk: Double?            // ꀻ V-11 (v2)
+    // var dustAccumulation: Double?    // ꀼ V-12 (v2)
+    // var kitchenGrime: Double?        // ꀽ V-13 (v2)
+    // var airQualityInternal: Double?  // ꀾ V-14 (v2)
+    // var bathCleanliness: Double?     // ꀿ V-15 (v2)
+    // var roomClutter: Double?         // ꁀ V-16 (v2)
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | 備考 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | — |
+| temperature | Double? | Optional | nil | ꀔ 由来（環境センサー温度成分） |
+| humidity | Double? | Optional | nil | ꀔ 由来（環境センサー湿度成分） |
+
+---
+
+#### 2.2.2 ScheduledEvent（C-04）
+
+資料準拠: ┃_rec, Sn01,04,06,07,19
+
+v1 では「対処行動のテンプレート参照」としての最小限の骨格を提供する。
+本格的なカレンダー配置・スケジューリングはv2で実装。
+F-38 (create_action_schedule) → F-37 (convert_schedule_to_execution) のフローで使用。
+
+```swift
+@Model
+final class ScheduledEvent {
+    var id: UUID = UUID()
+    var templateRef: String = ""        // タスクテンプレートID
+    var name: String = ""               // 表示名
+    var scheduledAt: Date = Date()
+    var statusRaw: String = "scheduled" // ScheduledEventStatus.rawValue
+
+    // v2 で追加予定
+    // var expectedStateJson: String?   // 期待状態スキーマ (v2)
+    // var recurrenceRule: String?      // 繰り返しルール (v2)
+
+    init(templateRef: String, name: String) {
+        self.templateRef = templateRef
+        self.name = name
+    }
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | 備考 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| templateRef | String | Required | "" | ሡ task_templates_dictionary 参照 |
+| name | String | Required | "" | 表示名 |
+| scheduledAt | Date | Required | Date() | — |
+| statusRaw | String | Required | "scheduled" | — |
+
+---
+
+#### 2.2.3 DeviceConnectionStatusMap（C-18）
+
+資料準拠: ꀍ, Sn17, P3-05
+
+v1 では HealthKit / SwitchBot の接続状態を簡易的に管理する。
+詳細なセンサー再接続フローや自動復帰はv2。
+
+```swift
+@Model
+final class DeviceConnectionStatusMap {
+    var id: UUID = UUID()
+    var lastUpdated: Date = Date()
+    var statusJson: String = "{}"       // { "deviceId": "status" } JSON
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | 備考 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| lastUpdated | Date | Required | Date() | — |
+| statusJson | String | Required | "{}" | デバイスID→接続状態のJSON |
+
+---
+
+#### 2.2.4 EvaluationTargetObject（C-20）
+
+資料準拠: ꁇ, Sn03
+
+評価結果の格納先コンテナ。Sn03 で `.result` フィールドアクセスが確認されている。
+v1 では ExecutionRecord とは独立した汎用評価コンテナとして最小限定義。
+Sn20（状態比較）のように対処行動に紐づかない評価にも使用する。
+
+```swift
+@Model
+final class EvaluationTargetObject {
+    var id: UUID = UUID()
+    var timestamp: Date = Date()
+    var contextDescription: String?     // 評価コンテキストの説明
+
+    @Relationship(deleteRule: .cascade)
+    var result: EvaluationResult?
+
+    init() {}
+}
+```
+
+| プロパティ | 型 | Required/Optional | デフォルト値 | 備考 |
+|---|---|---|---|---|
+| id | UUID | Required | UUID() | — |
+| timestamp | Date | Required | Date() | — |
+| contextDescription | String? | Optional | nil | — |
+| result | EvaluationResult? | Optional | nil | ꁇ.result |
+
+---
+
+### 2.3 v2 延期モデル（予約コメント）
+
+以下のモデルは v2 以降で定義する。Phase 5 では予約のみ記載。
+
+```swift
+// v2 延期: C-03 SocialState
+// v2 延期: C-11 FallbackScheduledEvent（ScheduledEvent のサブタイプ検討）
+// v2 延期: C-12 MicroInterventionPlan
+// v2 延期: C-13 RoiLogEntry
+// v2 延期: C-14 InterventionLogEntry
+// v2 延期: C-15 DeferredTaskEntry
+// v2 延期: C-16 PlMetrics
+// v2 延期: C-17 InterventionPlSummary
+// v2 延期: C-19 UserResourceState
+// v2 延期: C-21 GuestResponseTask
+// v2 延期: C-22 InterventionIntensityTable（未整備）
+// v2 延期: C-23 RecoveryLoopExitCondition（未整備）
+// v2 延期: C-24 VentilationFeasibilityCriteria（未整備）
+// v2 延期: C-25 SubjectiveModeExitCondition（未整備）
+```
+
+---
+
+## 3. 値型定義（struct）
+
+v1 で使用する値型。SwiftData モデルのプロパティとして Codable 準拠で埋め込む。
+
+---
+
+#### 3.1 SensorSnapshot
+
+資料準拠: V-04 (ꀔ environmental_sensor_raw), V-05〜V-06
+
+特定時点のセンサー値をまとめた不変構造体。
+UserStateHistoryRecord 生成時や状態比較時に使用。
+
+```swift
+struct SensorSnapshot: Codable, Equatable, Sendable {
+    var heartRateBpm: Double?       // ꀵ
+    var hrvMs: Double?              // ꀶ
+    var temperature: Double?        // 室温
+    var humidity: Double?           // 湿度
+    var capturedAt: Date
+
+    init(heartRateBpm: Double? = nil, hrvMs: Double? = nil,
+         temperature: Double? = nil, humidity: Double? = nil,
+         capturedAt: Date = Date()) {
+        self.heartRateBpm = heartRateBpm
+        self.hrvMs = hrvMs
+        self.temperature = temperature
+        self.humidity = humidity
+        self.capturedAt = capturedAt
+    }
+}
+```
+
+---
+
+#### 3.2 SubjectiveInput
+
+資料準拠: V-07〜V-10, ꃊ (phase1_subjective_input)
+
+ユーザーが入力する主観評価のバンドル。
+F-75 (collect_subjective_input) の出力型。
+
+```swift
+struct SubjectiveInput: Codable, Equatable, Sendable {
+    var valenceScore: Double        // ꀷ [1-5] 快-不快
+    var arousalScore: Double        // ꀸ [1-5] 覚醒度
+    var focusScore: Double          // ꀹ [1-5] 集中度
+    var fatigueScore: Double        // ꀺ [1-5] 疲労度
+    var inputTimestamp: Date
+
+    init(valence: Double, arousal: Double, focus: Double,
+         fatigue: Double, at: Date = Date()) {
+        self.valenceScore = valence
+        self.arousalScore = arousal
+        self.focusScore = focus
+        self.fatigueScore = fatigue
+        self.inputTimestamp = at
+    }
+}
+```
+
+---
+
+#### 3.3 DeltaResult
+
+資料準拠: F-16 (↶ compare_state_delta), Sn19
+
+対処行動の前後状態差分。F-16 の出力型。
+
+```swift
+struct DeltaResult: Codable, Equatable, Sendable {
+    var valenceChange: Double?      // 快-不快の変化量
+    var arousalChange: Double?      // 覚醒度の変化量
+    var focusChange: Double?        // 集中度の変化量
+    var fatigueChange: Double?      // 疲労度の変化量
+    var heartRateChange: Double?    // 心拍変化量
+    var hrvChange: Double?          // HRV変化量
+    var overallChangeScore: Double? // 総合変化スコア（提案/ドラフト: 算出式は未定）
+
+    init() {}
+}
+```
+
+---
+
+## 4. 列挙型定義（enum）
+
+### 4.1 v1 必須 enum
+
+---
+
+#### 4.1.1 MeasurementSessionStatus
+
+資料準拠: C-08 MeasurementSession の status フィールド, Sn11,12
+
+```swift
+enum MeasurementSessionStatus: String, Codable, Sendable {
+    case idle = "idle"              // セッション未開始
+    case active = "active"          // 測定中（ON状態）
+    case completed = "completed"    // 正常終了（ユーザーがOFF）
+    case cancelled = "cancelled"    // 中断/異常終了
+}
+```
+
+---
+
+#### 4.1.2 ExpectedStatePreset
+
+資料準拠: 定数 ሧ〜ራ (state_preset_user_*)
+
+```swift
+enum ExpectedStatePreset: String, Codable, CaseIterable, Sendable {
+    case standard = "standard"      // ሧ 標準状態
+    case ready = "ready"            // ረ 作業開始可能
+    case focus = "focus"            // ሩ 集中状態
+    case rest = "rest"              // ሪ 休息状態
+    case sleep = "sleep"            // ራ 睡眠状態
+}
+```
+
+---
+
+#### 4.1.3 ScheduledEventStatus
+
+資料準拠: C-04 ScheduledEvent の status フィールド
+
+```swift
+enum ScheduledEventStatus: String, Codable, Sendable {
+    case scheduled = "scheduled"        // 予定
+    case inProgress = "inProgress"      // 実行中
+    case completed = "completed"        // 完了
+    case cancelled = "cancelled"        // 取消
+}
+```
+
+---
+
+### 4.2 v1 骨格 enum
+
+---
+
+#### 4.2.1 MeasurementCapabilityStatus
+
+提案/ドラフト: PRE-02 #3 採用。V-110 (user_measurement_capability_recovery_pending) を enum の一値として包含。
+
+```swift
+enum MeasurementCapabilityStatus: String, Codable, Sendable {
+    case normal = "normal"                      // 通常測定可能
+    case degraded = "degraded"                  // 測定能力低下中
+    case recoveryPending = "recoveryPending"    // PRE-02 #3: 回復待ち状態
+    case unavailable = "unavailable"            // 測定不可
+}
+```
+
+---
+
+#### 4.2.2 MeasurementSessionQuality
+
+資料準拠: V-99 (ꄌ measurement_session_quality), P2-02, P3-06
+
+```swift
+enum MeasurementSessionQuality: String, Codable, Sendable {
+    case high = "high"
+    case normal = "normal"
+    case low = "low"
+}
+```
+
+---
+
+### 4.3 v2 延期 enum（予約）
+
+以下の enum は v2 以降で定義する。
+
+```swift
+// v2 延期: RejectPostpone (V-79 ꁗ) — Reject/Postpone 判定
+// v2 延期: RecoveryTaskPriority (V-98 ꄉ) — Normal/High/Critical（PRE-02 #1 延期）
+// v2 延期: InterventionPriority (V-64 ꁹ) — Normal/High/Critical
+// v2 延期: ExceptionRoute (V-104 ꄛ) — Escalate/Normal/Fallback
+// v2 延期: ResistanceType (V-80 ꁛ) — 汚れの性質分類
+// v2 延期: SystemMode (ꃗ) — Deterministic/Probabilistic
+```
+
+---
+
+## 5. プロトコル定義
+
+### 5.1 Timestamped
+
+資料準拠: 全 @Model に共通する timestamp フィールド
+
+UserState / EnvironmentState / UserStateHistoryRecord 等すべての永続モデルが保持する
+タイムスタンプ関連の共通インターフェース。
+
+```swift
+protocol Timestamped {
+    var id: UUID { get }
+    var timestamp: Date { get set }
+}
+```
+
+適用先: UserState, ExecutionRecord, UserStateHistoryRecord,
+        EvaluationResult, ExpectedStateSchema, ActualStateSnapshot,
+        EnvironmentState, ScheduledEvent, DeviceConnectionStatusMap, EvaluationTargetObject
+
+注記: MeasurementSession は `startTimestamp` を使用しており `timestamp` プロパティを持たない。
+Phase 6 実装時に `startTimestamp` を `timestamp` エイリアスとする対応、
+または Timestamped 準拠から除外する判断が必要。
+
+---
+
+### 5.2 StatePersistable
+
+資料準拠: C-01 UserState, C-02 EnvironmentState, C-03 SocialState に共通する構造
+
+UserState / EnvironmentState / SocialState（v2）に共通する「状態オブジェクト」プロトコル。
+Phase 4 の構造関連図で3つの状態クラスは並列に扱われている。
+
+```swift
+protocol StatePersistable: Timestamped {
+    func toSnapshot() -> [String: Any]
+    func applyUpdate(from sensorData: SensorSnapshot)
+}
+```
+
+適用先（v1）: UserState, EnvironmentState
+適用先（v2）: SocialState
+
+---
+
+### 5.3 StateSnapshotConvertible
+
+提案/ドラフト: UserState → UserStateHistoryRecord / ActualStateSnapshot の変換を統一する。
+
+```swift
+protocol StateSnapshotConvertible {
+    func createHistoryRecord() -> UserStateHistoryRecord
+    func createActualSnapshot() -> ActualStateSnapshot
+}
+```
+
+適用先: UserState
+
+---
+
+## 6. ER 図（テキスト形式）
+
+### 6.1 v1 コアモデル関係図
+
+```
+┌─────────────────────┐
+│  ExpectedStateSchema │  ← 期待状態プリセット（5種）
+│  (C-09)  v1必須      │
+│  id, name, preset    │
+└──────────┬──────────┘
+           │ selectedAs (expectedStateId)
+           ▼
+┌──────────────────────────┐       ┌──────────────────────────┐
+│  UserState               │       │  EnvironmentState        │
+│  (C-01)  v1必須           │       │  (C-02)  v1骨格           │
+│  id, timestamp           │       │  id, timestamp           │
+│  heartRateBpm, hrvMs     │       │  temperature, humidity   │
+│  valence, arousal,       │       └────────────┬─────────────┘
+│  focus, fatigue          │                    │
+│  isMeasurementActive     │                    │ sensor data
+│  measurementCapability   │◄───────────────────┘
+└──────┬──────────┬────────┘
+       │          │
+       │          │ snapshot (↪ merge_state_snapshot)
+       │          ▼
+       │  ┌────────────────────────────────┐
+       │  │  UserStateHistoryRecord        │  ← ログ閲覧データ
+       │  │  (C-06)  v1必須                 │
+       │  │  id, timestamp                 │
+       │  │  sensor + subjective snapshot  │
+       │  │  expectedStateId               │
+       │  │  recordTypeRaw                 │
+       │  └───────────┬────────────────────┘
+       │              │ stateBefore / stateAfter
+       │              ▼
+       │  ┌────────────────────────────────┐
+       │  │  ExecutionRecord               │  ← 対処行動記録
+       │  │  (C-05)  v1必須                 │
+       │  │  id, actionTemplateId          │
+       │  │  startTimestamp, endTimestamp   │
+       │  │  userRating [1-5]              │
+       │  │  stateBefore ──→ USHR          │
+       │  │  stateAfter  ──→ USHR          │
+       │  │  evaluationResult ──→ ER       │
+       │  └───────────┬────────────────────┘
+       │              │
+       │              ▼
+       │  ┌────────────────────────────────┐
+       │  │  EvaluationResult              │  ← 効果評価
+       │  │  (C-07)  v1必須                 │
+       │  │  id, matchScore                │
+       │  │  detailEvaluationJson          │
+       │  └────────────────────────────────┘
+       │
+       │ currentSession
+       ▼
+┌────────────────────────────────┐
+│  MeasurementSession            │  ← 測定ON/OFF
+│  (C-08)  v1必須                 │
+│  id, startTimestamp            │
+│  endTimestamp, statusRaw       │
+│  measurementTimeDailyMinutes   │
+│  isMeasurementMode             │
+│  executionRecords ──→ [ER]     │
+│  stateRecords ──→ [USHR]      │
+└────────────────────────────────┘
+
+┌────────────────────────────────┐
+│  ActualStateSnapshot           │  ← 評価用凍結コピー
+│  (C-10)  v1必須                 │
+│  sensor + subjective snapshot  │
+└────────────────────────────────┘
+
+┌────────────────────────────────┐
+│  EvaluationTargetObject        │  ← 汎用評価コンテナ
+│  (C-20)  v1骨格                 │
+│  result ──→ EvaluationResult   │
+└────────────────────────────────┘
+```
+
+### 6.2 Relationship 一覧
+
+| 起点 | 関係 | 終点 | 多重度 | 削除ルール |
+|---|---|---|---|---|
+| UserState | hasMany | UserStateHistoryRecord | 1:N | cascade |
+| MeasurementSession | hasMany | ExecutionRecord | 1:N | cascade |
+| MeasurementSession | hasMany | UserStateHistoryRecord | 1:N | cascade |
+| ExecutionRecord | hasOne | UserStateHistoryRecord (before) | 1:0..1 | nullify |
+| ExecutionRecord | hasOne | UserStateHistoryRecord (after) | 1:0..1 | nullify |
+| ExecutionRecord | hasOne | EvaluationResult | 1:0..1 | cascade |
+| ExecutionRecord | belongsTo | MeasurementSession | N:0..1 | — |
+| EvaluationTargetObject | hasOne | EvaluationResult | 1:0..1 | cascade |
+| UserStateHistoryRecord | belongsTo | UserState | N:0..1 | — |
+| UserStateHistoryRecord | belongsTo | MeasurementSession | N:0..1 | — |
+
+---
+
+## 7. 未整備事項への対処
+
+PRE-02 採否判定結果および Phase 4 の未整備事項（U-01〜U-18）への対処方針。
+
+### 7.1 PRE-02 反映状況
+
+| # | 要素 | 判定 | 対処 | 反映先 |
+|---|---|---|---|---|
+| 1 | P3-01: `↬` の第3引数 recovery_task_priority | v2延期 | スキーマ定義から除外。RecoveryTaskPriority enum はv2予約 | — |
+| 2 | P3-02: `↰` 出力と閾値比較の整合性 | v1採用 | F-21 eval_response_latency の出力を Float(sec) に統一。v1骨格関数として型定義のみ予約 | F-21 戻り値型 |
+| 3 | P3-03: `user_measurement_capability_recovery_pending` | v1骨格 | MeasurementCapabilityStatus enum に `recoveryPending` ケースを追加 | enum §4.2.1 |
+| 4 | P3-04: 換気不能判定の閾値定義 | v2延期 | VentilationFeasibilityCriteria (C-24) はv2予約 | — |
+| 5 | P3-04: `ሸ_air_purifier` | v2延期 | K-35 は定義スキップ | — |
+| 6 | P3-05: 品質スコアと閾値の整合性 | v1採用 | measurementQualityThreshold 定数をプレースホルダー追加 | 定数表 §7.3 |
+| 7 | P3-06: `ꄖ`, `ꄗ` の実値 | v1プレースホルダー | 仮値で定数定義 | 定数表 §7.3 |
+
+### 7.2 未整備事項（U-01〜U-18）の対処方針
+
+| # | 項目 | 対処方法 | 影響範囲 |
+|---|---|---|---|
+| U-01 | 再発回数に応じた介入強度テーブル | v2延期: C-22 InterventionIntensityTable はv2で実装 | C-22, F-88 |
+| U-02 | `ꄘ+1` の更新タイミング定義 | v2延期: 危篤状態管理はv2 | F-99 |
+| U-03 | critical_recurrence_window_hours の実値 | v2延期: K-21 はv2で実値決定 | K-21 |
+| U-04 | 無反応時のエスカレーション境界条件 | v2延期: 自動検知はv2 | F-46 |
+| U-05 | response_timeout_threshold_seconds の実値 | v2延期: K-22 はv2で実値決定 | K-22 |
+| U-06 | 回復専用ループの終了条件 | v2延期: C-23 はv2で実装 | C-23 |
+| U-07 | 測定疲労と睡眠不足の重複判定閾値 | v2延期: 高度な疲労判定はv2 | F-07 |
+| U-08 | 換気不能の具体的判定条件 | v2延期: C-24 はv2で実装 | C-24, F-108 |
+| U-09 | 代替介入選択の優先順位モデル | v2延期: 代替行動の自動提案はv2 | F-41 |
+| U-10 | 主観入力中心モードの終了条件 | v2延期: C-25 はv2で実装 | C-25 |
+| U-11 | センサー再接続時の自動復帰フロー | v2延期: 自動復帰はv2 | F-77 |
+| U-12 | 再開判定の最低回復条件の実値 | v1プレースホルダー: ꄖ = 0.6（PRE-02 #7） | K-23 |
+| U-13 | environment_recovery_min_threshold の実値 | v1プレースホルダー: 0.6（PRE-02 #7） | K-23 |
+| U-14 | measurement_restart_min_stability の実値 | v1プレースホルダー: 300.0 sec（PRE-02 #7） | K-24 |
+| U-15 | 環境→測定能力変換の実係数値 | v2延期: K-18 の実値はv2でチューニング | K-18 |
+| U-16 | 測定品質と環境変動の定量式 | v2延期: 定量式はv2で策定 | F-104, F-106 |
+| U-17 | エッジ解除/再接続の実閾値 | v2延期: K-20 はv2で実値決定 | K-20 |
+| U-18 | 回復遅延の数理モデル | v2延期: v2でモデル策定 | F-104, F-105 |
+
+### 7.3 v1 プレースホルダー定数
+
+以下の定数は v1 スキーマに仮値として含める。
+
+```swift
+enum AppConstants {
+    // --- v1 必須定数 ---
+    static let measurementLimitDailyMaxMinutes: Double = 480.0
+        // ሏ 1日の測定時間推奨上限（8時間 = 480分）
+
+    // --- v1 プレースホルダー定数（PRE-02 #6, #7）---
+    static let measurementQualityThreshold: Double = 0.5
+        // K-34（提案/ドラフト: PRE-02 #6 採用）
+        // 品質スコア ꀉ 用の専用閾値。ሤ とは独立。仮値。
+
+    static let environmentRecoveryMinThreshold: Double = 0.6
+        // K-23 ꄖ（提案/ドラフト: PRE-02 #7 プレースホルダー）
+        // 測定再開を許可する最低環境回復閾値。仮値。
+
+    static let measurementRestartMinStabilitySeconds: Double = 300.0
+        // K-24 ꄗ（提案/ドラフト: PRE-02 #7 プレースホルダー）
+        // 測定再開前に必要な安定継続時間（5分 = 300秒）。仮値。
+
+    static let thresholdMeasurementCapabilityForMonitoring: Double = 0.4
+        // K-25 ሤ（資料準拠: Sn18, P2-01, P3-03,05）
+        // モニタリング可能な測定能力閾値。仮値。
+
+    static let thresholdDiscrepancyForDissociationAlert: Double = 2.0
+        // K-27 ሢ（資料準拠: Sn16）
+        // 主観-客観乖離の警告閾値。仮値。
+}
+```
+
+---
+
+## 8. Phase 6 への申し送り事項
+
+### 8.1 デバイス分担の決定
+
+本スキーマはデバイス非依存で定義した。Phase 6 では以下を決定する必要がある。
+
+| 項目 | 決定事項 | 影響モデル |
+|---|---|---|
+| センサー取得元 | Watch (HealthKit) vs iPhone (SwitchBot) の分担 | UserState, EnvironmentState, MeasurementSession |
+| データ同期 | Watch ↔ iPhone 間のローカル同期方式 | 全 @Model |
+| 主観入力UI | Watch 上の簡易入力 vs iPhone 上の詳細入力 | SubjectiveInput, UserStateHistoryRecord |
+| 通知配信先 | Watch / iPhone / 両方 | MeasurementSession (fatigueWarning) |
+
+### 8.2 モデル統合の検討
+
+| 検討事項 | 詳細 |
+|---|---|
+| UserStateHistoryRecord と ActualStateSnapshot の統合 | 構造が類似。recordTypeRaw で区別して単一モデルにする案。ただし評価用途の独立性を維持するため、Phase 6 で最終判断。 |
+| EvaluationTargetObject と ExecutionRecord の統合 | C-20 は C-05 の evaluationResult プロパティと機能が重複。Sn20（行動に紐づかない状態比較）が v1 スコープ外なら統合可能。 |
+| ScheduledEvent の v1 での必要性 | v1 では対処行動は直接 ExecutionRecord として生成し、ScheduledEvent を経由しない案も検討。F-37/F-38 の v1 実装方針に依存。 |
+
+### 8.3 v1 → v2 拡張パス
+
+v2 移行時にスキーマ破壊変更を最小化するための設計指針:
+
+1. **EnvironmentState (C-02)**: v2 でフィールドを追加するのみ（moldRisk, dustAccumulation 等）。SwiftData のマイグレーションで対応可能。
+2. **SocialState (C-03)**: v2 で新規モデルとして追加。既存モデルへの影響なし。
+3. **ScheduledEvent (C-04)**: v2 で expected フィールド、recurrenceRule 等を追加。
+4. **v2 専用モデル**: C-11〜C-17, C-19, C-21〜C-25 はすべて新規追加。既存スキーマに非破壊的に追加可能。
+5. **Enum 拡張**: v2 延期の enum（RecoveryTaskPriority 等）は新規追加のみで既存 enum への影響なし。
+
+### 8.4 v1 変数・関数の対応サマリー
+
+変数 164 件の v1 スコープ絞り込み結果:
+
+| カテゴリ | v1 対象 | v2 延期 | 合計 |
+|---|---|---|---|
+| 状態変数（V-01〜V-68） | 32件（v1必須モデルのプロパティ + 測定管理変数） | 36件 | 68 |
+| 定数（K-01〜K-35） | 11件（プリセット5種 + AppConstants 6件） | 24件 | 35 |
+| 中間変数・フラグ（V-69〜V-111） | 8件（測定モード・期待状態関連フラグ） | 35件 | 43 |
+| Phase1ローカル変数（V-112〜V-164） | 30件（測定セッション・主観入力・対処行動フロー） | 23件 | 53 |
+| **合計** | **77件** | **87件** | **164** |
+
+関数 110 件の v1 スコープ絞り込み結果:
+
+| カテゴリ | v1 必須 | v1 骨格 | v2 延期 | 合計 |
+|---|---|---|---|---|
+| 算出・計算系（F-01〜F-17） | 2件（F-03, F-16） | 3件（F-01, F-06, F-07） | 12件 | 17 |
+| 判定・評価系（F-18〜F-35） | 1件（F-19） | 3件（F-20, F-21, F-33） | 14件 | 18 |
+| 生成・作成系（F-36〜F-46） | 3件（F-37, F-38, F-43） | 0件 | 8件 | 11 |
+| 保存・記録系（F-47〜F-56） | 5件（F-47〜F-49, F-52, F-53） | 1件（F-50） | 4件 | 10 |
+| 管理・制御系（F-57〜F-91） | 8件（F-57, F-58, F-67〜F-69, F-71, F-74, F-75） | 6件（F-65, F-66, F-72, F-73, F-76〜F-78） | 21件 | 35 |
+| 通知・表示系（F-92〜F-98） | 0件 | 1件（F-94） | 6件 | 7 |
+| 新規候補（F-99〜F-110） | 0件 | 0件 | 12件 | 12 |
+| **合計** | **19件** | **14件** | **77件** | **110** |
+
+### 8.5 シンボル不一致事項（Phase 4 §5.1 引き継ぎ）
+
+**ꀀ / ꁀ 不一致**: PRE-01 で解消済み。`03_複合スナップショットの記述.txt` P3-06 および `04_構造抽出.txt` F-109 の `ꀀ` を `ꁀ` に修正完了。v1 スキーマでは `ꁀ (room_clutter)` を正とし、v2 の EnvironmentState 拡張時に使用する。
+
+### 8.6 特記事項
+
+1. **StateVector の表現**: ExpectedStateSchema.stateVectorJson と ActualStateSnapshot の状態ベクトルは v1 では JSON 文字列としてエンコード。v2 で構造化する際の互換性を考慮し、キーは英語スネークケースで統一する（例: `{"valence": 3.0, "arousal": 4.0, ...}`）。
+
+2. **SwiftData マイグレーション戦略**: v1 → v2 のスキーマ変更は「フィールド追加」と「新規モデル追加」のみで構成される。SwiftData の軽量マイグレーションで対応可能な設計としている。
+
+3. **EvaluationResult の汎用性**: v1 では matchScore（0.0-1.0）のみを定量的評価とし、detailEvaluationJson に自由形式の詳細を格納する。v2 で構造化された評価スキーマに移行する際、JSON からの変換パスを用意する。
+
+---
+
+## 統計サマリー
+
+| カテゴリ | 件数 |
+|---|---|
+| @Model（v1 必須） | 7 |
+| @Model（v1 骨格） | 4 |
+| @Model（v2 延期） | 14 |
+| struct（v1） | 3 |
+| enum（v1 必須） | 3 |
+| enum（v1 骨格） | 2 |
+| enum（v2 延期） | 6 |
+| protocol（v1） | 3 |
+
+---
+
+以上

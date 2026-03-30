@@ -1,0 +1,48 @@
+# Phase 3: 複合・例外（Complex & Exception）
+
+Phase 1・Phase 2で定義したスナップショットを基に、ループ/条件分岐/例外処理を含む制御構造を定義します。
+
+## 目的
+複数領域をまたぐ例外・回復フローを形式的スナップショットとして記述し、運用時のフォールバックと復帰可能性を明示する。
+
+## 参照成果物（資料準拠）
+- `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`
+- `Agent_workspace/data_model_agent/業務/02_相互作用スナップショットの記述.txt`
+- `Agent_workspace/Task_Management/03_Completed/task_Phase2_Interactions.txt`
+
+## Assignment
+以下のアクションを各エージェントに割り当てます。
+
+### 1. ユースケース提出（例外・リカバリー）
+作成場所: `Task_Management/01_Proposals/`
+期限: 2026/02/20
+
+- **User_State_Agent**: `proposal_user_exception.txt`
+  - 期待内容: 危篤判定、回復不能、再発などの個人状態遷移を含む例外フロー。
+- **Environment_State_Agent**: `proposal_env_exception.txt`
+  - 期待内容: 環境崩壊カスケード、介入失敗、遅延回復などの例外フロー。
+- **Monitoring_State_Agent**: `proposal_monitoring_exception.txt`
+  - 期待内容: 測定欠損、測定疲労、センサー不整合時のフォールバック制御。
+
+### 2. 次ステップ（提出後）
+- Symbol_Agent に「制御構文シンボル抽出と定義」を指示。
+- Data_Model_Agent に「複合スナップショット記述」を指示。
+
+## 進捗ログ
+- 2026/02/13: Phase 3 開始。親タスクを `02_Active` に発行。
+- 2026/02/13: Phase 1・Phase 2 成果物の参照先を明示。
+- 2026/02/13: User/Environment/Monitoring 向けに例外ユースケース提出をアサイン。
+- 2026/02/13: `proposal_user_exception.txt` / `proposal_env_exception.txt` / `proposal_monitoring_exception.txt` を `01_Proposals` へ提出。
+- 2026/02/13: 提案3件の内容確認を実施し、適切性を確認。
+- 2026/02/13: 提案3件を `01_Proposals` から `02_Active` へ移動。
+- 2026/02/13: `task_Symbol_Agent_Phase3_Complex.txt` を `02_Active` に発行（Step10）。
+- 2026/02/13: Symbol_Agent が `report_symbol_definition_Phase3.txt` を提出し、制御構文シンボル定義を完了（Step11-16）。
+- 2026/02/13: `task_Data_Model_Agent_Phase3_Complex_Snapshot.txt` を `02_Active` に発行（Step17）。
+- 2026/02/14: Data_Model_Agent が Step18-22 を完了。Phase1/Phase2 スナップショットを部品として読み込み、Phase3 ユースケース・更新済み data を読み込み、ループ・分岐・例外を含む複合論理式を3件以上作成。`Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt` を新規作成（6件）。`report_phase3_complex_snapshot.txt` を提出。
+- 2026/02/14: 【Step23 最終承認】Agent_Manager 代行が成果物を確認。`03_複合スナップショットの記述.txt` に P3-01〜P3-06 の6件、`report_symbol_definition_Phase3.txt`、`report_phase3_complex_snapshot.txt`、`proposal_*_exception.txt` 3件を確認。ワークフロー v1_phase3.txt Step23 準拠で承認。Phase3 完了処理（Step24-27）を実施。
+- 2026/02/14: 進捗管理agentへ完了報告。`進捗管理agent/進捗報告受付/20260214_Phase3_Complex_完了報告.txt`。
+- 2026/02/14: 最終クローズとして `task_Symbol_Agent_Phase3_Complex.txt` / `task_Data_Model_Agent_Phase3_Complex_Snapshot.txt` / `report_phase3_complex_snapshot.txt` を `02_Active` から `03_Completed` へ集約。
+
+## 未整備
+- Social_State_Agent の Phase3 提出要否（代理運用継続の可否）
+- 例外ユースケースの評価基準（採否ルール）

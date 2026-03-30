@@ -11,12 +11,12 @@ Implementation Agent Manager が管理する業務チケットの一覧とステ
 - [Task] v1_alignment_20260111 (Loop 1) - v1方針転換と既存タスクのアーカイブ完了
 - [Task] v1_workflow_definition - Phase 1〜3 のワークフロー定義完了
 - [Task] Phase1_Foundation (2026/01/25) - Snapshot 01-20 整備完了
+- [Task] Phase1_Symbol_Resolution (2026/01/28) - 未整備シンボル確定・衝突解消・登録完了
 
 ## 進行中
-- [Active] task_Symbol_Agent_UnresolvedSymbols_Phase1.txt - 未整備シンボルの正本確定と登録
+- [Active] task_Phase2_Interactions.txt - 相互作用スナップショット作成
 
 ## 予定
-- [Pending] task_Phase2_Interactions.txt - 相互作用スナップショット作成
 - [Pending] task_Phase3_Complex.txt - 複合制御スナップショット作成
 - 04_データモデル実装準備.txt - スキーマファイル作成の指示出し
 - 05_エージェント標準構成の更新.txt - 全エージェントへexperienceフォルダを追加

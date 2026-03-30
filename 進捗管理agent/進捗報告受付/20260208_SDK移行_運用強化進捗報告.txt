@@ -1,0 +1,56 @@
+# 進捗報告: SDK移行_運用強化
+
+報告日: 2026/02/08
+報告者: Multi_Agent_Architect
+指示元: 開発者本人
+
+---
+
+## 本日の実施内容
+
+### 1. Task_Inbox 実フォルダの一括作成（資料準拠/事実）
+- 各エージェント配下に `Task_Inbox/.gitkeep` を追加
+
+### 2. 権限強制と拒否ログ（資料準拠/事実）
+- `permissions.yaml` に基づく書き込み拒否とログ出力の共通ヘルパを追加
+- イベントログ、Task_Inbox配布、スナップショット保存に権限チェックを適用
+
+### 3. サイズベースのログローテーション（資料準拠/事実）
+- `events.jsonl` と `denied.log` を 10MB でローテーション
+
+### 4. ヘルスチェック（資料準拠/事実）
+- `--health` で config/Task_Inbox/logs/state を確認する簡易ヘルスチェックを追加
+
+### 5. 運用ドキュメント反映（資料準拠/事実）
+- `sdk_runtime/README.md` に権限強制・ログローテーション・ヘルスチェックを追記
+
+---
+
+## 成果物
+
+| ファイル | 場所 |
+| :--- | :--- |
+| Task_Inbox 実フォルダ | `Agent_workspace/*/Task_Inbox/.gitkeep` |
+| 権限強制 | `sdk_runtime/orchestrator/permissions.py` |
+| ログローテーション | `sdk_runtime/orchestrator/logging_utils.py` |
+| ヘルスチェック | `sdk_runtime/orchestrator/health.py` |
+| 書き込み箇所の適用 | `sdk_runtime/orchestrator/events.py` / `dispatch.py` / `snapshot_store.py` |
+| ドキュメント更新 | `sdk_runtime/README.md` |
+
+---
+
+## 得られた知見（資料準拠/事実）
+- 書き込み拒否は `denied.log` に記録されるため、運用時の監視対象になる
+- ログはサイズ基準で分割されるため、ログ収集側のパターンを固定できる
+
+---
+
+## 次のアクション
+- [ ] （提案/ドラフト）SDK外プロセスの書き込みにも権限制御を拡張
+- [ ] （提案/ドラフト）ヘルスチェックに実書き込みテストを追加
+
+---
+
+## ステータス
+**完了**: Task_Inbox整備・権限強制・ログローテーション・ヘルスチェック・ドキュメント反映  
+**次**: 権限強制の適用範囲拡張（提案/ドラフト）

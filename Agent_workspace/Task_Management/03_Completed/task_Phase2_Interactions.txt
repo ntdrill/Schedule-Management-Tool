@@ -1,0 +1,47 @@
+# Phase 2: 相互作用（Interactions）
+
+Phase 1で定義した基礎スナップショットを基に、複数の状態やエージェントが相互作用する複雑なケースを定義します。
+
+## 目的
+2つ以上のエージェント領域が関わる処理（例：環境悪化→ユーザー状態低下、タスク完了→社会的評価）を形式的にスナップショット化する。
+
+## Assignment
+以下のアクションを各エージェントに割り当てます。
+
+### 1. ユースケースの提出 (Proposal)
+各専門エージェントは、他領域との相互作用を含むユースケースを提案してください。
+作成場所: `Task_Management/01_Proposals/`
+期限: 2026/02/01
+
+- **User_State_Agent**: `proposal_user_interaction.txt`
+  - 期待内容: 環境状態や社会的状態がユーザー状態に与える影響、またはその逆。
+- **Environment_State_Agent**: `proposal_env_interaction.txt`
+  - 期待内容: ユーザーの行動による環境変化、環境変化による測定精度の変化など。
+- **Social_State_Agent**: `proposal_social_interaction.txt`
+  - 期待内容: 他者との相互作用、コミュニケーションによる状態変化。
+- **Monitoring_State_Agent**: `proposal_monitoring_interaction.txt`
+  - 期待内容: 測定行為自体がユーザー/環境/社会に与える影響（干渉）。
+
+### 2. シンボルの定義 (Symbol)
+（ステップ1完了後に Symbol_Agent へ指示）
+
+### 3. スナップショット記述 (Data Model)
+（ステップ2完了後に Data_Model_Agent へ指示）
+
+## 進捗ログ
+- 2026/01/28: Phase 2 開始。ユースケース提出をアサイン。
+- 2026/02/13: 専門家起動により `proposal_user_interaction.txt` / `proposal_env_interaction.txt` / `proposal_social_interaction.txt` / `proposal_monitoring_interaction.txt` を `01_Proposals` へ提出。
+- 2026/02/13: ステップ2として `task_Symbol_Agent_Phase2_Interactions.txt` を `02_Active` に発行。
+- 2026/02/13: ステップ3として `task_Data_Model_Agent_Phase2_Interactions_Snapshot.txt` を `02_Active` に発行。
+- 2026/02/13: Data_Model_Agent の成果 `report_phase2_interactions_snapshot.txt` を `01_Proposals` へ提出。
+
+## 完了報告
+- 完了日: 2026/02/13
+- 進捗報告: `進捗管理agent/進捗報告受付/20260213_Phase2_Interactions_完了報告.txt`
+- クロック報告: `Agent_workspace/Agent_maneger/クロック受付/20260213_Phase2_Interactions_クロック.txt`
+
+## 補正ログ（ワークフロー準拠）
+- 2026/02/13: Phase2 Queue の残ステップ確認を実施し、未反映だった data 追記を補正。
+- 2026/02/13: `data/constants.txt` / `data/variables.txt` / `data/transforms.txt` に Phase2 追加シンボルを反映。
+- 2026/02/13: `Agent_workspace/data_model_agent/業務/02_相互作用スナップショットの記述.txt` を作成。
+- 2026/02/13: `Task_Management/03_Completed/report_symbol_definition_Phase2.txt` を作成。

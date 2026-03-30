@@ -1,0 +1,23 @@
+# Task: シンボル定義の更新とデータベース登録
+
+- **担当エージェント:** Symbol_Agent
+- **発行者:** Agent_Manager
+- **発行日:** 2026/01/28
+- **ソースドキュメント:** `開発者本人_workspace/docs/手作業で割り当て.txt`, `Agent_workspace/Agent_maneger/クロック受付/20260128_Phase1_SymbolResolution_Update.txt`
+
+## 指示
+
+1.  `開発者本人_workspace/docs/手作業で割り当て.txt` に記載されているシンボルと定義のマッピングを、`Agent_workspace/symbol_agent/data/variables.txt` および関連するシンボル定義ファイルに追記・更新せよ。
+2.  更新したすべてのシンボルを、Supabaseの`symbols`テーブルに登録せよ。
+
+## 完了条件
+
+- `手作業で割り当て.txt` に記載された全シンボルが、`data/variables.txt`等に反映されていること。
+- Supabase `symbols` テーブルへの登録が完了していること。
+
+## 完了報告
+- **完了日**: 2026/01/28
+- **根拠**: `Agent_workspace/Agent_maneger/クロック受付/20260128_進捗管理agent_報告.txt`
+- **内容**:
+  - `data/variables.txt` の `?_` 由来の値名を Phase1用の一意名として確定・反映済み
+  - Supabase `symbols` への新規登録を実施（Insert成功）

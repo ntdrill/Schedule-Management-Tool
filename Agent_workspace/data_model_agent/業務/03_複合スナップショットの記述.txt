@@ -1,0 +1,217 @@
+# 業務: 複合スナップショットの記述
+
+作成日: 2026/02/14
+担当: Data_Model_Agent
+
+## 目的
+Phase3（Complex & Exception）のユースケースを、Phase1/Phase2 のスナップショット部品と更新済みシンボルを組み合わせ、ループ・分岐・例外を含む複合論理式として記述する。
+
+## 参照資料
+- Phase1: `Agent_workspace/data_model_agent/業務/01_静的スナップショットの記述.txt`
+- Phase2: `Agent_workspace/data_model_agent/業務/02_相互作用スナップショットの記述.txt`
+- Phase3 提案: `Task_Management/02_Active/proposal_user_exception.txt`, `proposal_env_exception.txt`, `proposal_monitoring_exception.txt`
+- シンボル定義: `Task_Management/02_Active/report_symbol_definition_Phase3.txt`, `data/constants.txt`, `data/variables.txt`, `data/transforms.txt`
+
+---
+
+## Snapshot P3-01: 危篤再発ループ（介入強度昇格）
+
+### 資料準拠（事実）
+- 危篤状態は状態ベクトルと乖離スコア、危篤定義集合で判定する（参照: `proposal_user_exception.txt`）。
+- 回復介入後 24 時間以内に同種トリガーが再発した場合、介入強度を一段階上げる（参照: `proposal_user_exception.txt` UC-E1）。
+- Phase1 Snapshot 01 の危篤検知→回復フローを部品として利用可能（参照: `01_静的スナップショットの記述.txt`）。
+- `judge_exception_escalation` が再発回数と時間窓を入力に介入強度昇格可否を判定する（参照: `report_symbol_definition_Phase3.txt`, `data/transforms.txt`）。
+- `critical_recurrence_count`, `critical_recurrence_window_hours` が Phase3 で追加された（参照: `report_symbol_definition_Phase3.txt`, `data/constants.txt`, `data/variables.txt`）。
+
+### Expression
+`(↮(ꀴ, ꀔ) ⟼ ꀴ) ≫ (↖(ꀴ.subjective, ꀔ) ⟼ ꀏ) ≫ (↞(ꀴ, ꀏ, ህ) ⟼ ꀈ) ≫ ((ꀈ ?!= null) ⫸ (ꄜ(ꄘ, ꄔ) ⟼ ꄛ) ≫ ((ꄛ ?= escalate) ⫸ (ꄘ ⟼ ꄘ+1) ≫ (ꄉ ⟼ ꄉ↑)) ≫ (↬(ꀈ, ሡ, ꄉ) ⟼ ┃_rec) ≫ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↪(ꀴ, ꀔ) ⟼ ─_exec.state_after) ≫ (↥(┃_rec.expected, ─_exec.state_after) ⟼ ─_exec.result) ≫ (↞(─_exec.state_after, ꀏ, ህ) ?= null ∴ ꀚ_restored))`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꄜ` (judge_exception_escalation): 再発回数と時間窓を入力に介入強度昇格可否を判定
+*   `ꄘ` (critical_recurrence_count): 危篤再発回数カウンタ
+*   `ꄔ` (critical_recurrence_window_hours): 危篤再発を同一系列として扱う時間窓
+*   `ꄛ` (exception_route_selected): 分岐後に選択された例外処理ルート（escalate / normal）
+*   `ꄉ` (recovery_task_priority): リカバリー系タスクの優先度
+*   `?=`: 等価判定
+
+### 提案/ドラフト
+- `↬` の第3引数に `recovery_task_priority` を渡す拡張は、`select_recovery_task` の既存仕様にないため提案。優先度昇格時のタスク選択ロジックの変更を意味する。
+
+### 未整備
+- 再発回数に応じた介入強度テーブル（参照: `proposal_user_exception.txt` 未整備）。
+- `ꄘ+1` の更新タイミング（回復判定前か後か）の定義。
+- `critical_recurrence_window_hours` の実値（24時間相当か）。
+
+### Meaning (Description)
+危篤検知→回復フローに、再発判定を組み込んだ複合フロー。危篤状態が検知された場合、`judge_exception_escalation` で再発回数と時間窓から昇格可否を判定し、昇格なら `critical_recurrence_count` を増加させ `recovery_task_priority` を上げる。その後、優先度を考慮したリカバリータスクを選択・実行し、評価完了後に正常復帰を確定する。
+
+---
+
+## Snapshot P3-02: 無反応による回復失敗（フォールバックタスク切替）
+
+### 資料準拠（事実）
+- 介入後は期待状態と実際状態の比較評価で有効性を確認する（参照: `proposal_user_exception.txt`）。
+- 通知発火後、反応潜時が許容値を超過した場合、代替の低負荷回復タスクへ切替える（参照: `proposal_user_exception.txt` UC-E2）。
+- `response_latency_to_feedback` が反応潜時を表す（参照: `data/variables.txt`）。
+- `select_fallback_recovery_task` が無反応または失敗時に代替回復タスクを選択する（参照: `report_symbol_definition_Phase3.txt`, `data/transforms.txt`）。
+- `response_timeout_threshold_seconds` が無反応判定の閾値として定義（参照: `data/constants.txt`）。
+
+### Expression
+`(↬(ꀈ, ሡ) ⟼ ┃_rec) ≫ (↛(┃_rec, ꀊ) ⟼ ─_exec) ≫ (↰(ꀦ) ⟼ ꃏ) ≫ ((ꀦ > ꄕ) ⫸ (ꄝ(ꀈ, ሡ) ⟼ ┃_fallback) ≫ (┃_fallback ⟼ ┄) ≫ (ꄙ ⟼ true)) ∴ ꄛ`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꀦ` (response_latency_to_feedback): 反応潜時
+*   `ꄕ` (response_timeout_threshold_seconds): 無反応判定の閾値（秒）
+*   `ꄝ` (select_fallback_recovery_task): 無反応時に代替回復タスクを選択
+*   `┃_fallback`: フォールバックタスクの予定オブジェクト
+*   `┄` (task_queue): 実行待ちタスクキュー
+*   `ꄙ` (fallback_mode_active): フォールバックモード稼働状態
+*   `ꃏ`: 反応潜時フラグ群（Phase1 Snapshot 16 より）
+
+### 提案/ドラフト
+- `↰` の出力と閾値 `ሕ` の比較は、`eval_response_latency` の出力形式が閾値比較と整合するか未定義。`ꀦ > ሕ` は「反応潜時が閾値を超える」を表す簡略記述。
+
+### 未整備
+- 無反応時のエスカレーション境界条件（参照: `proposal_user_exception.txt` 未整備）。
+- `response_timeout_threshold_seconds` の実値。
+
+### Meaning (Description)
+介入リカバリータスクを選択・生成した後、反応潜時を評価する。潜時が閾値を超えた場合、`select_fallback_recovery_task` で代替の低負荷回復タスクを選択し、`task_queue` に投入し、`fallback_mode_active` を true にする。分岐結果を `exception_route_selected` に記録する。
+
+---
+
+## Snapshot P3-03: 測定不能状態の長期化（主観入力中心モードへ移行）
+
+### 資料準拠（事実）
+- 測定は認知資源を消費し、疲労を蓄積する（参照: `proposal_monitoring_exception.txt`）。
+- 測定品質は欠損/ノイズ/デバイス状態で変動する（参照: `proposal_monitoring_exception.txt`）。
+- 測定疲労と睡眠不足が重なり測定能力低下が継続した場合、測定モードを一時停止し回復専用ループへ移行する（参照: `proposal_user_exception.txt` UC-E3）。
+- `is_measurement_mode` OFF、`user_measurement_capability` 回復待ち状態へ遷移（参照: `proposal_user_exception.txt` UC-E3）。
+- `switch_to_subjective_mode` が測定品質劣化時に主観入力中心モードへ切替える（参照: `report_symbol_definition_Phase3.txt`, `data/transforms.txt`）。
+- Phase1 Snapshot 14（測定疲労）、Snapshot 18（測定能力評価）を部品として利用。
+
+### Expression
+`(ꃄ ⫸ (⇹(ꀡ, ꃅ) ⟼ ꀟ) ≫ (→(ꀇ, ꀧ, ꃖ) ⟼ ꀳ) ≫ ((ꀳ < ሤ) ⟼ (ꄞ(ꀉ, ꀟ) ⟼ ꄚ)) ≫ (⇵ ⟼ ꀙ) ≫ (ꀳ ⟼ user_measurement_capability_recovery_pending)) ∴ ꄛ`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꄞ` (switch_to_subjective_mode): 測定品質劣化時に主観入力中心モードへ切替
+*   `ꄚ` (monitoring_degraded_mode): 測定劣化時の主観入力中心モード状態
+*   `ꀙ` (is_measurement_mode): 測定モードフラグ
+*   `⇵` (set_measurement_mode_off): 測定モードOFF設定
+*   `user_measurement_capability_recovery_pending`: 回復待ち状態（提案/ドラフト）
+
+### 提案/ドラフト
+- `user_measurement_capability_recovery_pending` は `user_measurement_capability` の特殊値として提案。正式な状態列挙は未定義。
+
+### 未整備
+- 回復専用ループの終了条件（`user_measurement_capability` が閾値以上に戻った後の再開判定）。
+- 測定疲労と睡眠不足の重複判定の閾値。
+
+### Meaning (Description)
+時間経過に応じて測定疲労を算出し、認知資源・環境エントロピーから測定能力を算出する。測定能力が閾値を下回った場合、`switch_to_subjective_mode` で主観入力中心モードへ切替え、`monitoring_degraded_mode` を設定する。測定モードをOFFにし、回復待ち状態へ遷移する。
+
+---
+
+## Snapshot P3-04: 換気不能による空気質悪化カスケード（代替介入）
+
+### 資料準拠（事実）
+- 環境状態は独立オブジェクトとして管理され、崩壊ダイナミクスを持つ（参照: `proposal_env_exception.txt`）。
+- 外気条件が悪く換気が実行不能な場合、空気質悪化予測が閾値を超えたら通常換気タスクを抑止し、代替として空気清浄タスクを優先投入する（参照: `proposal_env_exception.txt` UC-E1）。
+- Phase1 Snapshot 07（空気質の閾値制御）を部品として利用。
+- `air_quality_internal` の悪化速度を抑制、`intervention_priority` を Critical へ昇格（参照: `proposal_env_exception.txt` UC-E1）。
+
+### Expression
+`(↮(ꀓ, ꀔ) ⟼ ꀓ) ≫ (⇗(ꀾ) ⟼ ꁤ) ≫ ((ꁤ >= ሷ) ⫸ ((ꀗ > ሓ) ⫸ (⇚(ꁦ, ሸ_air_purifier) ⟼ ꁧ) ≫ (⇛(ꁧ, ꀊ) ⟼ ┃_rec) ≫ (┃_rec ⟼ ┄) ≫ (ꁹ ⟼ Critical)) ≫ (⇜(ꀾ, ሹ) ⟼ ꀾ)) ∴ ꁨ`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꀗ` (external_air_quality_index): 外気の質（換気可否判定に使用）
+*   `ሓ` (noise_limit_concentration_db): 窓開けの可否に関連する閾値の代理（提案: 換気不能判定の閾値）
+*   `ሸ_air_purifier`: 空気清浄タスク用テンプレート（提案: `micro_intervention_templates` の要素）
+*   `ꁹ` (intervention_priority): 介入優先度
+
+### 提案/ドラフト
+- 換気不能判定の閾値は `external_air_quality_index` と `noise_limit_concentration_db` の組み合わせで提案。資料に明確な閾値定義なし。
+- `ሸ_air_purifier` は `micro_intervention_templates` の空気清浄用要素として提案。
+
+### 未整備
+- 換気不能の具体的な判定条件（外気質・騒音・その他）。
+- 代替介入選択の優先順位モデル（参照: `proposal_env_exception.txt` 未整備）。
+
+### Meaning (Description)
+環境状態を更新し、空気質リスクを予測する。リスクが閾値以上かつ換気が不能な場合、通常換気タスクを抑止し、空気清浄タスクを優先投入する。介入優先度を Critical に昇格し、空気質を目標値へ更新する。
+
+---
+
+## Snapshot P3-05: センサー断続切断（主観入力中心モードへ一時遷移）
+
+### 資料準拠（事実）
+- センサーストリームが間欠的に切断した場合、品質スコアを劣化補正し、主観入力中心モードへ一時遷移する（参照: `proposal_monitoring_exception.txt` UC-E1）。
+- `device_connection_status_map` が不安定化、`current_measurement_quality_score` 低下（参照: `proposal_monitoring_exception.txt` UC-E1）。
+- Phase1 Snapshot 17（デバイス接続管理）を部品として利用。
+- `switch_to_subjective_mode` が主観入力中心モードへ切替える（参照: `report_symbol_definition_Phase3.txt`）。
+
+### Expression
+`(ꃒ ⫸ (⟶(ꀍ, ꃒ) ⟼ ꀍ) ≫ (⟷(ꀍ) ⟼ ꃓ) ≫ (⟸(ꃓ) ⟼ ꀉ) ≫ ((ꀉ < ሤ) ⫸ (ꄞ(ꀉ, ꀟ) ⟼ ꄚ) ≫ (ꄙ ⟼ true))) ∴ ꃔ`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꀍ` (device_connection_status_map): デバイス接続マップ
+*   `ꀉ` (current_measurement_quality_score): 測定品質スコア
+*   `ꄞ` (switch_to_subjective_mode): 主観入力中心モードへ切替
+*   `ꄚ` (monitoring_degraded_mode): 測定劣化モード状態
+*   `ꄙ` (fallback_mode_active): フォールバックモード稼働状態
+*   `ሤ` (threshold_measurement_capability_for_monitoring): 測定能力閾値（品質スコアの代理として使用）
+
+### 提案/ドラフト
+- 品質スコア `ꀉ` と閾値 `ሤ` の比較は、測定品質と測定能力の閾値が異なる可能性があるため提案。同一閾値の再利用は未定義。
+
+### 未整備
+- 主観入力中心モードの終了条件（参照: `proposal_monitoring_exception.txt` 未整備）。
+- センサー再接続時の自動復帰フロー。
+
+### Meaning (Description)
+接続イベントに基づき接続マップを更新し、切断時の処理を行い、品質スコアを低下させる。品質スコアが閾値を下回った場合、`switch_to_subjective_mode` で主観入力中心モードへ切替え、`fallback_mode_active` を true にする。
+
+---
+
+## Snapshot P3-06: 環境ノイズ急増による測定中断と再開判定
+
+### 資料準拠（事実）
+- 騒音と散らかりが同時閾値超過した場合、測定品質劣化を検知し、測定継続を中断し環境介入へフォールバック、介入完了後に測定再開判定を行う（参照: `proposal_env_exception.txt` UC-E3）。
+- `measurement_session_quality` 低下、`work_ready_boolean` が回復するまで false 維持（参照: `proposal_env_exception.txt` UC-E3）。
+- `judge_measurement_restart_ready` が環境回復度と安定時間から測定再開可否を判定する（参照: `report_symbol_definition_Phase3.txt`, `data/transforms.txt`）。
+- `environment_recovery_min_threshold`, `measurement_restart_min_stability` が Phase3 で追加（参照: `data/constants.txt`）。
+
+### Expression
+`(ꀓ, ꁀ) ≫ ((ꀘ > ሓ) ∧ (ꁀ > ሂ)) ⫸ (⇵ ⟼ ꀙ) ≫ (ꄌ ⟼ low) ≫ (ꄇ ⟼ false) ≫ (⇦(ꁀ, ꁶ, ꁷ) ⟼ ꁸ) ≫ (⇨(ꁹ, ሡ) ⟼ ꁺ) ≫ (⇩(ꁺ, ┄) ⟼ ┄) ≫ (ꄟ(ꀓ, ꀊ, ꄖ, ꄗ) ⟼ restart_ready) ≫ ((restart_ready ?= true) ⫸ (⇱ ⟼ ꀙ))) ∴ ꄇ`
+
+### Symbol Definitions（Phase3 追加分）
+*   `ꀘ` (external_noise_level_db): 外部騒音レベル
+*   `ꁀ` (room_clutter): 部屋の散らかり度
+*   `ሓ` (noise_limit_concentration_db): 騒音閾値
+*   `ሂ` (clutter_stress_threshold_count): 散らかり閾値
+*   `ꄌ` (measurement_session_quality): 測定セッション品質
+*   `ꄇ` (work_ready_boolean): 作業開始可能状態
+*   `ꄟ` (judge_measurement_restart_ready): 測定再開可否判定
+*   `ꄖ` (environment_recovery_min_threshold): 測定再開の最低環境回復閾値
+*   `ꄗ` (measurement_restart_min_stability): 測定再開前の安定継続時間閾値
+*   `∧`: 論理積（両条件成立）
+
+### 提案/ドラフト
+- 騒音・散らかりの同時閾値超過判定に `∧` を使用。`ꄖ`, `ꄗ` は `data/constants.txt` の Phase3 追加定数。
+- 騒音・散らかりの同時閾値超過判定に `∧` を使用。
+
+### 未整備
+- 再開判定の最低回復条件（参照: `proposal_env_exception.txt` 未整備）。
+- `environment_recovery_min_threshold`, `measurement_restart_min_stability` の実値。
+
+### Meaning (Description)
+騒音と散らかりが同時に閾値を超えた場合、測定モードをOFFにし、セッション品質を低下、作業可能フラグを false にする。波及リスクを判定し、環境介入タスクを選択・キュー投入する。環境回復度と安定時間から `judge_measurement_restart_ready` で再開可否を判定し、可なら測定モードをONに戻す。
+
+---
+
+## 未整備（全体）
+- 各閾値の実値（運用ログに基づくチューニング値）
+- 例外ルート選択の優先順位テーブル
+- 再発時の最大昇格段数と停止条件
+- Social_State_Agent の Phase3 提出要否（代理運用継続の可否）
+- 例外ユースケースの評価基準（採否ルール）

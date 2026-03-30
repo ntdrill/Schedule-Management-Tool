@@ -1,0 +1,78 @@
+[25 tools called]
+
+確認しました。以下は**資料準拠（事実）**の確認結果と、**提案/ドラフト**としての「流用/編集/新規」分類です。
+
+## 資料準拠（確認結果）
+- 確認範囲: 直下、`Agent_workspace/`、`docs/`、`data/`、`data_backup/`、`進捗管理agent/`、`開発者本人_workspace/`
+- 直下ファイル: `create_symbols_table.sql`、`create_symbols_table_v2.sql`、`migrate_symbols_to_supabase.py`、`migrate_coping_data_to_supabase.py`、`sync_symbols_diff.py`、`process_proposals.py`、`test_supabase_connection.py`、`社会の成立と表現.txt`
+- 直下の設定系: `.cursor/worktrees.json`、`data/value_types_override.json`
+- `*.yml`/`*.yaml`/`*.toml`/`*.sh` はリポジトリ内に存在しない
+- データ: `data/constants.txt`、`data/coping_actions.txt`、`data/coping_scenarios.txt`、`data/expression.txt`、`data/transforms.txt`、`data/variables.txt`、`data_backup/constants.txt`、`data_backup/transforms.txt`、`data_backup/variables.txt`
+- `docs/readme/**`: `01_プロジェクト概要.md`〜`07_進捗・履歴.md` と `readme構成案.txt` が存在
+- `docs/原典/**`: 32ファイルが存在（ドメイン決定資料群）
+- `Agent_workspace` 主要ディレクトリ: `Agent_maneger/`、`Task_Management/`、`Multi_Agent_Architect/`、`symbol_agent/`、`data_model_agent/`、`user_state_agent/`、`environment_state_agent/`、`monitoring_state_agent/`、`organization_state_agent/`
+- `Agent_workspace/Agent_maneger/scripts/*.py`:  
+  `unresolved_index.py`、`clock_digest.py`、`daily_check.py`、`weekly_summary_generator.py`、`workflow_generator.py`、`auto_proposal_processor.py`、`error_notifier.py`、`task_mover.py`、`auto_git_commit.py`、`update_agent_list.py`、`task_monitor.py`、`auto_clock_digest.py`、`assignee_dashboard.py`、`update_business_list.py`、`unresolved_to_proposal.py`、`clock_diff.py`、`task_inventory.py`
+- `Agent_workspace/environment_state_agent/*.py`:  
+  `cli_visualizer.py`、`test_simulation.py`、`persuasive_adapter.py`、`optimization_simulation.py`、`environment_dynamics.py`、`demo_ui_output.py`、`arbitration_layer.py`
+- `進捗管理agent/**`: `業務/`、`進捗報告受付/`、`進捗報告アーカイブ/` が存在
+- `開発者本人_workspace/**`: `docs/`、`プロンプト集/`、`やったこと.txt` が存在
+- CAO/Codex/SDK系キーワードに該当:  
+  `Agent_workspace/Multi_Agent_Architect/chat_summary_20260130.md`、`開発者本人_workspace/docs/エージェンシーの自動化.txt`、`docs/原典/データモデルに関する決定/統合システム設計_リマインダー統合.md`
+
+## 未整備
+- SDK方式の確定（Agents SDK / app-server / CLIサブエージェント）
+- 監視プロセスの起動/停止ポリシー
+- クロック判断ルールの具体化
+- Codex/SDK側の権限・サンドボックス機能の運用可否
+- キャッシュ運用の実効性（プロバイダ別の扱い）
+- 既存スクリプトの実行形態（常駐/バッチ/手動）の明文化
+
+## 提案/ドラフト（SDK移行時の分類）
+### 流用（そのまま保持しやすいと見込む）
+- 仕様・理論・ドメイン資料: `docs/readme/**`、`docs/原典/**`
+- エージェント別の知識資料: `Agent_workspace/**/docs/**`、`Agent_workspace/**/experience/**`
+- 現行の運用記録/履歴: `Agent_workspace/Task_Management/**`、`Agent_workspace/Agent_maneger/クロック受付/**`、`Agent_workspace/Agent_maneger/クロックアーカイブ/**`、`進捗管理agent/進捗報告受付/**`、`進捗管理agent/進捗報告アーカイブ/**`
+- データ資産: `data/**`、`data_backup/**`、`Agent_workspace/**/data/**`
+- ドメイン側のPython実装: `Agent_workspace/environment_state_agent/*.py`
+
+### 編集が必要（SDK統合のための反映先）
+- SDK移行/CAO記述の更新: `Agent_workspace/Multi_Agent_Architect/chat_summary_20260130.md`
+- 実装運用ルールの更新余地: `docs/readme/04_開発ワークフロー.md`、`docs/readme/06_ディレクトリ構造ガイド.md`、`Agent_workspace/Agent_maneger/docs/README.md`
+- 自動化スクリプトのツール化/呼び出し統合:  
+  `Agent_workspace/Agent_maneger/scripts/*.py`（上記16本）
+- 直下の運用スクリプト:  
+  `process_proposals.py`、`sync_symbols_diff.py`、`migrate_symbols_to_supabase.py`、`migrate_coping_data_to_supabase.py`、`test_supabase_connection.py`
+- CAO/自動化に触れている文書: `開発者本人_workspace/docs/エージェンシーの自動化.txt`
+
+### 新しく作成（SDK移行で新設が必要）
+- SDKオーケストレータ実装（例: `sdk_orchestrator/` 配下にエントリポイントと管理ロジック）
+- エージェント定義・権限・ツール管理: `agents.yaml`、`permissions.yaml`、`tools_registry.yaml`
+- キャッシュ/プロンプトフロー: `cache/manifest.yaml`、`prompt_flow/`
+- 監視設定: `thresholds.yaml`、`watchers/clock_watcher.py`、`watchers/progress_watcher.py`、`watchers/taskfolder_watcher.py`、`watchers/inbox_watcher.py`
+- 共有ツール置き場: `Shared_Tools/`
+- 専用受信箱: `Task_Inbox/`（エージェントごと）
+- コミュニティ共有チャネル: `.channels/`（Community A/B/C）
+
+必要なら、この分類をもとに「どこからSDK統合の実装に着手するか」を具体タスクに切り分けます。
+
+[1 tool called]
+
+あります。以下は**資料準拠（事実）**と**提案/ドラフト**を分けて整理しました。
+
+**資料準拠（事実）**  
+- 追加でCAO/Codex/SDKに明示言及があるのは `開発者本人_workspace/docs/エージェンシーの自動化.txt`（進捗エージェント監視、クロック、コスト面の自動化、codexsmokeという呼称を避けたい旨）です。  
+- それ以外でSDK/CAO/Codexの文字列に該当するのは `Agent_workspace/Multi_Agent_Architect/chat_summary_20260130.md` と `docs/原典/データモデルに関する決定/統合システム設計_リマインダー統合.md` です。  
+- `*.yml`/`*.yaml`/`*.toml`/`*.sh` はリポジトリ内に存在しません。  
+
+**未整備**  
+- どの運用文書をSDK移行に合わせて改訂するかは、資料上で明示されていません。  
+
+**提案/ドラフト（追加の流用/編集候補）**  
+- `Agent_workspace/Agent_maneger/docs/agent_list.txt`（エージェント定義の元データとして流用候補）  
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt`、`v1_phase2.txt`、`v1_phase3.txt`、`phase3以降のphase.txt`（ワークフロー定義をSDK側の実行計画へ反映する候補）  
+- `Agent_workspace/Agent_maneger/業務/*.txt`、`進捗管理agent/業務/*.txt`（監視/クロック/報告/権限運用の文章をSDK運用ルールへ統合する候補）  
+- `Agent_workspace/Task_Management/01_Proposals/proposal_by_Multi_Agent_Architect_Automation_Architecture.txt`（自動化設計の提案資料として流用候補）  
+- `開発者本人_workspace/プロンプト集/*.txt`（プロンプトフロー/事前資料の素材として流用候補）  
+
+必要なら、これら候補の「具体的に編集が要る範囲」を資料準拠で再確認して、対象ファイル一覧を確定します。

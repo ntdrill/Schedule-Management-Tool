@@ -1,0 +1,56 @@
+**Phase 3: 複合・例外（Complex & Exception）** のワークフローを作成します。
+
+---
+
+## Phase 3 の定義
+
+| 項目 | 内容 |
+| :--- | :--- |
+| **目的** | ループ、条件分岐、リカバリーを含む高度な制御フローをスナップショット化する |
+| **入力** | Phase 1・Phase 2 で作成されたスナップショット + 例外処理のユースケース |
+| **出力** | 制御構造を含む複合スナップショット（閉じたループ、分岐、フォールバック） |
+| **例** | 「危篤検知ループと回復確認」「測定モード強制移行」「代替タスクへのフォールバック」 |
+
+---
+
+## Agent_Workflow_Queue (Phase 3: Complex & Exception)
+
+1. **Agent_Manager**: `Task_Management/02_Active` に親タスク `task_Phase3_Complex.txt` を作成する
+2. **Agent_Manager**: Phase 1・Phase 2 の成果物（スナップショット）を参照可能な状態にする
+3. **Agent_Manager**: `task_Phase3_Complex.txt` 内で、各専門エージェントに「例外・リカバリーユースケース」の提出をアサインする
+4. **User_State_Agent**: `Task_Management/01_Proposals` に `proposal_user_exception.txt` を作成する
+5. **Environment_State_Agent**: `Task_Management/01_Proposals` に `proposal_env_exception.txt` を作成する
+6. **Monitoring_State_Agent**: `Task_Management/01_Proposals` に `proposal_monitoring_exception.txt` を作成する
+7. **Agent_Manager**: `Task_Management/01_Proposals` を監視し、ファイルが提出されたことを検知する
+8. **Agent_Manager**: 提出された `proposal_*_exception.txt` を読み込み、内容が適切か確認する
+9. **Agent_Manager**: 確認した `proposal_*_exception.txt` を `Task_Management/02_Active` に移動する
+10. **Agent_Manager**: `task_Phase3_Complex.txt` を更新し、Symbol_Agent に「制御構文シンボルの抽出と定義」を指示する
+11. **Symbol_Agent**: `Task_Management/02_Active` に移動されたユースケースファイルを読み込む
+12. **Symbol_Agent**: 制御構造に必要な概念（ループ、条件分岐、例外ハンドリング）を抽出してリスト化する
+13. **Symbol_Agent**: Phase 1・Phase 2 で定義済みのシンボルと照合し、不足分を特定する
+14. **Symbol_Agent**: 不足分に対して新しいシンボル（ループ演算子、分岐演算子等）を設計し、`data/` に追記する
+15. **Symbol_Agent**: `Task_Management/02_Active` に `report_symbol_definition_Phase3.txt` を作成し、定義結果を報告する
+16. **Symbol_Agent**: `task_Phase3_Complex.txt` に「シンボル定義完了」を追記する
+17. **Agent_Manager**: シンボル定義報告を確認し、Data_Model_Agent に「複合スナップショット記述」を指示する
+18. **Data_Model_Agent**: Phase 1・Phase 2 のスナップショットを部品として読み込む
+19. **Data_Model_Agent**: Phase 3 のユースケースファイルと、更新された `data/` を読み込む
+20. **Data_Model_Agent**: 制御構造（ループ、分岐、例外）を含む複合的な論理式を作成する
+21. **Data_Model_Agent**: `Agent_workspace/data_model_agent/業務/03_複合スナップショットの記述.txt` に論理式を追記する
+22. **Data_Model_Agent**: `task_Phase3_Complex.txt` に作業完了を追記する
+23. **Agent_Manager**: 成果物（複合スナップショットファイル）を確認し、最終承認を行う
+24. **Agent_Manager**: `Task_Management/02_Active` 内の `proposal_*_exception.txt` を `Task_Management/03_Completed` に移動する
+25. **Agent_Manager**: `Task_Management/02_Active` 内の `report_symbol_definition_Phase3.txt` を `Task_Management/03_Completed` に移動する
+26. **Agent_Manager**: 親タスク `task_Phase3_Complex.txt` を `Task_Management/03_Completed` に移動する
+27. **Agent_Manager**: 完了したファイル群を `Task_Management/04_Archive/Phase3_Complex_[日付]/` にアーカイブする
+
+---
+
+## Phase 1・2・3 の全体比較
+
+| 観点 | Phase 1 | Phase 2 | Phase 3 |
+| :--- | :--- | :--- | :--- |
+| **ユースケースの焦点** | 単一領域内の処理 | 複数領域間の影響 | ループ・分岐・例外 |
+| **スナップショットの構造** | 単純な論理式 | Phase 1 の組み合わせ | Phase 1・2 + 制御構文 |
+| **シンボル定義の焦点** | 基本的な名詞・動詞 | 領域間変換関数 | 制御演算子（ループ、分岐） |
+| **成果物ファイル** | `01_静的スナップショット` | `02_相互作用スナップショット` | `03_複合スナップショット` |
+| **ステップ数** | 24 | 27 | 27 |

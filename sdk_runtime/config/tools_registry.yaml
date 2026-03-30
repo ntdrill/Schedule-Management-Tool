@@ -1,0 +1,36 @@
+# PROPOSAL/DRAFT
+version: 1
+shared_tools:
+  - id: clock_diff
+    entry: sdk_runtime.tools.shared.clock_diff:run
+    description: detect new clock reports and update last seen
+    outputs: ["Agent_workspace/Agent_maneger/data/clock_last_seen.txt"]
+  - id: clock_digest
+    entry: sdk_runtime.tools.shared.clock_digest:run
+    description: summarize recent clock reports
+    outputs: []
+  - id: daily_check
+    entry: sdk_runtime.tools.shared.daily_check:run
+    description: check overdue tasks and recent clock reports
+    outputs: []
+  - id: weekly_summary_generator
+    entry: sdk_runtime.tools.shared.weekly_summary_generator:run
+    description: generate weekly summary
+    outputs: ["Agent_workspace/Agent_maneger/data/weekly_summary.md"]
+  - id: unresolved_index
+    entry: sdk_runtime.tools.shared.unresolved_index:run
+    description: generate unresolved index from clock reports
+    outputs: ["Agent_workspace/Agent_maneger/data/unresolved_index.md"]
+  - id: unresolved_to_proposal
+    entry: sdk_runtime.tools.shared.unresolved_to_proposal:run
+    description: generate unresolved proposal draft
+    outputs: ["Agent_workspace/Agent_maneger/data/unresolved_proposals_draft.md"]
+  - id: task_mover
+    entry: sdk_runtime.tools.shared.task_mover:run
+    description: move proposal/active tasks based on markers
+    outputs: ["Agent_workspace/Task_Management/02_Active", "Agent_workspace/Task_Management/03_Completed"]
+  - id: auto_proposal_processor
+    entry: sdk_runtime.tools.shared.auto_proposal_processor:run
+    description: digest proposal files
+    outputs: ["Agent_workspace/Agent_maneger/data/proposal_digest.md"]
+per_agent_tools: {}

@@ -38,10 +38,10 @@
 
 | ファイル | 場所 |
 | :--- | :--- |
-| Phase 1 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_1.txt` |
-| Phase 2 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase2.txt` |
-| Phase 3 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/v1_phase3.txt` |
-| Phase 4以降の提案 | `Agent_workspace/Agent_maneger/data/Agent Workflow Queue/phase3以降のphase.txt` |
+| Phase 1 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_1.txt` |
+| Phase 2 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase2.txt` |
+| Phase 3 ワークフロー | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase3.txt` |
+| Phase 4以降の提案 | `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/phase3以降のphase.txt` |
 
 ---
 

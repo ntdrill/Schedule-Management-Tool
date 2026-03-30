@@ -1,0 +1,37 @@
+# Task: Symbol_Agent 向け Phase3 制御構文シンボル定義
+
+作成日: 2026/02/13  
+発行者: Agent_Manager
+
+## 目的（資料準拠）
+Phase3（Complex & Exception）で必要となる制御構文シンボルを抽出・定義し、既存の Phase1/2 シンボル体系へ接続する。
+
+## 入力資料
+- `Task_Management/02_Active/proposal_user_exception.txt`
+- `Task_Management/02_Active/proposal_env_exception.txt`
+- `Task_Management/02_Active/proposal_monitoring_exception.txt`
+- `data/constants.txt`
+- `data/variables.txt`
+- `data/transforms.txt`
+
+## 実施内容
+1. 例外ユースケースから制御構造語彙（ループ、分岐、フォールバック、復帰条件）を抽出する。  
+2. 既存シンボルと照合し、再利用可能シンボルと不足シンボルを分離する。  
+3. 不足シンボルを `constants/variables/transforms` のどこへ追加すべきか提案する。  
+4. 定義結果を `Task_Management/02_Active/report_symbol_definition_Phase3.txt` として提出する。  
+5. 親タスク `task_Phase3_Complex.txt` に作業完了ログを追記する。  
+
+## 出力フォーマット
+- 「資料準拠（事実）」「提案/ドラフト」「未整備」を区別して記載すること。
+
+## ステータス
+- status: active
+
+## 実行ログ
+- 2026/02/13: `proposal_*_exception.txt` 3件を読み込み、例外制御語彙を抽出。
+- 2026/02/13: 既存シンボル照合後、不足シンボルを `data/*.txt` へ追記。
+- 2026/02/13: `report_symbol_definition_Phase3.txt` を `02_Active` に提出。
+- 2026/02/13: status を completed に更新。
+
+## ステータス（更新）
+- status: completed

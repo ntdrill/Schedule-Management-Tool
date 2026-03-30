@@ -1,0 +1,27 @@
+# PROPOSAL/DRAFT
+# Watcher-level filters for dispatch.
+version: 2
+watchers:
+  taskfolder:
+    poll_interval_sec: 30
+    min_changes: 1
+    include_paths: []
+    exclude_paths: [".DS_Store", ".gitkeep"]
+  progress:
+    poll_interval_sec: 30
+    min_changes: 1
+    include_paths: []
+    exclude_paths: [".DS_Store", ".gitkeep"]
+  clock:
+    poll_interval_sec: 30
+    min_changes: 1
+    include_paths: []
+    exclude_paths: [".DS_Store", ".gitkeep"]
+  inbox:
+    poll_interval_sec: 15
+    min_changes: 1
+    include_paths: []
+    exclude_paths: [".DS_Store", ".gitkeep"]
+dispatch:
+  max_events_per_run: 100
+  ignore_sources: [inbox]

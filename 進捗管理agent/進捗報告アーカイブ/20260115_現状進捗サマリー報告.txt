@@ -10,7 +10,7 @@
 ### 1. リポジトリ内の進捗ソースを点検
 - `進捗管理agent/進捗報告受付/`（既存の進捗報告）
 - `Agent_workspace/Task_Management/`（提案/進行中/完了/アーカイブ）
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue /`（Phase1〜3キュー）
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/`（Phase1〜3キュー）
 - `docs/readme/`（プロジェクト概要、体制）
 - 実装物（`.swift`, `.xcodeproj`, `.xcworkspace`）の有無
 
@@ -29,7 +29,7 @@
 ### 1) 進捗報告（受付済み）
 - 2026/01/11: ワークフロー設計完了（Phase 1〜3）  
   - 参照: `進捗管理agent/進捗報告受付/20260111_ワークフロー設計.txt`  
-  - 成果物: `Agent_workspace/Agent_maneger/data/Agent Workflow Queue /v1_phase1.txt`, `v1_phase2.txt`, `v1_phase3.txt`, `phase3以降のphase.txt`
+  - 成果物: `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt`, `v1_phase2.txt`, `v1_phase3.txt`, `phase3以降のphase.txt`
 - 2026/01/12: v1仕様誤り修正完了  
   - 参照: `進捗管理agent/進捗報告受付/20260112_v1仕様誤り修正.txt`
 
@@ -54,7 +54,7 @@
 ## 未整備（資料から不足として確認できる点）
 
 ### 1) Phase 1 実行開始に必要な「親タスク」が Active に存在しない
-- `Agent_workspace/Agent_maneger/data/Agent Workflow Queue /v1_phase1.txt` の先頭手順は `Task_Management/02_Active` に `task_Phase1_Foundation.txt` を作成することだが、現状 `02_Active/` が空
+- `Agent_workspace/Agent_maneger/data/Agent_Workflow_Queue/v1_phase1.txt` の先頭手順は `Task_Management/02_Active` に `task_Phase1_Foundation.txt` を作成することだが、現状 `02_Active/` が空
 
 ### 2) `docs/Version1_Architecture.md` がリポジトリ内に見当たらない
 - `Agent_workspace/Task_Management/03_Completed/completed_init_v1_alignment.txt` で「完了条件」に言及があるが、ファイル実体が未確認
@@ -74,5 +74,4 @@
 
 **完了**: 現状の進捗棚卸しと報告（本ファイル作成）  
 **次**: Phase 1 実行開始のための Active 親タスク作成・アサイン（提案/ドラフト）
-
 

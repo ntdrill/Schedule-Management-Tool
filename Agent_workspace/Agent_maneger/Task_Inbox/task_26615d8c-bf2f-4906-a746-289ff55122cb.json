@@ -1,0 +1,17 @@
+{
+  "id": "task_26615d8c-bf2f-4906-a746-289ff55122cb",
+  "type": "watch_event",
+  "created_at": "2026-02-08T09:40:23.455627+00:00",
+  "source": "orchestrator",
+  "payload": {
+    "watcher": "clock",
+    "event_id": "26615d8c-bf2f-4906-a746-289ff55122cb",
+    "created_at": "2026-02-08T09:40:23.443404+00:00",
+    "added": [
+      "/Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Agent_maneger/\u30af\u30ed\u30c3\u30af\u53d7\u4ed8/20260128_\u9032\u6357\u7ba1\u7406agent_\u5831\u544a.txt",
+      "/Users/numaoryuutarou/cursor/Schedule-Management-Tool/Agent_workspace/Agent_maneger/\u30af\u30ed\u30c3\u30af\u53d7\u4ed8/20260130_\u9032\u6357\u7ba1\u7406agent_\u30af\u30ed\u30c3\u30af.txt"
+    ],
+    "removed": [],
+    "modified": []
+  }
+}

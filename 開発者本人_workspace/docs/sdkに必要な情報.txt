@@ -1,0 +1,149 @@
+[5 tools called]
+
+以下が、**SDKに移行するために必要な「このプロジェクト固有の情報」**の全体像です。資料準拠（事実）と未整備（不足）を分けています。すべて「移行に必須となる観点」を網羅する形で挙げています。
+
+---
+
+## 資料準拠（現時点で把握できる必須情報）
+
+1) **タスク運用の基本フローと完了条件**  
+- `Task_Management` は **Propose → Active → Execute → Complete** の流れで運用される。  
+- **Active完了時は進捗管理agentへの報告が必須**で、報告後に `03_Completed` へ移動し、ファイル末尾に報告リンクを追記する（`Agent_workspace/Task_Management/README.md`, `Agent_workspace/Agent_maneger/業務/07_タスクマネジメントフォルダの運用.txt`）。
+- 移行時の場面（提案/ドラフト）: SDK側のタスク状態遷移設計、完了判定・報告自動化の実装時。  
+
+2) **Agent_Managerの責務と運用要件**  
+- Agent_Managerはタスクの割当、進捗確認、完了移動、情報伝達を担う（`Agent_workspace/Agent_maneger/docs/README.md`）。  
+- **Activeタスクには必ず「完了時の報告先（進捗管理agent）」を明記**する必要がある（同README）。
+- 移行時の場面（提案/ドラフト）: 役割分担と権限設計、Managerエージェントのプロンプト/ツール境界を定義する段階。  
+
+3) **進捗管理agentの報告体系**  
+- 進捗報告テンプレート、命名規則（YYYYMMDD_件名）、保存先が定義されている（`進捗管理agent/業務/01_進捗報告フォーマットの策定.txt`）。  
+- **クロック報告は資料準拠（事実）のみ**で、提案を含めない（`進捗管理agent/業務/05_クロック運用ルールの整備.txt`）。  
+- 週次サマリーのテンプレートと保存先が定義されている（`進捗管理agent/業務/02_週次サマリー作成プロセス.txt`）。  
+- 問題検知と報告テンプレート、報告先（Task_Management/error_report）が定義されている（`進捗管理agent/業務/04_問題検知と報告フロー.txt`）。
+- 移行時の場面（提案/ドラフト）: 進捗報告の受領・生成・保存フローをSDKで再実装する段階。  
+
+4) **クロック運用の定義と役割分担**  
+- クロックは「進捗管理agentが作業区切りを判断しAgent_Managerへ報告」する行為で、報告先は `Agent_workspace/Agent_maneger/クロック受付/`（`進捗管理agent/業務/05_クロック運用ルールの整備.txt`）。  
+- 役割分担は「進捗管理agent＝事実報告」「Agent_Manager＝判断と次Active発行」。
+- 移行時の場面（提案/ドラフト）: クロック判断の入力/出力を定義し、Managerへのハンドオフを実装する段階。  
+
+5) **Agent哲学（プロンプト設計に直結）**  
+- **ファクトチェックを必須**とすること、**完了には必ず報告を伴わせる**というClosed Loop設計、**ユーザー発言だけで判断しない**という方針が明記されている（`Agent_workspace/Agent_maneger/docs/Agent_Philosophy.md`）。  
+- 反省会で「報告先明記不足」「未整備の検証不足」がミスの原因であったことが記録されている（`Agent_workspace/Agent_maneger/experience/04_反省会_20260204.md`）。  
+- 移行時の場面（提案/ドラフト）: 各エージェントのシステムプロンプトと検証チェックの設計段階。  
+→ これらはSDK移行時のシステムプロンプトや検証ステップに反映必須。
+
+6) **シンボル管理規定（Symbol_Agentの必須ルール）**  
+- シンボルは「記法・識別子・接地」の3要素から成り、カテゴリ（A〜E）のUnicode範囲が規定されている（`Agent_workspace/symbol_agent/docs/シンボル管理規定.md`）。  
+- **衝突時は既存定義を維持し、新規記号を発行**する。  
+- 登録先は **Supabaseのsymbols（正本）** と **data/*.txt（ミラー）**。
+- 移行時の場面（提案/ドラフト）: Symbol_Agentのツール化・DB操作手順の設計/実装段階。  
+
+7) **既存の自動化スクリプト群（移行時の移植対象）**  
+- `Agent_workspace/Agent_maneger/scripts/clock_diff.py`：クロック受付の新規検知  
+- `Agent_workspace/Agent_maneger/scripts/clock_digest.py`：クロック受付の未整備/依頼抽出  
+- `Agent_workspace/Agent_maneger/scripts/daily_check.py`：Active期限チェック + クロック受付の最近3件  
+- `Agent_workspace/Agent_maneger/scripts/weekly_summary_generator.py`：週次サマリーの自動生成  
+- `Agent_workspace/Agent_maneger/scripts/unresolved_index.py`：未整備インデックス作成  
+- `Agent_workspace/Agent_maneger/scripts/unresolved_to_proposal.py`：未整備から提案ドラフト生成  
+- 移行時の場面（提案/ドラフト）: SDKのツール設計・自動化バッチの移植/再利用判断を行う段階。  
+→ SDK版ではこれらを**ツールとして再利用 or 置換**する前提が必須。
+
+8) **データ連携スクリプト（Symbol/Copingデータ）**  
+- `process_proposals.py`：`Task_Management/01_Proposals` から名前抽出し、カテゴリ判定とシンボル割当を行い `data/*.txt` を生成。  
+- `sync_symbols_diff.py`：`data/*.txt` と Supabase `symbols` を diff して upsert。  
+- `migrate_symbols_to_supabase.py`：`data/*.txt` から Supabase へ upsert。  
+- `migrate_coping_data_to_supabase.py`：`coping_actions` / `coping_scenarios` を Supabaseへ upsert。  
+- 移行時の場面（提案/ドラフト）: DB連携の実装計画（実行主体・権限・スケジュール）を決める段階。  
+→ SDK移行時に **「どの段階で誰が実行するか」**を設計に含める必要がある。
+
+9) **進行中タスクの現状**  
+- `task_Phase2_Interactions.txt` が Active で、各専門家に相互作用ユースケース提出を割当済み。  
+- 移行時の場面（提案/ドラフト）: 移行時の初期状態/カットオーバー計画を作る段階。  
+→ SDK移行後の初期状態として重要。
+
+---
+
+## 未整備（SDK移行に必要だが資料で確定できない情報）
+
+1) **SDK運用方式の確定**  
+- Agents SDK / App Server / Chat Completions + 自前ツール のどれで構成するか。
+- 移行時の場面（提案/ドラフト）: アーキテクチャ選定・実装方針決定の初期段階。  
+
+2) **SDK側の権限実装方式**  
+- `permissions.yaml` 等の具体仕様（操作単位、例外、ログ要件）  
+- OSユーザー分離やコンテナ分離を併用するかどうか。
+- 移行時の場面（提案/ドラフト）: セキュリティ設計・権限境界の確定フェーズ。  
+
+3) **監視対象の具体パスと閾値**  
+- Task_Inboxの実際の配置ルール  
+- Task_Management監視の変化量/時間閾値の具体値  
+- Watcherの起動/停止ポリシー（常駐 or 定期起動）
+- 移行時の場面（提案/ドラフト）: Watcher実装・運用チューニングの段階。  
+
+4) **クロック判断ルールの詳細**  
+- 進捗管理agentが何を見て「クロック」と判断するか（期限/差分/報告数など）。
+- 移行時の場面（提案/ドラフト）: 進捗管理agentの判断ロジックと通知条件の実装前。  
+
+5) **API/モデル関連のプロジェクト方針**  
+- SDK利用モデル、コスト上限、トークン制限  
+- 事前キャッシュ運用の具体設計（作成頻度、失効）
+- 移行時の場面（提案/ドラフト）: モデル選定・コスト設計・キャッシュ戦略の確定段階。  
+
+6) **Supabase接続運用**  
+- `supabase_1.txt` の扱い（キー管理、実行者制限）  
+- DB更新の頻度/権限（Symbol_Agentのみ運用する前提の具体ルール）
+- 移行時の場面（提案/ドラフト）: 秘匿情報管理・DB操作権限の確定段階。  
+
+7) **コミュニティ共有チャネルの具体実装**  
+- community_a/b/c の実フォルダ設計とアクセス権限の明文化
+- 移行時の場面（提案/ドラフト）: 共有チャネルのフォルダ設計とアクセス制御を確定する段階。  
+
+---
+
+## 提案/ドラフト（SDK実装時のファイル/フォルダ構成と運用）
+
+前提: 既存の `Agent_workspace/`、`Task_Management/`、`進捗管理agent/`、`docs/` は維持し、SDK実行基盤のみ追加する。
+
+### 1) 追加するトップレベル
+- `sdk_runtime/`: SDK実行基盤（オーケストレータ/監視/ツール/キャッシュ）。
+- `Shared_Tools/`: 共有ツールの原本置き場。必要に応じて各エージェントにコピー。
+- `.channels/`: community_a/b/c の共有チャネル。
+- `Agent_workspace/<agent>/Task_Inbox/`: 専門家の専用受信箱。Task_Management全体ではなくここを監視。
+
+### 2) sdk_runtime 配下
+- `sdk_runtime/config/agents.yaml`: エージェント定義（役割、パス、監視対象、Task_Inbox）。
+  - 運用: Agent_Managerが更新。変更履歴は `Agent_workspace/Agent_maneger/業務/` に記録。
+- `sdk_runtime/config/permissions.yaml`: read/write/exec の権限境界。
+  - 運用: 管理側のみ更新。例外は明示し、監査ログを残す。
+- `sdk_runtime/config/tools_registry.yaml`: 共有/専用ツールの一覧と実体パス。
+  - 運用: 既存スクリプトの再利用/置換判断をここで管理。
+- `sdk_runtime/config/thresholds.yaml`: 監視の変化量/時間閾値。
+  - 運用: 未整備の閾値決定後に更新。Watcherは参照のみ。
+- `sdk_runtime/config/cache_manifest.yaml`: 事前資料パックとキャッシュIDの対応表。
+  - 運用: 事前キャッシュ更新時に更新。
+- `sdk_runtime/orchestrator/`: エージェント起動、配布、状態管理。
+  - 運用: 監視プロセスからのイベントを受け、Task_Inbox配布や通知を行う。
+- `sdk_runtime/watchers/`: 監視プロセス群。
+  - `clock_watcher.py`: `Agent_workspace/Agent_maneger/クロック受付/` を監視。
+  - `progress_watcher.py`: `進捗管理agent/進捗報告受付/` を監視。
+  - `taskfolder_watcher.py`: `Agent_workspace/Task_Management/` を監視。
+  - `inbox_watcher.py`: 各 `Task_Inbox/` を監視。
+  - 運用: 常駐か定期起動かは未整備のため、後でポリシーを確定。
+- `sdk_runtime/tools/shared/`: 共有ツール（read_task/assign_task/report_progress 等）。
+  - 運用: ここを原本とし、必要に応じてコピー。
+- `sdk_runtime/tools/per_agent/<agent>/`: エージェント専用ツール。
+  - 運用: 権限や責務に応じて分岐。共有ツールと混在させない。
+- `sdk_runtime/prompt_profiles/common/`: 共通の事前資料。
+- `sdk_runtime/prompt_profiles/agents/`: エージェント専用事前資料。
+  - 運用: 事前キャッシュ作成の元データとして管理。
+- `sdk_runtime/prompt_flow/templates/`: 進捗/Proposal/Activeなどの動的情報注入手順。
+- `sdk_runtime/cache/`: キャッシュIDや失効管理の記録。
+- `sdk_runtime/logs/`: 実行ログ。
+- `sdk_runtime/tests/`: Watcher/ツールの簡易テスト。
+
+---
+
+## まとめ（結論）
+SDK移行に必要なプロジェクト固有情報は、**運用フロー（Task_Management + クロック + 報告）**、**役割ごとの権限と責務**、**Symbol/DB連携ルール**、**既存自動化スクリプト群**、そして**進捗管理の規定**が中心です。これらはすでに資料準拠で揃っています。一方で、**SDK運用方式・権限実装・監視閾値・クロック判断基準**などは未整備であり、SDK移行の実装仕様を確定する上で必須の空白項目です。

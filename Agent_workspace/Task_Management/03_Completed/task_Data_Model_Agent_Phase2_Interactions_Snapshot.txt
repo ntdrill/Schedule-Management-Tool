@@ -1,0 +1,43 @@
+# Task: Phase2 相互作用スナップショット記述
+
+## 現状
+- Phase2 ステップ1（相互作用ユースケース提案）は提出済み。
+  - `proposal_user_interaction.txt`
+  - `proposal_env_interaction.txt`
+  - `proposal_social_interaction.txt`
+  - `proposal_monitoring_interaction.txt`
+- Phase2 ステップ2（シンボル抽出）は提出済み。
+  - `report_symbol_phase2_interactions.txt`
+- 次工程として、相互作用ユースケースを形式的スナップショットとして記述する。
+
+## Assignment
+- **Assignee**: Data_Model_Agent (@Data_Model_Agent)
+- **期限**: 2026/02/18
+- **タスク**:
+  - 上記4提案とシンボル抽出レポートを参照し、相互作用ユースケースをスナップショット記法で記述する
+  - 最低4ケース（ユーザー/環境/社会/測定）を含める
+  - 記述内で「資料準拠（事実）」と「提案/ドラフト」を分離する
+  - 未整備項目は `## 未整備` セクションで明示する
+  - 必要なシンボル参照を併記し、未定義シンボルがある場合は一覧化する
+- **成果物**:
+  - `report_phase2_interactions_snapshot.txt`（提出先: `Task_Management/01_Proposals/`）
+
+## 参照資料
+- `Task_Management/01_Proposals/proposal_user_interaction.txt`
+- `Task_Management/01_Proposals/proposal_env_interaction.txt`
+- `Task_Management/01_Proposals/proposal_social_interaction.txt`
+- `Task_Management/01_Proposals/proposal_monitoring_interaction.txt`
+- `Task_Management/01_Proposals/report_symbol_phase2_interactions.txt`
+- `docs/readme/05_ドメイン知識・理論基盤.md`
+
+## 完了時の報告先
+- `進捗管理agent/進捗報告受付/`
+- `Agent_workspace/Agent_maneger/クロック受付/`（資料準拠の事実のみ）
+
+## 進捗ログ
+- 2026/02/13: Data_Model_Agent 実行結果として `report_phase2_interactions_snapshot.txt` を `01_Proposals/` へ提出。
+
+## 完了報告
+- 完了日: 2026/02/13
+- 進捗報告: `進捗管理agent/進捗報告受付/20260213_Phase2_Interactions_完了報告.txt`
+- クロック報告: `Agent_workspace/Agent_maneger/クロック受付/20260213_Phase2_Interactions_クロック.txt`

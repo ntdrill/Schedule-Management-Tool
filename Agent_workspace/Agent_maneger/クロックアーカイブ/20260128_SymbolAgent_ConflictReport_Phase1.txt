@@ -1,0 +1,100 @@
+# 報告: Phase1 シンボル割当の衝突検出（Symbol_Agent）
+報告日: 2026/01/28
+報告者: Symbol_Agent
+対象: `手作業で割り当て.txt` / `data/variables.txt`
+
+---
+
+## 1. 資料準拠（事実）
+- `手作業で割り当て.txt` の Snapshot 09〜20 を確認。
+- `data/variables.txt` の既存定義と照合した結果、**Snapshot 11〜20 で同一シンボルに異なる意味が割り当てられている**ことを確認。
+- Snapshot 09〜10 は既存定義と一致。
+
+---
+
+## 2. 衝突一覧（資料準拠）
+### Snapshot 11
+- ꁽ: 手作業=measurement_session / 既存=sensor_subscription
+- ꁾ: 手作業=sensor_subscription / 既存=subjective_prompt
+- ꁿ: 手作業=subjective_prompt / 既存=measurement_started
+- ꂀ: 手作業=measurement_started / 既存=measurement_toggle_off_event
+
+### Snapshot 12
+- ꂁ: 手作業=measurement_toggle_off_event / 既存=retrospective_prompt
+- ꂂ: 手作業=measurement_session / 既存=measurement_stats_saved
+- ꂃ: 手作業=retrospective_prompt / 既存=recovery_started
+- ꂅ: 手作業=measurement_stats_saved / 既存=sensor_stream
+- ꂆ: 手作業=recovery_started / 既存=noise_factor
+- ꂇ: 手作業=measurement_ended / 既存=loss_factor
+
+### Snapshot 13
+- ꂈ: 手作業=sensor_stream / 既存=device_factor
+- ꂉ: 手作業=noise_factor / 既存=context_factor
+- ꂊ: 手作業=loss_factor / 既存=continuity_ok
+- ꂋ: 手作業=device_factor / 既存=interruption_mark_result
+- ꂌ: 手作業=context_factor / 既存=quality_updated
+- ꂍ: 手作業=continuity_ok / 既存=time_tick_event
+- ꂎ: 手作業=interruption_mark_result / 既存=input_cost
+- ꂏ: 手作業=quality_updated / 既存=over_limit
+
+### Snapshot 14
+- ꂐ: 手作業=time_tick_event / 既存=fatigue_warning_output
+- ꂑ: 手作業=input_cost / 既存=fatigue_updated
+- ꂒ: 手作業=over_limit / 既存=subjective_input_trigger_event
+- ꂓ: 手作業=fatigue_warning_output / 既存=state_input_ui
+- ꂔ: 手作業=fatigue_updated / 既存=subjective_input
+
+### Snapshot 15
+- ꂕ: 手作業=subjective_input_trigger_event / 既存=user_state_store_result
+- ꂖ: 手作業=subjective_input / 既存=subjective_input_done
+- ꂗ: 手作業=user_state_store_result / 既存=subjective_input_ready
+- ꂘ: 手作業=subjective_input_done / 既存=discrepancy_alert_flag
+
+### Snapshot 16
+- ꂙ: 手作業=subjective_input_ready / 既存=latency_flags
+- ꂚ: 手作業=discrepancy_alert_flag / 既存=latency_flags_store_result
+- ꂛ: 手作業=latency_flags / 既存=discrepancy_checked
+- ꂜ: 手作業=latency_flags_store_result / 既存=connectivity_event
+- ꂝ: 手作業=discrepancy_checked / 既存=disconnect_handle_result
+
+### Snapshot 17
+- ꂞ: 手作業=connectivity_event / 既存=connection_updated
+- ꂟ: 手作業=disconnect_handle_result / 既存=capability_eval_trigger
+- ꂠ: 手作業=connection_updated / 既存=bio_factors
+
+### Snapshot 18
+- ꂡ: 手作業=capability_eval_trigger / 既存=system_mode
+- ꂢ: 手作業=bio_factors / 既存=system_mode_update_result
+- ꂣ: 手作業=system_mode / 既存=intervention_suggestion_output
+- ꂤ: 手作業=system_mode_update_result / 既存=capability_evaluated
+- ꂥ: 手作業=intervention_suggestion_output / 既存=action_selected
+- ꂦ: 手作業=capability_evaluated / 既存=action_start
+
+### Snapshot 19
+- ꂧ: 手作業=action_selected / 既存=subjective_input_before
+- ꂨ: 手作業=action_start / 既存=action_end
+- ꂩ: 手作業=subjective_input_before / 既存=subjective_input_after
+- ꂪ: 手作業=action_end / 既存=effectiveness_score
+- ꂫ: 手作業=subjective_input_after / 既存=execution_record_store_result
+- ꂬ: 手作業=effectiveness_score / 既存=action_evaluated
+- ꂭ: 手作業=execution_record_store_result / 既存=compare_request
+- ꂮ: 手作業=action_evaluated / 既存=expected_state
+
+### Snapshot 20
+- ꂯ: 手作業=compare_request / 既存=actual_state
+- ꂰ: 手作業=expected_state / 既存=evaluation_target
+- ꂱ: 手作業=actual_state / 既存=evaluation_store_result
+- ꂲ: 手作業=evaluation_target / 既存=comparison_done
+
+---
+
+## 3. 判定（提案/ドラフト）
+- シンボル意味の不変性により、既存定義の上書きは不可。
+- 現行スナップショットの `?_` 置換は、**既存 `data/variables.txt` の定義に従う**方向が安全。
+- 手作業割当は「再割当案」として扱い、必要なら**新規シンボル発行の再提案**が必要。
+
+---
+
+## 4. 依頼
+- Agent_Managerにて、**採用方針（既存優先 or 新規再割当）**の判断をお願いします。
+

@@ -1,0 +1,501 @@
+# Phase 5 スキーマ整合性検証報告
+
+作成日: 2026/02/24
+担当: Symbol_Agent
+
+## 区分ルール
+- **資料準拠**: スナップショット・シンボル辞書に根拠があるもの。事実のみを記述。
+- **提案/ドラフト**: 新たな提案は「提案/ドラフト」と明記。
+- **未整備**: 根拠資料に「未整備」と明記されている項目。
+
+---
+
+## 1. 検証サマリー
+
+| # | 検証項目 | 結果 | 詳細 |
+|---|---|---|---|
+| 13-a | プロパティ名・シンボル辞書の一致 | 合格 | 全 v1 必須/骨格モデルのプロパティが variables.txt に正しく対応。camelCase ↔ snake_case 変換も妥当 |
+| 13-b | クラス間関係・@Relationship 整合性 | 合格 | 指定された6関係すべてがスキーマの @Relationship 宣言および §6.2 表に正確に反映されている |
+| 13-c | v1 スナップショットカバレッジ | 合格 | 7クラスが v1 コア機能（測定ON/OFF、対処行動記録・評価、ログ閲覧、期待状態選択、ローカル通知）のスナップショットを網羅 |
+| 13-d | 未整備事項プレースホルダー化 | 合格 | U-12〜U-14（ꄖ, ꄗ の仮値）が AppConstants に正しく定義。v2 延期分も予約コメント化済み |
+| 追加-1 | v1 スコープ判定表の妥当性 | 要修正 | 分類は妥当だが、§8.4 の v1 定数カウント（7件）が実際（11件以上）と不整合 |
+| 追加-2 | PRE-02 の7件反映確認 | 合格 | 全7件の採否判定がスキーマの §7.1 に正確に反映されている |
+| 追加-3 | ꀀ/ꁀ シンボル不一致確認 | 合格 | スキーマは ꁀ = room_clutter を正として扱っており、§8.5 で明示的に記載済み |
+
+**総合判定: 条件付き合格**（§8.4 の統計カウント修正と、2件の軽微な注記修正を推奨）
+
+---
+
+## 2. プロパティ名・シンボル照合結果
+
+### 2.1 一致確認（正常）
+
+#### 2.1.1 UserState（C-01）— 全プロパティ一致
+
+| Swift プロパティ (camelCase) | シンボル | variables.txt 変数名 (snake_case) | V-xx | 結果 |
+|---|---|---|---|---|
+| heartRateBpm | ꀵ | heart_rate_bpm | V-05 | ✓ 一致 |
+| hrvMs | ꀶ | hrv_ms | V-06 | ✓ 一致 |
+| valenceScore | ꀷ | valence_score | V-07 | ✓ 一致 |
+| arousalScore | ꀸ | arousal_score | V-08 | ✓ 一致 |
+| focusScore | ꀹ | focus_score | V-09 | ✓ 一致 |
+| fatigueScore | ꀺ | fatigue_score | V-10 | ✓ 一致 |
+| isMeasurementStateActive | ꀚ | is_measurement_state_active | V-47 | ✓ 一致 |
+| measurementCapability | ꀳ | user_measurement_capability | V-23 | ✓ 一致（クラス所属のため "user_" 省略は妥当） |
+| measurementCapabilityStatusRaw | — | user_measurement_capability_recovery_pending 由来 | V-110 | ✓ 一致（enum rawValue 格納） |
+
+#### 2.1.2 MeasurementSession（C-08）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | variables.txt 変数名 | V-xx | 結果 |
+|---|---|---|---|---|
+| measurementTimeDailyMinutes | ꀡ | measurement_time_daily | V-27 | ✓ 一致（単位明示 "Minutes" の付加は適切） |
+| lastValidMeasurementTimestamp | ꀞ | last_valid_measurement_timestamp | V-28 | ✓ 一致 |
+| measurementQualityScore | ꀉ | current_measurement_quality_score | V-24 | ✓ 一致 |
+| measurementFatigueLevel | ꀟ | measurement_fatigue_level | V-26 | ✓ 一致 |
+| isMeasurementMode | ꀙ | is_measurement_mode | V-95 | ✓ 一致 |
+
+#### 2.1.3 ExecutionRecord（C-05）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | variables.txt 変数名 | V-xx | 結果 |
+|---|---|---|---|---|
+| userRating | ꃠ | phase1_effectiveness_score | V-157 | ✓ 一致（[1-5] 主観評価） |
+
+#### 2.1.4 UserStateHistoryRecord（C-06）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | variables.txt 変数名 | V-xx | 結果 |
+|---|---|---|---|---|
+| heartRateBpm | ꀵ | heart_rate_bpm | V-05 | ✓ 一致 |
+| hrvMs | ꀶ | hrv_ms | V-06 | ✓ 一致 |
+| valenceScore | ꀷ | valence_score | V-07 | ✓ 一致 |
+| arousalScore | ꀸ | arousal_score | V-08 | ✓ 一致 |
+| focusScore | ꀹ | focus_score | V-09 | ✓ 一致 |
+| fatigueScore | ꀺ | fatigue_score | V-10 | ✓ 一致 |
+| expectedStateId | ꁄ | expected_state_reference | V-91 | ✓ 一致（ID 参照として String? 化） |
+| isMeasurementActive | ꀚ | is_measurement_state_active | V-47 | ✓ 一致 |
+
+#### 2.1.5 EvaluationResult（C-07）— スキーマ固有プロパティ
+
+| Swift プロパティ | 対応 | 結果 |
+|---|---|---|
+| matchScore | ↥(evaluate_task_effect) 出力 | ✓ 一致（Sn03, Sn20 の一致スコア） |
+| detailEvaluationJson | ↥ 出力の詳細部分 | ✓ 一致（JSON エンコード） |
+| expectedStateId | ꁃ expected_state_selected 由来 | ✓ 一致 |
+
+#### 2.1.6 ExpectedStateSchema（C-09）— 全プロパティ一致
+
+| Swift プロパティ | 対応定数 | constants.txt | 結果 |
+|---|---|---|---|
+| presetTypeRaw = "standard" | ሧ | state_preset_user_standard | ✓ 一致 |
+| presetTypeRaw = "ready" | ረ | state_preset_user_ready | ✓ 一致 |
+| presetTypeRaw = "focus" | ሩ | state_preset_user_focus | ✓ 一致 |
+| presetTypeRaw = "rest" | ሪ | state_preset_user_rest | ✓ 一致 |
+| presetTypeRaw = "sleep" | ራ | state_preset_user_sleep | ✓ 一致 |
+
+#### 2.1.7 ActualStateSnapshot（C-10）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | variables.txt 変数名 | V-xx | 結果 |
+|---|---|---|---|---|
+| heartRateBpm | ꀵ | heart_rate_bpm | V-05 | ✓ 一致 |
+| hrvMs | ꀶ | hrv_ms | V-06 | ✓ 一致 |
+| valenceScore | ꀷ | valence_score | V-07 | ✓ 一致 |
+| arousalScore | ꀸ | arousal_score | V-08 | ✓ 一致 |
+| focusScore | ꀹ | focus_score | V-09 | ✓ 一致 |
+| fatigueScore | ꀺ | fatigue_score | V-10 | ✓ 一致 |
+| sourceDescription | ꁆ | actual_state_source | V-93 | ✓ 一致 |
+
+#### 2.1.8 EnvironmentState（C-02, v1 骨格）— 全プロパティ一致
+
+| Swift プロパティ | 対応 | 結果 |
+|---|---|---|
+| temperature | ꀔ environmental_sensor_raw 由来 | ✓ 一致 |
+| humidity | ꀔ environmental_sensor_raw 由来 | ✓ 一致 |
+| (コメント) roomClutter | ꁀ (V-16, v2) | ✓ 一致（正しいシンボル ꁀ を使用） |
+
+#### 2.1.9 ScheduledEvent（C-04, v1 骨格）— 全プロパティ一致
+
+| Swift プロパティ | 対応定数 | 結果 |
+|---|---|---|
+| templateRef | ሡ task_templates_dictionary 参照 | ✓ 一致 |
+
+#### 2.1.10 DeviceConnectionStatusMap（C-18, v1 骨格）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | 結果 |
+|---|---|---|
+| statusJson | ꀍ device_connection_status_map | ✓ 一致 |
+
+#### 2.1.11 EvaluationTargetObject（C-20, v1 骨格）— 全プロパティ一致
+
+| Swift プロパティ | シンボル | 結果 |
+|---|---|---|
+| result | ꁇ evaluation_target_object の .result フィールド | ✓ 一致（Sn03 で確認） |
+
+#### 2.1.12 値型（struct）— シンボル対応確認
+
+| 構造体 | 含有シンボル | 結果 |
+|---|---|---|
+| SensorSnapshot | ꀵ, ꀶ + 温度/湿度 | ✓ 一致 |
+| SubjectiveInput | ꀷ, ꀸ, ꀹ, ꀺ | ✓ 一致（ꃊ phase1_subjective_input 対応） |
+| DeltaResult | F-16 (↶ compare_state_delta) 出力型 | ✓ 一致 |
+
+#### 2.1.13 列挙型（enum）— シンボル/定数対応確認
+
+| 列挙型 | 対応 | 結果 |
+|---|---|---|
+| MeasurementSessionStatus | C-08 status, Sn11/12 | ✓ 一致 |
+| ExpectedStatePreset | ሧ〜ራ (constants.txt) | ✓ 全5定数と一致 |
+| ScheduledEventStatus | C-04 status | ✓ 一致 |
+| MeasurementCapabilityStatus | V-110 (PRE-02 #3) | ✓ recoveryPending ケース含む |
+| MeasurementSessionQuality | V-99 (ꄌ) | ✓ 一致 |
+
+### 2.2 不一致・懸念事項
+
+| # | 項目 | 重要度 | 詳細 |
+|---|---|---|---|
+| SV-01 | §8.4 定数カウント不整合 | 軽微 | v1 定数を「7件（プリセット5種 + プレースホルダー2件）」としているが、AppConstants に実際定義されている v1 定数は6件（ሏ, K-34, K-23/ꄖ, K-24/ꄗ, K-25/ሤ, K-27/ሢ）、プリセット5件と合計すると 11件。カウント方法の再整理を推奨 |
+| SV-02 | measurementCapability の注釈 | 軽微 | UserState.measurementCapability のコメントに「v1骨格: PRE-02 #3」とあるが、PRE-02 #3 は measurementCapabilityStatusRaw（MeasurementCapabilityStatus enum）に関するもの。measurementCapability 自体は V-23 として独立した v1 骨格フィールド |
+| SV-03 | Timestamped プロトコル適用 | 注記 | MeasurementSession は適用先に含まれているが、timestamp プロパティが startTimestamp という名前。プロトコル準拠時に computed property または命名調整が必要（Phase 6 実装事項） |
+
+**判定: 合格**（プロパティ名とシンボル辞書の対応は全件正確。SV-01〜SV-03 は機能的影響なし）
+
+---
+
+## 3. クラス間関係・@Relationship 検証結果
+
+### 3.1 Phase 4 §4 構造関連図との照合
+
+| # | 関係 | Phase 4 §4 記述 | スキーマ §2 コード | スキーマ §6.2 表 | 結果 |
+|---|---|---|---|---|---|
+| R-01 | UserState → UserStateHistoryRecord | [UserState] ──produces──> [UserStateHistoryRecord] (↪ で履歴生成) | @Relationship(deleteRule: .cascade, inverse: \UserStateHistoryRecord.userState) var historyRecords: [UserStateHistoryRecord] = [] | 1:N, cascade | ✓ 一致 |
+| R-02 | MeasurementSession → ExecutionRecord | [MeasurementSession] ──uses──> [UserState] 経由 | @Relationship(deleteRule: .cascade, inverse: \ExecutionRecord.measurementSession) var executionRecords: [ExecutionRecord] = [] | 1:N, cascade | ✓ 一致 |
+| R-03 | MeasurementSession → UserStateHistoryRecord | [MeasurementSession] 内で状態記録 | @Relationship(deleteRule: .cascade, inverse: \UserStateHistoryRecord.measurementSession) var stateRecords: [UserStateHistoryRecord] = [] | 1:N, cascade | ✓ 一致 |
+| R-04 | ExecutionRecord → UserStateHistoryRecord (stateBefore) | [ExecutionRecord] ──has-a──> state_before | @Relationship(deleteRule: .nullify) var stateBefore: UserStateHistoryRecord? | 1:0..1, nullify | ✓ 一致 |
+| R-05 | ExecutionRecord → UserStateHistoryRecord (stateAfter) | [ExecutionRecord] ──has-a──> state_after | @Relationship(deleteRule: .nullify) var stateAfter: UserStateHistoryRecord? | 1:0..1, nullify | ✓ 一致 |
+| R-06 | ExecutionRecord → EvaluationResult | [ExecutionRecord] ──has-a──> result (EvaluationResult) | @Relationship(deleteRule: .cascade) var evaluationResult: EvaluationResult? | 1:0..1, cascade | ✓ 一致 |
+| R-07 | EvaluationTargetObject → EvaluationResult | [EvaluationResult] ──stored-in──> [EvaluationTargetObject].result | @Relationship(deleteRule: .cascade) var result: EvaluationResult? | 1:0..1, cascade | ✓ 一致 |
+
+### 3.2 逆方向関係（belongsTo）の確認
+
+| # | 関係 | コード | §6.2 表 | 結果 |
+|---|---|---|---|---|
+| R-08 | ExecutionRecord → MeasurementSession | var measurementSession: MeasurementSession? | N:0..1 | ✓ 一致 |
+| R-09 | UserStateHistoryRecord → UserState | var userState: UserState? | N:0..1 | ✓ 一致 |
+| R-10 | UserStateHistoryRecord → MeasurementSession | var measurementSession: MeasurementSession? | N:0..1 | ✓ 一致 |
+
+### 3.3 Relationship に関する注記
+
+| # | 注記 | 影響度 |
+|---|---|---|
+| RN-01 | ExecutionRecord の stateBefore/stateAfter は inverse 宣言が省略されている。SwiftData では逆方向の推論が必要な場合がある。1つの UserStateHistoryRecord が「行動前」と「行動後」の両方の候補となりうるため、inverse パターンが複雑になる。Phase 6 実装時に要検討 | Phase 6 |
+| RN-02 | EvaluationResult は ExecutionRecord と EvaluationTargetObject の両方から cascade で参照される。同一 EvaluationResult が複数の親から参照されないことを保証する設計が必要（v1 では排他的に使用する想定） | Phase 6 |
+
+**判定: 合格**（指定された6関係すべてが正確に反映されている。RN-01, RN-02 は Phase 6 実装時の考慮事項）
+
+---
+
+## 4. v1 スナップショットカバレッジ
+
+### 4.1 コア機能別カバレッジ
+
+#### 4.1.1 測定 ON/OFF: Sn11, Sn12
+
+| 機能要素 | カバーモデル | カバー状況 | 根拠 |
+|---|---|---|---|
+| セッション生成 | MeasurementSession (C-08) | ✓ | F-43 (⇭ create_measurement_session), startTimestamp |
+| 測定状態管理 | MeasurementSession.statusRaw | ✓ | MeasurementSessionStatus enum (idle/active/completed/cancelled) |
+| センサー購読開始 | MeasurementSession 経由 | ✓ | F-65 (⇮), V-113 phase1_sensor_subscription |
+| セッション完了処理 | MeasurementSession.endTimestamp | ✓ | F-69 (⇲ finalize_measurement_session) |
+| 統計保存 | MeasurementSession | ✓ | F-52 (⇳ store_measurement_stats) |
+| 測定モードフラグ | MeasurementSession.isMeasurementMode (ꀙ) | ✓ | V-95, F-68/F-71 |
+
+**カバレッジ: 完全**
+
+#### 4.1.2 対処行動の記録・評価: Sn01, Sn19
+
+| 機能要素 | カバーモデル | カバー状況 | 根拠 |
+|---|---|---|---|
+| 行動選択・開始 | ExecutionRecord (C-05) | ✓ | actionTemplateId, actionName, startTimestamp |
+| 行動前状態 | ExecutionRecord.stateBefore → USHR | ✓ | R-04 (1:0..1, nullify) |
+| 行動後状態 | ExecutionRecord.stateAfter → USHR | ✓ | R-05 (1:0..1, nullify) |
+| 主観評価 | ExecutionRecord.userRating | ✓ | V-157 (ꃠ [1-5]) |
+| 効果評価 | ExecutionRecord.evaluationResult → ER | ✓ | R-06 (1:0..1, cascade) |
+| 期待-実績比較 | EvaluationResult (C-07) | ✓ | matchScore, detailEvaluationJson |
+| 実行記録保存 | F-49 (↽ store_execution_record) | ✓ | |
+
+**カバレッジ: 完全**
+
+#### 4.1.3 ログ閲覧: Sn02, Sn15
+
+| 機能要素 | カバーモデル | カバー状況 | 根拠 |
+|---|---|---|---|
+| 状態スナップショット履歴 | UserStateHistoryRecord (C-06) | ✓ | sensor + subjective snapshot |
+| 期待状態参照 | USHR.expectedStateId | ✓ | V-91 |
+| 時系列記録 | USHR.timestamp | ✓ | Timestamped プロトコル |
+| 環境データ包含 | USHR.temperature, humidity | ✓ | C-02 由来の v1 骨格データ |
+| 記録種別分類 | USHR.recordTypeRaw | ✓ | "periodic" / "actionBefore" / "actionAfter" |
+| 状態保存 | F-53 (⇾ store_user_state) | ✓ | |
+
+**カバレッジ: 完全**
+
+#### 4.1.4 期待状態の選択: Sn03
+
+| 機能要素 | カバーモデル | カバー状況 | 根拠 |
+|---|---|---|---|
+| プリセット定義 | ExpectedStateSchema (C-09) | ✓ | 5種（ሧ〜ራ） |
+| 状態ベクトル | ESS.targetValence/Arousal/Focus/FatigueRange | ✓ | 範囲表記 |
+| 実際状態スナップショット | ActualStateSnapshot (C-10) | ✓ | ↥ の第2引数 |
+| 評価実行 | EvaluationResult (C-07) | ✓ | ↥(evaluate_task_effect) 出力 |
+| 汎用評価コンテナ | EvaluationTargetObject (C-20) | ✓ | ꁇ.result フィールド |
+
+**カバレッジ: 完全**
+
+#### 4.1.5 ローカル通知: Sn14（疲労警告）
+
+| 機能要素 | カバーモデル | カバー状況 | 根拠 |
+|---|---|---|---|
+| 累積測定時間 | MeasurementSession.measurementTimeDailyMinutes (ꀡ) | ✓ | V-27 |
+| 測定疲労レベル | MeasurementSession.measurementFatigueLevel (ꀟ) | ✓ | V-26 (v1 骨格) |
+| 上限超過判定 | AppConstants.measurementLimitDailyMaxMinutes (ሏ) | ✓ | F-33 (⇺ check_limit_exceeded) |
+| 警告発行 | F-94 (⇻ issue_fatigue_warning) | ✓ | UIOutput |
+
+**カバレッジ: 完全**
+
+### 4.2 カバレッジ集計
+
+| コア機能 | 関連 Sn | カバーモデル | 結果 |
+|---|---|---|---|
+| 測定 ON/OFF | Sn11, Sn12 | MeasurementSession | ✓ 完全 |
+| 対処行動記録・評価 | Sn01, Sn19 | ExecutionRecord, EvaluationResult | ✓ 完全 |
+| ログ閲覧 | Sn02, Sn15 | UserStateHistoryRecord | ✓ 完全 |
+| 期待状態選択 | Sn03 | ExpectedStateSchema, ActualStateSnapshot | ✓ 完全 |
+| ローカル通知 | Sn14 | MeasurementSession（疲労関連フィールド） | ✓ 完全 |
+
+**判定: 合格**（全 v1 コア機能のスナップショットカバレッジが確認された）
+
+---
+
+## 5. 未整備事項プレースホルダー検証
+
+### 5.1 スキーマに影響する未整備事項の対処状況
+
+| # | 未整備事項 | 影響先 | スキーマ上の対処 | 結果 |
+|---|---|---|---|---|
+| U-01 | 再発回数に応じた介入強度テーブル | C-22 | v2 延期: C-22 InterventionIntensityTable は予約コメント化 | ✓ 適切 |
+| U-02 | ꄘ+1 の更新タイミング | F-99 | v2 延期: 危篤状態管理はv2 | ✓ 適切 |
+| U-03 | critical_recurrence_window_hours の実値 | K-21 | v2 延期: K-21 はv2で実値決定 | ✓ 適切 |
+| U-04 | エスカレーション境界条件 | F-46 | v2 延期: 自動検知はv2 | ✓ 適切 |
+| U-05 | response_timeout_threshold_seconds の実値 | K-22 | v2 延期: K-22 はv2で実値決定 | ✓ 適切 |
+| U-06 | 回復ループ終了条件 | C-23 | v2 延期: C-23 は予約コメント化 | ✓ 適切 |
+| U-07 | 測定疲労・睡眠不足重複判定 | F-07 | v2 延期 | ✓ 適切 |
+| U-08 | 換気不能の判定条件 | C-24 | v2 延期: C-24 は予約コメント化 | ✓ 適切 |
+| U-09 | 代替介入優先順位モデル | F-41 | v2 延期 | ✓ 適切 |
+| U-10 | 主観モード終了条件 | C-25 | v2 延期: C-25 は予約コメント化 | ✓ 適切 |
+| U-11 | センサー再接続自動復帰 | F-77 | v2 延期 | ✓ 適切 |
+| U-12 | 再開判定の最低回復条件の実値 | K-23 (ꄖ) | v1 プレースホルダー: AppConstants.environmentRecoveryMinThreshold = 0.6 | ✓ 適切 |
+| U-13 | environment_recovery_min_threshold の実値 | K-23 (ꄖ) | U-12 と同一: 0.6 で仮値定義 | ✓ 適切 |
+| U-14 | measurement_restart_min_stability の実値 | K-24 (ꄗ) | v1 プレースホルダー: AppConstants.measurementRestartMinStabilitySeconds = 300.0 | ✓ 適切 |
+| U-15 | 環境→測定能力変換の係数 | K-18 | v2 延期 | ✓ 適切 |
+| U-16 | 測定品質と環境変動の定量式 | F-104, F-106 | v2 延期 | ✓ 適切 |
+| U-17 | エッジ解除/再接続の閾値 | K-20 | v2 延期 | ✓ 適切 |
+| U-18 | 回復遅延の数理モデル | F-104, F-105 | v2 延期 | ✓ 適切 |
+
+### 5.2 AppConstants プレースホルダー定数の検証
+
+| 定数名 | シンボル | 仮値 | 根拠 | 結果 |
+|---|---|---|---|---|
+| measurementLimitDailyMaxMinutes | ሏ | 480.0 (8時間) | 資料準拠: constants.txt「1日の測定時間推奨上限 (8時間)」 | ✓ 一致 |
+| measurementQualityThreshold | K-34 | 0.5 | 提案/ドラフト: PRE-02 #6 採用 | ✓ 適切 |
+| environmentRecoveryMinThreshold | ꄖ (K-23) | 0.6 | 提案/ドラフト: PRE-02 #7 | ✓ 適切 |
+| measurementRestartMinStabilitySeconds | ꄗ (K-24) | 300.0 (5分) | 提案/ドラフト: PRE-02 #7 | ✓ 適切 |
+| thresholdMeasurementCapabilityForMonitoring | ሤ (K-25) | 0.4 | 資料準拠: constants.txt 記載あり（実値は仮） | ✓ 適切 |
+| thresholdDiscrepancyForDissociationAlert | ሢ (K-27) | 2.0 | 資料準拠: constants.txt 記載あり（実値は仮） | ✓ 適切 |
+
+### 5.3 v2 延期モデルの予約コメント化確認
+
+以下の14クラスがスキーマ §2.3 で予約コメント化されていることを確認:
+
+| # | クラス | 予約コメント | 未整備マーク | 結果 |
+|---|---|---|---|---|
+| C-03 | SocialState | ✓ | — | ✓ |
+| C-11 | FallbackScheduledEvent | ✓ | — | ✓ |
+| C-12 | MicroInterventionPlan | ✓ | — | ✓ |
+| C-13 | RoiLogEntry | ✓ | — | ✓ |
+| C-14 | InterventionLogEntry | ✓ | — | ✓ |
+| C-15 | DeferredTaskEntry | ✓ | — | ✓ |
+| C-16 | PlMetrics | ✓ | — | ✓ |
+| C-17 | InterventionPlSummary | ✓ | — | ✓ |
+| C-19 | UserResourceState | ✓ | — | ✓ |
+| C-21 | GuestResponseTask | ✓ | — | ✓ |
+| C-22 | InterventionIntensityTable | ✓ | 未整備 | ✓ |
+| C-23 | RecoveryLoopExitCondition | ✓ | 未整備 | ✓ |
+| C-24 | VentilationFeasibilityCriteria | ✓ | 未整備 | ✓ |
+| C-25 | SubjectiveModeExitCondition | ✓ | 未整備 | ✓ |
+
+**判定: 合格**（全18件の未整備事項が適切に対処されている。v1 プレースホルダーは仮値で定義済み、v2 延期分は予約コメント化済み）
+
+---
+
+## 6. v1 スコープ判定の妥当性評価
+
+### 6.1 カテゴリ別件数の検証
+
+| カテゴリ | スキーマ記載 | Phase 4 照合 | 結果 |
+|---|---|---|---|
+| v1 必須 | 7件 | C-01, C-05, C-06, C-07, C-08, C-09, C-10 | ✓ 一致 |
+| v1 骨格 | 4件 | C-02, C-04, C-18, C-20 | ✓ 一致 |
+| v2 延期 | 14件 | C-03, C-11〜C-17, C-19, C-21〜C-25 | ✓ 一致 |
+| 合計 | 25件 | Phase 4 のクラス候補25件と一致 | ✓ 一致 |
+
+### 6.2 境界判断の妥当性
+
+| 境界判断 | 評価 | 根拠 |
+|---|---|---|
+| C-02 (EnvironmentState) を v1 骨格 | 妥当 | 温度・湿度のセンサーデータは v1 で収集するが、環境メトリクス6指標（ꀻ〜ꁀ）は v2。v1 では UserStateHistoryRecord に環境スナップショットを埋め込む設計で十分 |
+| C-04 (ScheduledEvent) を v1 骨格 | 妥当 | v1 では ExecutionRecord を直接生成するフローが中心。カレンダー配置は v2。F-37/F-38 の v1 実装は骨格レベルで可 |
+| C-10 (ActualStateSnapshot) を v1 必須 | 妥当 | Sn03 で ↥(evaluate_task_effect) の第2引数として使用。v1 の期待状態選択機能に必須 |
+| C-20 (EvaluationTargetObject) を v1 骨格 | 妥当 | Sn03 で .result フィールドアクセスが確認されているが、v1 では ExecutionRecord.evaluationResult で大部分をカバー可能。Sn20（行動に紐づかない比較）の v1 スコープ次第 |
+
+### 6.3 統計サマリーの検証
+
+| 項目 | スキーマ記載 | 検証結果 | 結果 |
+|---|---|---|---|
+| @Model（v1 必須） | 7 | 7 | ✓ |
+| @Model（v1 骨格） | 4 | 4 | ✓ |
+| @Model（v2 延期） | 14 | 14 | ✓ |
+| struct（v1） | 3 | 3 (SensorSnapshot, SubjectiveInput, DeltaResult) | ✓ |
+| enum（v1 必須） | 3 | 3 | ✓ |
+| enum（v1 骨格） | 2 | 2 | ✓ |
+| enum（v2 延期） | 6 | 6 | ✓ |
+| protocol（v1） | 3 | 3 | ✓ |
+
+### 6.4 §8.4 変数・関数サマリーの検証
+
+| 項目 | スキーマ記載 | 検証結果 | 結果 |
+|---|---|---|---|
+| 変数合計 | 164件 | V-01〜V-68 (68) + V-69〜V-111 (43) + V-112〜V-164 (53) = 164 | ✓ 一致 |
+| 関数合計 | 110件 | Phase 4 §3: 98 既定義 + 12 新規 = 110 | ✓ 一致 |
+| v1 定数 | 7件 | **要修正**: 実際には AppConstants 6件 + プリセット5件 = 11件以上。「7件（プリセット5種 + プレースホルダー2件）」は ꄖ, ꄗ のみをプレースホルダーとしてカウントし、ሏ, K-34, ሤ, ሢ を除外している | ⚠ 要修正 |
+
+**判定: 要修正**（スコープ分類自体は妥当だが、§8.4 の v1 定数カウントに不整合あり）
+
+---
+
+## 7. PRE-02 反映確認
+
+### 7.1 PRE-02 全7件の反映検証
+
+| # | PRE-02 要素 | 判定 | スキーマ上の反映 | 反映先 | 結果 |
+|---|---|---|---|---|---|
+| 1 | P3-01: ↬ の第3引数 recovery_task_priority | v2 延期 | RecoveryTaskPriority enum は v2 予約コメント（§4.3） | — | ✓ 正確 |
+| 2 | P3-02: ↰ 出力と閾値比較の整合性 | v1 採用 | F-21 eval_response_latency の出力を Float(sec) に統一。v1 骨格関数として型定義のみ予約 | F-21 戻り値型 | ✓ 正確 |
+| 3 | P3-03: user_measurement_capability_recovery_pending | v1 骨格 | MeasurementCapabilityStatus enum に recoveryPending ケース追加（§4.2.1） | enum §4.2.1 | ✓ 正確 |
+| 4 | P3-04: 換気不能判定の閾値定義 | v2 延期 | VentilationFeasibilityCriteria (C-24) は v2 予約コメント | — | ✓ 正確 |
+| 5 | P3-04: ሸ_air_purifier | v2 延期 | K-35 は定義スキップ、§7.1 に記載 | — | ✓ 正確 |
+| 6 | P3-05: 品質スコアと閾値の整合性 | v1 採用 | measurementQualityThreshold = 0.5 を AppConstants に追加（§7.3） | AppConstants | ✓ 正確 |
+| 7 | P3-06: ꄖ, ꄗ の実値 | v1 プレースホルダー | ꄖ = 0.6, ꄗ = 300.0 を AppConstants に仮値定義（§7.3） | AppConstants | ✓ 正確 |
+
+### 7.2 PRE-02 と Phase 4 提案/ドラフト要素の整合性
+
+Phase 4 §5.2 に記載された7件の提案/ドラフト要素と、PRE-02 の7件が正確に1:1対応していることを確認。
+
+| Phase 4 §5.2 # | PRE-02 # | 対応 |
+|---|---|---|
+| 1 (P3-01: ↬ 第3引数) | 1 | ✓ |
+| 2 (P3-02: ↰ 出力) | 2 | ✓ |
+| 3 (P3-03: recovery_pending) | 3 | ✓ |
+| 4 (P3-04: 換気閾値) | 4 | ✓ |
+| 5 (P3-04: ሸ_air_purifier) | 5 | ✓ |
+| 6 (P3-05: 品質閾値) | 6 | ✓ |
+| 7 (P3-06: ꄖ, ꄗ) | 7 | ✓ |
+
+**判定: 合格**（PRE-02 の全7件が正確にスキーマに反映されている）
+
+---
+
+## 8. シンボル不一致確認
+
+### 8.1 ꀀ / ꁀ 不一致の検証
+
+**背景**: Phase 4 §5.1 で指摘された不一致。P3-06 で `ꀀ` が `room_clutter` として使用されていたが、variables.txt では:
+- ꀀ = accumulated_thermal_entropy_production（熱エントロピー蓄積量）
+- ꁀ = room_clutter（部屋の散らかり度）
+
+**PRE-01 での修正状況**: 03_複合スナップショットの記述.txt の P3-06 は修正済み。
+
+**スキーマ側の確認**:
+
+| 確認箇所 | 使用シンボル | 変数名 | 結果 |
+|---|---|---|---|
+| EnvironmentState §2.2.1 コメント（行445） | ꁀ | room_clutter | ✓ 正（ꁀ を使用） |
+| §8.5 シンボル不一致事項（行1048） | ꁀ | room_clutter を正と明記 | ✓ 正 |
+| variables.txt 行65 | ꁀ | room_clutter | ✓ 正 |
+| variables.txt 行1 | ꀀ | accumulated_thermal_entropy_production | ✓ 正（別の変数） |
+
+**結論**: スキーマは `ꁀ = room_clutter` を一貫して正として扱っている。ꀀ との混同はスキーマ内に存在しない。
+
+### 8.2 Phase 4 側の残存課題
+
+Phase 4 §3.7.2 の F-109 (evaluate_simultaneous_threshold_breach) の備考に `(ꀘ > ሓ) ∧ (ꀀ > ሂ)` という記述がある。この `ꀀ` は Phase 4 の記述であり、正しくは `ꁀ` であるべき。ただしこれは Phase 4 のアーティファクトであり、スキーマ側では影響しない。Phase 4 の修正を推奨するが、スキーマ検証としては合格。
+
+**判定: 合格**（スキーマ側では ꁀ = room_clutter を正として一貫的に扱っている）
+
+---
+
+## 9. 総合判定
+
+**判定: 条件付き合格**
+
+### 9.1 判定理由
+
+スキーマ定義は以下のすべての主要検証項目に合格している:
+- 全 v1 必須/骨格モデルのプロパティ名がシンボル辞書と正確に対応（13-a: 合格）
+- Phase 4 §4 の6関係すべてが @Relationship に正確に反映（13-b: 合格）
+- v1 コア機能5分野のスナップショットカバレッジが完全（13-c: 合格）
+- U-01〜U-18 の全18件が適切に対処（13-d: 合格）
+- PRE-02 の全7件が正確に反映（追加-2: 合格）
+- ꀀ/ꁀ 不一致がスキーマ側で解消済み（追加-3: 合格）
+
+「条件付き」とする理由:
+- §8.4 の v1 定数カウントに不整合（7件 vs 実際11件以上）: 修正推奨
+- 2件の軽微な注記修正: SV-02 (measurementCapability の PRE-02 #3 注釈)、SV-03 (Timestamped プロトコル適用の補足)
+
+### 9.2 判定の根拠分類
+
+| 判定要素 | 区分 |
+|---|---|
+| プロパティ・シンボル対応の検証結果 | 資料準拠 |
+| Relationship 検証結果 | 資料準拠 |
+| スナップショットカバレッジ検証結果 | 資料準拠 |
+| プレースホルダー検証結果 | 資料準拠 + 提案/ドラフト（仮値） |
+| §8.4 カウント不整合の指摘 | 資料準拠（事実の記述） |
+
+---
+
+## 10. 要修正事項一覧
+
+| # | 重要度 | 項目 | 修正内容 | 影響範囲 |
+|---|---|---|---|---|
+| FIX-01 | 軽微 | §8.4 v1 定数カウント不整合 | 「7件（プリセット5種 + プレースホルダー2件）」を実際のカウント（AppConstants 6件 + プリセット5件 = 11件）に修正。カウント定義を明確化する | §8.4 統計表 |
+| FIX-02 | 軽微 | §2.1.1 UserState.measurementCapability の注釈 | コメント「v1骨格: PRE-02 #3」を「v1骨格」に修正（PRE-02 #3 は measurementCapabilityStatusRaw に関するもの） | §2.1.1 コード内コメント |
+| FIX-03 | 注記 | Timestamped プロトコル適用の補足 | §5.1 適用先リストで MeasurementSession に関する注記を追加（startTimestamp → timestamp の対応が必要）。または MeasurementSession を適用先から除外し、別途 SessionLifecycle プロトコルを検討 | §5.1 |
+
+### 10.1 Phase 4 への修正推奨（スキーマ外）
+
+| # | 項目 | 修正内容 |
+|---|---|---|
+| P4-FIX-01 | §3.7.2 F-109 のシンボル | 備考の `ꀀ` を `ꁀ` に修正（ꀀ = accumulated_thermal_entropy_production は room_clutter ではない） |
+
+---
+
+## 付録: 検証対象ファイルのハッシュ参照
+
+| ファイル | 行数 | 検証日 |
+|---|---|---|
+| 05_スキーマ定義.txt | 1076行 | 2026/02/24 |
+| 04_構造抽出.txt | 717行 | 2026/02/24 |
+| constants.txt | 108行 | 2026/02/24 |
+| variables.txt | 204行 | 2026/02/24 |
+| transforms.txt | 127行 | 2026/02/24 |
+
+---
+
+以上

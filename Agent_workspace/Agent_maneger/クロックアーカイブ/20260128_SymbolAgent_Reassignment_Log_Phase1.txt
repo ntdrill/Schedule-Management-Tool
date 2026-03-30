@@ -1,0 +1,76 @@
+# 報告: Phase1 手作業割当の新規シンボル再割当
+報告日: 2026/01/28
+報告者: Symbol_Agent
+対象: `開発者本人_workspace/docs/手作業で割り当て.txt`, `data/variables.txt`
+
+---
+
+## 1. 資料準拠（事実）
+- 既存定義を優先し、手作業側の衝突分に**新規シンボルを再割当**。
+- `手作業で割り当て.txt` と `data/variables.txt` を同一の割当で更新。
+- Snapshot 09〜10 は既存と一致のため変更なし。
+
+---
+
+## 2. 再割当一覧（資料準拠）
+- ꂳ phase1_measurement_session
+- ꂴ phase1_sensor_subscription
+- ꂵ phase1_subjective_prompt
+- ꂶ phase1_measurement_started
+- ꂷ phase1_measurement_toggle_off_event
+- ꂸ phase1_retrospective_prompt
+- ꂹ phase1_measurement_stats_saved
+- ꂺ phase1_recovery_started
+- ꂻ phase1_measurement_ended
+- ꂼ phase1_sensor_stream
+- ꂽ phase1_noise_factor
+- ꂾ phase1_loss_factor
+- ꂿ phase1_device_factor
+- ꃀ phase1_context_factor
+- ꃁ phase1_continuity_ok
+- ꃂ phase1_interruption_mark_result
+- ꃃ phase1_quality_updated
+- ꃄ phase1_time_tick_event
+- ꃅ phase1_input_cost
+- ꃆ phase1_over_limit
+- ꃇ phase1_fatigue_warning_output
+- ꃈ phase1_fatigue_updated
+- ꃉ phase1_subjective_input_trigger_event
+- ꃊ phase1_subjective_input
+- ꃋ phase1_user_state_store_result
+- ꃌ phase1_subjective_input_done
+- ꃍ phase1_subjective_input_ready
+- ꃎ phase1_discrepancy_alert_flag
+- ꃏ phase1_latency_flags
+- ꃐ phase1_latency_flags_store_result
+- ꃑ phase1_discrepancy_checked
+- ꃒ phase1_connectivity_event
+- ꃓ phase1_disconnect_handle_result
+- ꃔ phase1_connection_updated
+- ꃕ phase1_capability_eval_trigger
+- ꃖ phase1_bio_factors
+- ꃗ phase1_system_mode
+- ꃘ phase1_system_mode_update_result
+- ꃙ phase1_intervention_suggestion_output
+- ꃚ phase1_capability_evaluated
+- ꃛ phase1_action_selected
+- ꃜ phase1_action_start
+- ꃝ phase1_subjective_input_before
+- ꃞ phase1_action_end
+- ꃟ phase1_subjective_input_after
+- ꃠ phase1_effectiveness_score
+- ꃡ phase1_execution_record_store_result
+- ꃢ phase1_action_evaluated
+- ꃣ phase1_compare_request
+- ꃤ phase1_expected_state
+- ꃥ phase1_actual_state
+- ꃦ phase1_evaluation_target
+- ꃧ phase1_evaluation_store_result
+- ꃨ phase1_comparison_done
+
+---
+
+## 3. 未整備
+- Supabase `symbols` テーブルの更新は未実施。
+- 旧シンボルの廃止（Deprecated）処理は未実施。
+
