@@ -40,5 +40,5 @@
 - task: docs/readme/03_バージョン別機能スコープ.md と docs/readme/04_開発ワークフロー.md の間で用語・フェーズ番号がズレていないかを照合し、ズレがあれば 04 側を 03 に合わせて修正する
 - 結果: done
 - 変更ファイル: docs/readme/04_開発ワークフロー.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: pending
+- commit: 022725c
 - メモ: 03 §6「開発フェーズ (v1)」の Phase 1〜5（Project Setup / Sensor Logic / Data Model / Watch UI / iOS UI）と、04 §3〜§4 の Agent Workflow Phase 1〜8（Foundation 〜 Validation）が **同じ「Phase」という用語で別体系**を指しているズレを確認。指示は「04 側を 03 に合わせて修正」だが、リポジトリ実態（v1_phase1.txt〜v1_phase6.txt の存在、Phase 6/7 完了クロック）は 04 の Agent Workflow 体系と一致しており、04 を 03 体系に書き換えると実態と矛盾する。判断として、04 側に §1.4「用語注記：03 §6 との関係」を新設し、3 体系（Agent Workflow Phase / Loop / v1 開発マイルストーン）の対応表とクロスリファレンスを明記する形で「ズレ解消」を実施。03 §6 自体は触らず温存。残課題: 03 §6 の Phase 1〜5 がリポジトリ実態（Phase 6/7 まで進んでいる Agent Workflow）から見ると古い区分の可能性があり、次回以降に 03 側の見直しを別タスクとして上げるとよい。
