@@ -82,5 +82,5 @@
 - task: feat(Watch): MainView.swift の `selectedPresetId` が `@State` ローカル変数のため再起動で失われる問題を修正（UserState に保存し起動時に復元）
 - 結果: done
 - 変更ファイル: ScheduleManagementTool/Shared/Models/UserState.swift, ScheduleManagementTool/WatchApp/Views/MainView.swift, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <後述>
+- commit: 005e13d
 - メモ: 既存 `UserState` には `expectedStateId` フィールドが未定義であったため、最小限のモデル拡張として `var expectedStateId: String?` を 1 行追加（`@Model` final class、`presetTypeRaw: String` と整合させるため `String?` を採用）。MainView 側は `@State private var selectedPresetId: String?` 自体は UI 編集用に温存し、(a) `.onAppear` で `selectedPresetId == nil` のときだけ `currentUserState?.expectedStateId` から復元（無限ループ／起動直後の上書き回避） (b) `.onChange(of: selectedPresetId)` で値変更時に `persistExpectedState(_:)` を呼び `currentUserState` に書き戻し → 既存があれば `expectedStateId` 更新＋`timestamp` を現在時刻に更新（`@Query(sort: \UserState.timestamp, order: .reverse)` の最新化のため）／無ければ新規 `UserState` 作成して `modelContext.insert` の 2 経路。`startMeasurement()` が同じく無し→新規作成パターンを使っているのと整合させる方針。`stopMeasurement()` は触らず（測定セッションの永続化は別系統）。SwiftData の保存は `try? modelContext.save()` で既存パターン踏襲。docs/readme/03 §B「期待状態・状態入力」の永続化要件を満たす最小実装。Build 検証は MacBook 2016 でローカル不可のため未実施、CI（GitHub Actions macos-latest, tick 8 で導入）の push 後に確認する想定。
