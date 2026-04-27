@@ -28,3 +28,10 @@
 - 変更ファイル: docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: abf3923
 - メモ: backlog の `- [ ]` 行が 0 件のため、手順 7 に従い BACKLOG 末尾に「すべてのタスクが完了しました」マーカーを追記。launchd 側で検知して自動 unload する想定。
+
+## 2026-04-27 20:11 JST  tick 3
+- task: docs/readme/07_進捗・履歴.md を現状に合わせて更新する（Phase 6/Phase 7 完了・半自動開発移植・sdk-migration ブランチ）
+- 結果: done
+- 変更ファイル: docs/readme/07_進捗・履歴.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: (この tick 後に確定)
+- メモ: 既存セクション 1〜4 は温存。末尾に「5. 最新スナップショット（2026-04-27 時点）」を追記。Agent_workspace/Agent_maneger/クロック受付/ の Phase 4/5/6/7 各完了クロックと 進捗管理agent/進捗報告受付/ の対応報告を実ファイル名で参照。現行 sdk-migration ブランチの直近 main 取り込みコミット (5c4a662) と claude_dev 自動ワーカー由来のドキュメントコミット (a08114a, abf3923) も明記。半自動開発 macOS 移植・SDK 運用強化（permissions.yaml / ローテーション / --health）も主要マイルストーンに追加。Phase 8 未着手・02_Active 0 件・未整備シンボル 18 件残などの「進行中・未着手」も整理。
