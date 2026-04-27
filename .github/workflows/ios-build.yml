@@ -68,7 +68,7 @@ jobs:
         run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS Simulator' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
 
       - name: Run SharedTests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-SharedTests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:SharedTests CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-SharedTests.xcresult
 
       - name: Setup paired Watch + iPhone simulators
         run: |
@@ -89,10 +89,10 @@ jobs:
           fi
 
       - name: Run WatchAppTests (watchOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-WatchAppTests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)' -only-testing:WatchAppTests CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-WatchAppTests.xcresult
 
       - name: Run iPhoneAppUITests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneAppUITests -destination 'platform=iOS Simulator,name=iPhone 16' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:iPhoneAppUITests CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
 
       # Coverage 可視化 (閾値判定なし)。xccov view --report --json で各 xcresult を JSON 化し、
       # xcresult バンドル本体と合わせて Actions 成果物として残す。テスト失敗時もアップロードする。
