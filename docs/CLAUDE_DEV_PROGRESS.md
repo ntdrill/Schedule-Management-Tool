@@ -49,3 +49,10 @@
 - 変更ファイル: docs/readme/01_プロジェクト概要.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: 37d998e
 - メモ: ScheduleManagementTool/iPhoneApp/iPhoneApp.swift と WatchApp/WatchApp.swift を確認し、両ターゲットとも `import SwiftData` + `ModelContainer` のみで Core Data 不使用、deployment target は iOS 17 / watchOS 10 系（Swift 5.9 SwiftUI）であることを確認。01 §3 技術スタック表の「データ保存: SwiftData または Core Data」は実態と齟齬があったため「SwiftData（ModelContainer によるローカル永続化・単一ユーザー）」に修正。「対象OS」「言語」も `iOS 17+ / watchOS 10+` `Swift 5.9` と具体化。さらに Shared/Sync/ 配下に SyncMessage / 各 DTO（UserStateDTO, MeasurementSessionDTO 等 7 種）が存在し WatchConnectivity 経由の双方向同期が実装済みであるため、技術スタック表に「デバイス間連携」行を追加。§4「v1 実装機能スコープ」（A〜E）と §6「画面構成」は 03 が真正典の仕様記述であり、Watch 側 MainView/ActionView/FeedbackView・iOS 側 DashboardView/HistoryLogView/SettingsView・HealthKitService/SwitchBotService の存在も確認できたため温存。なお iOS DashboardView の「大きなトグルボタン」未実装は backlog の別タスクで追跡されているため 01 では書き換えない判断。
+
+## 2026-04-27 20:42 JST  tick 6
+- task: chore(repo): リポジトリ ルートに `.gitignore` を作成（Xcode/macOS/SPM/Python/Node/IDE/ログ/半自動開発の実行時生成物を網羅）
+- 結果: done
+- 変更ファイル: .gitignore, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: PENDING
+- メモ: リポジトリルートに `.gitignore` 不在を確認した上で新規作成。Xcode 系（`build/`, `DerivedData/`, `xcuserdata/`, `*.xcuserstate`, `*.xcodeproj/`, `*.xcworkspace/`）/ macOS（`.DS_Store`, `.AppleDouble`, `.LSOverride`）/ SPM（`.swiftpm/`, `Packages/` + `!Package.resolved` で否定）/ Python（`.venv/`, `__pycache__/`, `*.py[cod]`, `*$py.class`）/ Node（`node_modules/`）/ IDE（`.idea/`, `.vscode/`）/ ログ（`*.log`）/ 半自動開発の実行時生成物（`半自動開発/tool/*.lock`, `半自動開発/codex_observe/`, `半自動開発/スクリーンショット/`）を網羅。加えてリポジトリ実体（`半自動開発/tool/notify_config.example.json` の存在）を踏まえ、認証情報の誤コミット予防として `.env` / `.env.*`（`!.env.example` で否定）と `半自動開発/tool/notify_config.json` も同 `.gitignore` に追加。`*.xcodeproj/` を ignore したのは XcodeGen が project.yml から生成する前提（次タスク以降で追加予定）。`git check-ignore` で `半自動開発/tool/claude_dev_tick.lock` がパターン 52 行目にマッチすることを確認。既存 tracked の `.DS_Store` は gitignore 対象外（別タスクで cleanup する場合は `git rm --cached` が必要）。
