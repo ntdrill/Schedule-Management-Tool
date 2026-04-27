@@ -59,14 +59,16 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
+      # CI 上で実機 Provisioning が無いため Simulator 向け汎用ターゲットでビルドし、
+      # かつ全ターゲットの code signing を完全に無効化する。
       - name: Build iPhoneApp
-        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS' build
+        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
 
       - name: Build WatchApp
-        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build
+        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS Simulator' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
 
       - name: Run SharedTests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES -resultBundlePath TestResults-SharedTests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-SharedTests.xcresult
 
       - name: Setup paired Watch + iPhone simulators
         run: |
@@ -87,10 +89,10 @@ jobs:
           fi
 
       - name: Run WatchAppTests (watchOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)' -enableCodeCoverage YES -resultBundlePath TestResults-WatchAppTests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-WatchAppTests.xcresult
 
       - name: Run iPhoneAppUITests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneAppUITests -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneAppUITests -destination 'platform=iOS Simulator,name=iPhone 15' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
 
       # Coverage 可視化 (閾値判定なし)。xccov view --report --json で各 xcresult を JSON 化し、
       # xcresult バンドル本体と合わせて Actions 成果物として残す。テスト失敗時もアップロードする。
