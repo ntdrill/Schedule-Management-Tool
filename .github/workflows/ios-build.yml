@@ -1,0 +1,37 @@
+# iOS / watchOS build verification on GitHub Actions.
+#
+# 目的:
+#   MacBook 2016 (macOS 12) ではローカル Xcode ビルドが動かないため、
+#   GitHub Actions の macos-latest ランナー上で xcodegen → xcodebuild を
+#   回して iPhoneApp / WatchApp が型・構文レベルで成立しているかを検証する。
+#
+# 方針:
+#   - 最初は素朴に。キャッシュなし、並列なし、エラー整形なし。
+#   - 失敗ログがそのまま Actions UI に出るよう、`set -o pipefail` や
+#     `xcpretty` 等のフィルタは挟まない。
+#   - public repo 化前提で macos-latest 無料枠で回す。
+
+name: iOS Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build iPhoneApp
+        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS' build
+
+      - name: Build WatchApp
+        run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build
