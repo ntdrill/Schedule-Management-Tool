@@ -48,8 +48,8 @@ struct HistoryLogView: View {
                         .cornerRadius(4)
                 }
                 HStack(spacing: 12) {
-                    if let hr = record.heartRateBpm {
-                        Label("\(Int(hr))bpm", systemImage: "heart.fill").font(.caption)
+                    if let bpm = record.heartRateBpm {
+                        Label("\(Int(bpm))bpm", systemImage: "heart.fill").font(.caption)
                     }
                     if let hrv = record.hrvMs {
                         Label("\(Int(hrv))ms", systemImage: "waveform.path.ecg").font(.caption)
@@ -77,8 +77,8 @@ struct HistoryLogView: View {
                     Spacer()
                     if let rating = record.userRating {
                         HStack(spacing: 2) {
-                            ForEach(1...5, id: \.self) { i in
-                                Image(systemName: i <= Int(rating) ? "star.fill" : "star")
+                            ForEach(1...5, id: \.self) { star in
+                                Image(systemName: star <= Int(rating) ? "star.fill" : "star")
                                     .font(.caption2).foregroundColor(.yellow)
                             }
                         }

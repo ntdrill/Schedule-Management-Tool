@@ -8,11 +8,11 @@ struct SubjectiveInput: Codable, Equatable, Sendable {
     var inputTimestamp: Date
 
     init(valence: Double, arousal: Double, focus: Double,
-         fatigue: Double, at: Date = Date()) {
+         fatigue: Double, timestamp: Date = Date()) {
         self.valenceScore = valence
         self.arousalScore = arousal
         self.focusScore = focus
         self.fatigueScore = fatigue
-        self.inputTimestamp = at
+        self.inputTimestamp = timestamp
     }
 }
