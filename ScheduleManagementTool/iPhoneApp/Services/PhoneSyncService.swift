@@ -24,10 +24,13 @@ final class PhoneSyncService: NSObject, ObservableObject, WCSessionDelegate {
     func sendSettingsToWatch(presets: [ExpectedStateSchema], templates: [ActionTemplate], environment: EnvironmentState?) {
         var context: [String: Any] = [:]
 
-        if let presetsData = try? JSONEncoder().encode(presets.map { preset in
-            ["id": preset.id.uuidString, "name": preset.name, "presetType": preset.presetTypeRaw,
-             "displayOrder": preset.displayOrder] as [String: Any]
-        }) {
+        let presetDicts: [[String: Any]] = presets.map { preset in
+            ["id": preset.id.uuidString,
+             "name": preset.name,
+             "presetType": preset.presetTypeRaw,
+             "displayOrder": preset.displayOrder]
+        }
+        if let presetsData = try? JSONSerialization.data(withJSONObject: presetDicts) {
             context["presets"] = presetsData
         }
 
