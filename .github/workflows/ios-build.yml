@@ -43,7 +43,7 @@ jobs:
         run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build
 
       - name: Run SharedTests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15'
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES -resultBundlePath TestResults-SharedTests.xcresult
 
       - name: Setup paired Watch + iPhone simulators
         run: |
@@ -64,7 +64,32 @@ jobs:
           fi
 
       - name: Run WatchAppTests (watchOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)'
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)' -enableCodeCoverage YES -resultBundlePath TestResults-WatchAppTests.xcresult
 
       - name: Run iPhoneAppUITests (iOS Simulator)
-        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneAppUITests -destination 'platform=iOS Simulator,name=iPhone 15'
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneAppUITests -destination 'platform=iOS Simulator,name=iPhone 15' -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
+
+      # Coverage 可視化 (閾値判定なし)。xccov view --report --json で各 xcresult を JSON 化し、
+      # xcresult バンドル本体と合わせて Actions 成果物として残す。テスト失敗時もアップロードする。
+      - name: Generate coverage JSON from xcresult bundles
+        if: always()
+        run: |
+          for bundle in TestResults-SharedTests.xcresult TestResults-WatchAppTests.xcresult TestResults-iPhoneAppUITests.xcresult; do
+            if [ -d "$bundle" ]; then
+              out="coverage-${bundle%.xcresult}.json"
+              xcrun xccov view --report --json "$bundle" > "$out" || echo "coverage extraction failed for $bundle"
+            else
+              echo "skip: $bundle does not exist"
+            fi
+          done
+          ls -la TestResults-*.xcresult coverage-*.json 2>/dev/null || true
+
+      - name: Upload xcresult bundles & coverage JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-and-coverage
+          path: |
+            TestResults-*.xcresult
+            coverage-*.json
+          if-no-files-found: warn

@@ -153,3 +153,18 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施。CI
 `included` でプロダクトコード `ScheduleManagementTool` 配下に限定しているため、`Tests/`（XCTest/XCUITest）配下は実質スキャン対象外。`excluded: [ScheduleManagementTool/Tests]` を冗長に書いているのは `included` と `excluded` の評価順を明示する保険（SwiftLint は `excluded` が `included` より優先）。
 
 検証は MacBook 2016 ローカル不可。CI 上で `Run SwiftLint (strict)` が緑になるかを push 後に確認する想定。最初の CI 実行で `disabled_rules` から漏れた既存違反が残っていれば、そこで列挙された rule を順次 `.swiftlint.yml` の `disabled_rules` に追記して緑化し、別 backlog タスクで本質的に直す（タスク仕様遵守）。
+
+## 2026-04-27 23:31 JST  tick 18
+- task: chore(coverage): CI workflow の test ステップに `-enableCodeCoverage YES -resultBundlePath` を付与し、`xcrun xccov view --report --json` で coverage.json を生成、`actions/upload-artifact` で xcresult と coverage JSON を CI 成果物として残す（閾値判定なし）
+- 結果: done
+- 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: <pending>
+- メモ: 既存の 3 つの test ステップ（SharedTests / WatchAppTests / iPhoneAppUITests）それぞれに `-enableCodeCoverage YES -resultBundlePath TestResults-<scheme>.xcresult` を追記。`-resultBundlePath` は xcodebuild が path 既存だと失敗するため、CI ランナーは clean state なので衝突なし、かつ scheme 単位で別バンドルにすることで 3 つを並行保持。
+
+`Generate coverage JSON from xcresult bundles` ステップを追加：bash for ループで各 xcresult bundle の存在を `[ -d ]` 確認し、存在すれば `xcrun xccov view --report --json <bundle> > coverage-<bundle名>.json` を実行、無ければ skip ログ出力で続行。`|| echo` で抽出失敗時もステップ全体は緑のまま（テスト失敗時に部分的な xcresult が出ても処理を継続するため）。`if: always()` でテストが赤でも実行する。
+
+`Upload xcresult bundles & coverage JSON` ステップを追加：`actions/upload-artifact@v4` で `TestResults-*.xcresult` と `coverage-*.json` を `test-results-and-coverage` 名でアップロード。`if-no-files-found: warn` で xcresult が 1 つも生成されなかった場合に warning だけ出して fail させない（ジョブが build 段階で落ちた場合の互換性）。`if: always()` でテスト失敗時も成果物を残し、後から Actions UI からダウンロードして失敗原因を解析できる動線を確保。
+
+閾値判定（カバレッジ %% が一定以下なら fail 等）は backlog 指示どおり**導入せず**、最初は可視化のみ。今後 coverage を gating したくなった場合は別タスクで `jq '.lineCoverage' coverage-SharedTests.json` 等で取り出し閾値比較を追加する想定。`xcrun xccov view --report --json` は Xcode 14+ で安定動作する古典 API（`xcresulttool get` の新フローもあるが、backlog 指示の literal `xccov view` を踏襲）。
+
+検証は MacBook 2016 ローカル不可。CI 緑化と Actions UI で成果物 `test-results-and-coverage` artifact がダウンロード可能になることを push 後に確認する想定。
