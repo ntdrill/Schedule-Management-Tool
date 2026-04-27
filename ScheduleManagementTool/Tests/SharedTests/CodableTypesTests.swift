@@ -42,7 +42,7 @@ final class CodableTypesTests: XCTestCase {
             arousal: 3.0,
             focus: 5.0,
             fatigue: 2.0,
-            at: Date(timeIntervalSince1970: 1_700_000_000)
+            timestamp: Date(timeIntervalSince1970: 1_700_000_000)
         )
         let data = try encoder().encode(original)
         let recovered = try decoder().decode(SubjectiveInput.self, from: data)
