@@ -1,0 +1,28 @@
+# SwiftLint configuration for ScheduleManagementTool.
+#
+# 方針:
+#   このファイルは SwiftLint の最初の導入であり、CI を即座に通すことを優先する。
+#   既存違反はこのタスクでは直さず、`disabled_rules` か `excluded` で抑制し、
+#   別タスク（段階的修正）で対応する。新規ルールを段階的に有効化していくこと。
+#
+# 段階的に直す候補（将来 disabled_rules から外す順序の一例）:
+#   - trailing_whitespace : 末尾空白を除去するだけなので最初に有効化しやすい
+#   - line_length         : 1 行 120 文字程度に揃える小タスクで対応
+#
+# 参考: https://github.com/realm/SwiftLint
+
+included:
+  - ScheduleManagementTool
+
+excluded:
+  - Tests
+  - .build
+  - DerivedData
+  - build
+  - ScheduleManagementTool.xcodeproj
+  - ScheduleManagementTool/Tests
+
+disabled_rules:
+  # 出発時点で広範に違反しているため一旦無効化。後続タスクで段階的に再有効化する。
+  - trailing_whitespace
+  - line_length
