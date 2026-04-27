@@ -39,8 +39,13 @@ jobs:
       - name: Install SwiftLint
         run: brew install swiftlint
 
-      - name: Run SwiftLint (strict)
-        run: swiftlint --strict
+      # SwiftLint 違反 1 件で後続 step が全部 skip されると、build/test の他の問題が
+      # 同じ run で見えず、push を 1 回ずつしか潰せない（鋸歯状 CI ループ）。
+      # 違反は continue-on-error で advisory として早期に列挙だけし、
+      # 実際の strict gate はジョブ末尾に置いて build/test と並列に問題を可視化する。
+      - name: SwiftLint (advisory, lists all violations)
+        run: swiftlint
+        continue-on-error: true
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -93,6 +98,11 @@ jobs:
 
       - name: Run iPhoneAppUITests (iOS Simulator)
         run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:iPhoneAppUITests CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" -enableCodeCoverage YES -resultBundlePath TestResults-iPhoneAppUITests.xcresult
+
+      # SwiftLint の最終 strict gate。advisory 段階で全違反は列挙済みなので、
+      # ここで失敗してもログ追加なしに job 全体を fail させる役割。
+      - name: SwiftLint (strict gate)
+        run: swiftlint --strict
 
       # Coverage 可視化 (閾値判定なし)。xccov view --report --json で各 xcresult を JSON 化し、
       # xcresult バンドル本体と合わせて Actions 成果物として残す。テスト失敗時もアップロードする。
