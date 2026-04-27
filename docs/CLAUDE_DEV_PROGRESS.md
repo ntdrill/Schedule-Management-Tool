@@ -68,5 +68,5 @@
 - task: chore(ci): `.github/workflows/ios-build.yml` を新規作成（macos-latest で xcodegen → xcodebuild iPhone/Watch）
 - 結果: done
 - 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <pending>
+- commit: 0cd2b5a
 - メモ: `.github/workflows/` 不在を確認の上、ディレクトリ作成 → `ios-build.yml` を新規作成。`name: iOS Build` / `on: [push, pull_request]`（push はブランチ絞り込みなし）/ `jobs.build.runs-on: macos-latest` 1 ジョブ構成。ステップは (a) `actions/checkout@v4` (b) `brew install xcodegen` (c) `xcodegen generate` (d) `xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS' build` (e) `xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build` の 5 ステップ。タスク仕様どおり `set -o pipefail` や `xcpretty` 等のフィルタは挟まず、xcodebuild の素のログがそのまま Actions UI に出る形にした。キャッシュ（`actions/cache` 等）も導入せず最初は素朴に。前 tick の `project.yml` と前々 tick の `.gitignore` (`*.xcodeproj/` ignore) の組み合わせで、CI 上で都度 `xcodegen generate` → `xcodebuild` のフローが成立する。実 CI の動作確認は public repo 化後 / push 後のため、本 tick はファイル作成のみで完了。
