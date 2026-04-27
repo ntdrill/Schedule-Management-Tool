@@ -19,5 +19,5 @@
 - task: docs/readme/06_ディレクトリ構造ガイド.md を、現在のリポジトリ実態（`半自動開発/`, `Agent_workspace/`, `ScheduleManagementTool/` 等）と突き合わせて更新する
 - 結果: done
 - 変更ファイル: docs/readme/06_ディレクトリ構造ガイド.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <pending>
+- commit: a08114a
 - メモ: トップレベル実態スナップショット（`Agent_workspace/`, `ScheduleManagementTool/`, `sdk_runtime/`, `半自動開発/`, `進捗管理agent/`, `開発者本人_workspace/`, `data/`, `docs/` 等）を追記。Agent_workspace 直下の各エージェント、ScheduleManagementTool の iPhone/Watch/Shared 構成、sdk_runtime のサブツリー、Task_Management の 04_Archive/error_report、Agent_maneger の Task_Inbox/data/experience/scripts/クロック受付/クロックアーカイブ を反映。半自動開発/ は内部実装に踏み込まず存在のみ記載。

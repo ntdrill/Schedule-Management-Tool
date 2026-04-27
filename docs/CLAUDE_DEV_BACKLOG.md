@@ -20,4 +20,4 @@
 - [ ] docs/readme/ 全ファイル間の用語ゆれをチェックして用語集 docs/readme/08_用語集.md を新規作成
 -->
 
-- [x] docs/readme/06_ディレクトリ構造ガイド.md を、現在のリポジトリ実態（`半自動開発/`, `Agent_workspace/`, `ScheduleManagementTool/` 等）と突き合わせて更新する。実態と差分があれば全箇所を直す — 2026-04-27 19:35 JST commit:<pending>
+- [x] docs/readme/06_ディレクトリ構造ガイド.md を、現在のリポジトリ実態（`半自動開発/`, `Agent_workspace/`, `ScheduleManagementTool/` 等）と突き合わせて更新する。実態と差分があれば全箇所を直す — 2026-04-27 19:35 JST commit:a08114a
