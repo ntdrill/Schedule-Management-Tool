@@ -132,7 +132,7 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施、CI
 - task: test(iPhone-UI): Tests/iPhoneAppUITests/ を新設し最小スモーク 1 件（起動 → タブ「ダッシュボード/ログ/設定」確認 → 「ログ」遷移）を XCUITest で書く
 - 結果: done
 - 変更ファイル: ScheduleManagementTool/Tests/iPhoneAppUITests/DashboardSmokeUITests.swift, project.yml, .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: PENDING
+- commit: 804a24b
 - メモ: テストは `DashboardSmokeUITests.test_appLaunch_showsThreeTabsAndCanNavigateToLog` 1 ケース。`XCUIApplication().launch()` 後に (1) `app.tabBars.firstMatch.waitForExistence(timeout: 10)` で TabBar 出現を待ち、(2) `tabBar.buttons["ダッシュボード"|"ログ"|"設定"]` で 3 タブの存在を assert、(3) 起動直後は dashboardTab.isSelected が true（SwiftUI TabView の最初の子が初期選択になる仕様）、(4) `logTab.tap()` 後に `logTab.isSelected` が true になることで遷移確認。`continueAfterFailure = false` で初期 assert 失敗時に後続を打ち切る。SwiftUI の `.tabItem { Label("ダッシュボード", systemImage: ...) }` の text が XCUIElement の accessibility identifier として `tabBars.buttons["ダッシュボード"]` で引けることに依存（Apple HIG 標準動作）。
 
 `project.yml`: `WatchAppTests` の直後に `iPhoneAppUITests` ターゲット（`type: bundle.ui-testing`, `platform: iOS`, `deploymentTarget: "17.0"`, `sources: ScheduleManagementTool/Tests/iPhoneAppUITests`, `dependencies: [target: iPhoneApp]`, bundle id `com.ntdrill.schedulemanagementtool.iPhoneAppUITests`, `TEST_TARGET_NAME: iPhoneApp`）を追加。`TEST_TARGET_NAME` は host app launch のための UI テスト固有設定で、XcodeGen が dependencies から推論してくれることもあるが既存の WatchAppTests / SharedTests と書き味を揃えるため明示。`iPhoneApp.scheme.testTargets` には追加せず（SharedTests と混ぜない方針 — UI テストは host app の launch を伴うため `xcodebuild test -scheme iPhoneAppUITests` 専用で回す）。
