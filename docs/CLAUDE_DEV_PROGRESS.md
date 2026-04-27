@@ -54,5 +54,5 @@
 - task: chore(repo): リポジトリ ルートに `.gitignore` を作成（Xcode/macOS/SPM/Python/Node/IDE/ログ/半自動開発の実行時生成物を網羅）
 - 結果: done
 - 変更ファイル: .gitignore, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: PENDING
+- commit: bb99f19
 - メモ: リポジトリルートに `.gitignore` 不在を確認した上で新規作成。Xcode 系（`build/`, `DerivedData/`, `xcuserdata/`, `*.xcuserstate`, `*.xcodeproj/`, `*.xcworkspace/`）/ macOS（`.DS_Store`, `.AppleDouble`, `.LSOverride`）/ SPM（`.swiftpm/`, `Packages/` + `!Package.resolved` で否定）/ Python（`.venv/`, `__pycache__/`, `*.py[cod]`, `*$py.class`）/ Node（`node_modules/`）/ IDE（`.idea/`, `.vscode/`）/ ログ（`*.log`）/ 半自動開発の実行時生成物（`半自動開発/tool/*.lock`, `半自動開発/codex_observe/`, `半自動開発/スクリーンショット/`）を網羅。加えてリポジトリ実体（`半自動開発/tool/notify_config.example.json` の存在）を踏まえ、認証情報の誤コミット予防として `.env` / `.env.*`（`!.env.example` で否定）と `半自動開発/tool/notify_config.json` も同 `.gitignore` に追加。`*.xcodeproj/` を ignore したのは XcodeGen が project.yml から生成する前提（次タスク以降で追加予定）。`git check-ignore` で `半自動開発/tool/claude_dev_tick.lock` がパターン 52 行目にマッチすることを確認。既存 tracked の `.DS_Store` は gitignore 対象外（別タスクで cleanup する場合は `git rm --cached` が必要）。
