@@ -145,7 +145,7 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施。CI
 - task: chore(quality): SwiftLint をプロジェクトに導入。`.swiftlint.yml` を作成し、`.github/workflows/ios-build.yml` の build ジョブ先頭に `brew install swiftlint && swiftlint --strict` を追加
 - 結果: done
 - 変更ファイル: .swiftlint.yml, .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <fill-after>
+- commit: 62c8e9d
 - メモ: `.swiftlint.yml` はリポジトリルートに新設。設計は backlog 指定どおり最小: `included: [ScheduleManagementTool]` でプロダクトコードのみ対象、`excluded: [Tests, .build, DerivedData, build, ScheduleManagementTool.xcodeproj, ScheduleManagementTool/Tests]` でテスト/生成物/Xcode 生成物（`xcodegen generate` の成果物）を除外。`disabled_rules: [trailing_whitespace, line_length]` で出発時点の広範な違反を一括抑制し、CI 即緑化を優先。ファイル冒頭コメントに「既存違反はこのタスクでは直さず、別タスクで段階的に再有効化していく」方針と、`trailing_whitespace` → `line_length` の順で再有効化する候補順序を明記（backlog ルール「直さずに抑制し、別タスクで段階的に直す方針を `.swiftlint.yml` のコメントに明記」遵守）。
 
 `.github/workflows/ios-build.yml`: `Checkout` 直後に 2 ステップ追加 — (a) `Install SwiftLint` (`brew install swiftlint`)、(b) `Run SwiftLint (strict)` (`swiftlint --strict`)。`brew install xcodegen` より前に置くことで Lint 違反時に Xcode ビルド/テストの長時間ジョブを走らせずに早期失敗させる（fail-fast）。`--strict` フラグは warning も fail 扱いにし、`disabled_rules` で抑制した以外の全ルールを実質エラー化する設計。macos-latest ランナーには SwiftLint がプリインストールされている可能性があるが、backlog 指定どおり明示的に `brew install swiftlint` で固定する（既にインストール済みなら brew が no-op で抜ける）。
