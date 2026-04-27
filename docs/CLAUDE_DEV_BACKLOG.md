@@ -32,7 +32,7 @@
 
 - [x] feat(Watch): `ScheduleManagementTool/WatchApp/Views/MainView.swift` の `selectedPresetId` が `@State` ローカル変数のため、アプリ再起動で期待状態の選択が失われる。`UserState` か アクティブな `MeasurementSession` に保存し、起動時に復元するよう修正。docs/readme/03 §B「期待状態・状態入力」を満たす最小実装。Shared/Models/ の既存フィールド（`UserState.expectedStateId` 等）を優先利用し、無ければモデル拡張は最小限で行う — 2026-04-27 21:32 JST commit:005e13d
 - [x] feat(iPhone): `ScheduleManagementTool/iPhoneApp/Views/DashboardView.swift` は現状ステータス表示のみで、docs/readme/03 §A「Watch/iOS共にメイン画面に大きなトグルボタンを配置」の iOS 側要件を満たしていない。Watch `MainView.startMeasurement` / `stopMeasurement` 相当のロジックを iPhone 側にも実装し、`measurementStatusCard` の上に大きなトグルボタンを追加する。SwiftData 経由で `MeasurementSession` を作成/終了する点は Watch と同じ作法に揃える — 2026-04-27 21:45 JST commit:e526dcb
-- [ ] feat(iPhone): `ScheduleManagementTool/iPhoneApp/Services/SwitchBotService.swift` の現状実装を読み、docs/readme/03 §D「客観データ: 室温・湿度（センサー連携）」を満たすための呼び出し動線が欠けていれば配線する。少なくとも測定モード ON 中に周期的に SwitchBot から温湿度を取得し `EnvironmentState` に保存する最小ループを iPhone 側に追加（タイマー間隔は 60 秒既定、定数は `Shared/AppConstants.swift` に置く）。API クレデンシャル等は `Info.plist` か環境変数前提で、ハードコードしない
+- [x] feat(iPhone): `ScheduleManagementTool/iPhoneApp/Services/SwitchBotService.swift` の現状実装を読み、docs/readme/03 §D「客観データ: 室温・湿度（センサー連携）」を満たすための呼び出し動線が欠けていれば配線する。少なくとも測定モード ON 中に周期的に SwitchBot から温湿度を取得し `EnvironmentState` に保存する最小ループを iPhone 側に追加（タイマー間隔は 60 秒既定、定数は `Shared/AppConstants.swift` に置く）。API クレデンシャル等は `Info.plist` か環境変数前提で、ハードコードしない — 2026-04-27 22:00 JST commit:__PENDING__
 
 <!-- ↓↓ レンタル MacBook Pro 2020 到着までに価値を出すタスク -->
 

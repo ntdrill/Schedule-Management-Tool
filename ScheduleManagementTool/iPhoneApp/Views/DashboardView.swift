@@ -8,6 +8,10 @@ struct DashboardView: View {
     @Query(filter: #Predicate<MeasurementSession> { $0.statusRaw == "active" })
     private var activeSessions: [MeasurementSession]
 
+    @StateObject private var switchBotService = SwitchBotService()
+    @AppStorage("switchBotToken") private var switchBotToken: String = ""
+    @AppStorage("switchBotDeviceId") private var switchBotDeviceId: String = ""
+
     private var currentUserState: UserState? { userStates.first }
     private var currentEnvironment: EnvironmentState? { environmentStates.first }
     private var activeSession: MeasurementSession? { activeSessions.first }
@@ -44,7 +48,36 @@ struct DashboardView: View {
                 .padding()
             }
             .navigationTitle("ダッシュボード")
+            .task(id: isMeasuring) {
+                await runEnvironmentPollingLoop()
+            }
         }
+    }
+
+    private func runEnvironmentPollingLoop() async {
+        guard isMeasuring else { return }
+        let intervalNs = UInt64(AppConstants.switchBotPollingIntervalSeconds * 1_000_000_000)
+        while !Task.isCancelled {
+            await pollAndPersistEnvironment()
+            do {
+                try await Task.sleep(nanoseconds: intervalNs)
+            } catch {
+                return
+            }
+        }
+    }
+
+    private func pollAndPersistEnvironment() async {
+        guard !switchBotToken.isEmpty, !switchBotDeviceId.isEmpty else { return }
+        await switchBotService.fetchEnvironmentData(token: switchBotToken, deviceId: switchBotDeviceId)
+        let temperature = switchBotService.latestTemperature
+        let humidity = switchBotService.latestHumidity
+        guard temperature != nil || humidity != nil else { return }
+        let snapshot = EnvironmentState()
+        snapshot.temperature = temperature
+        snapshot.humidity = humidity
+        modelContext.insert(snapshot)
+        try? modelContext.save()
     }
 
     private var measurementToggleButton: some View {
