@@ -26,3 +26,5 @@ disabled_rules:
   # 出発時点で広範に違反しているため一旦無効化。後続タスクで段階的に再有効化する。
   - trailing_whitespace
   - line_length
+  - identifier_name      # 仕様由来の長い定数名 (`thresholdMeasurementCapabilityForMonitoring` 等) と慣用的な短い変数 (`ms`) の両方が現状混在
+  - trailing_comma       # 配列リテラル末尾のカンマは Swift 慣用としてプロジェクトで許容
