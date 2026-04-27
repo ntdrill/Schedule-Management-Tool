@@ -57,10 +57,10 @@ struct HistoryLogView: View {
                 }
                 if record.valenceScore != nil || record.arousalScore != nil {
                     HStack(spacing: 8) {
-                        if let v = record.valenceScore { Text("快:\(Int(v))").font(.caption2) }
-                        if let a = record.arousalScore { Text("覚:\(Int(a))").font(.caption2) }
-                        if let f = record.focusScore { Text("集:\(Int(f))").font(.caption2) }
-                        if let ft = record.fatigueScore { Text("疲:\(Int(ft))").font(.caption2) }
+                        if let valence = record.valenceScore { Text("快:\(Int(valence))").font(.caption2) }
+                        if let arousal = record.arousalScore { Text("覚:\(Int(arousal))").font(.caption2) }
+                        if let focus = record.focusScore { Text("集:\(Int(focus))").font(.caption2) }
+                        if let fatigue = record.fatigueScore { Text("疲:\(Int(fatigue))").font(.caption2) }
                     }
                     .foregroundColor(.secondary)
                 }

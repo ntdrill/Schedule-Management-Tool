@@ -26,8 +26,17 @@ disabled_rules:
   # 出発時点で広範に違反しているため一旦無効化。後続タスクで段階的に再有効化する。
   - trailing_whitespace
   - line_length
-  - identifier_name           # 仕様由来の長い定数名と慣用的な短い変数 (`ms`) の両方が現状混在
   - trailing_comma            # 配列リテラル末尾のカンマは Swift 慣用としてプロジェクトで許容
   - redundant_string_enum_value  # Shared/Types/Enums.swift で日本語ラベルとの 1:1 対応を明示するため raw value を残す
   - large_tuple               # SettingsView 等の SwiftUI 内部 (3要素 tuple) を許容、別タスクで構造体化検討
   - cyclomatic_complexity     # 同期受信ハンドラ等の type-by-type 分岐を許容、後続で関数分割タスク化
+
+# identifier_name は再有効化。仕様由来の長い定数名 (40 文字超) は許容するため max_length を緩和。
+# 1〜2 文字の超短名はリネーム済 (ms→milliseconds, v/a/f→valence/arousal/focus, ft→fatigue)。
+identifier_name:
+  min_length:
+    warning: 3
+    error: 2
+  max_length:
+    warning: 60
+    error: 80

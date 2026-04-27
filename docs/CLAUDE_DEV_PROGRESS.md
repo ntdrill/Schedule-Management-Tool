@@ -194,3 +194,10 @@ PR コメント投稿には GITHUB_TOKEN の `pull-requests: write` / `issues: w
 - 変更ファイル: 半自動開発/CLAUDE_SESSION_HANDOFF.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: 405db61
 - メモ: §1 を「2 つの LaunchAgent」→「駆動方式の変遷」3 世代テーブルに改訂（旧 halfauto-scheduler / 中 claude-dev / 現 /loop cron `f5e0c276`）。§2 を /loop cron + loop_instruction.txt 駆動の説明に書き換え。§7 のタイムラインに 23:55 自己 unload と、その後の /loop ベース CI 修正 9 commit (6539e9e → ed30b1e の緑化) を追記。§8 復元プロトコルの 3 点セットを launchctl 系→`grep -c [ ]` + `git log` + GitHub Actions API curl に置換（旧 launchctl 系は両世代とも空振りする旨を注記）。
+
+## 2026-04-28 01:30 JST  tick (loop cron)
+- task: chore(quality): SwiftLint identifier_name を再有効化（max_length 60/80, min_length 3/2 に緩和）し、ms→milliseconds, v/a/f/ft→valence/arousal/focus/fatigue にリネーム
+- 結果: done
+- 変更ファイル: .swiftlint.yml, ScheduleManagementTool/WatchApp/Services/HealthKitService.swift, ScheduleManagementTool/iPhoneApp/Views/HistoryLogView.swift, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: (本コミット内、push 後に sha 反映)
+- メモ: identifier_name を disabled から外し、custom config を追加。max_length warning 60 error 80 にすることで Shared/AppConstants.swift の `thresholdMeasurementCapabilityForMonitoring` (41 chars) を許容。`thresholdDiscrepancyForDissociationAlert` (40 chars) もデフォルト 40 だとボーダーなので明示的にバッファを取る。short identifier は `ms` (HealthKitService.swift:114) を `milliseconds` に、HistoryLogView.swift の `if let v/a/f/ft` を `valence/arousal/focus/fatigue` に置換。Tests 配下の `e`/`d` (CodableTypesTests.swift) は SwiftLint excluded のため触らない。CI 緑維持の確認は次 cron tick 待ち。

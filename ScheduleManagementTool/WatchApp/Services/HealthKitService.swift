@@ -111,9 +111,9 @@ final class HealthKitService: ObservableObject, HealthKitServicing {
         guard let quantitySamples = samples as? [HKQuantitySample],
               let latest = quantitySamples.last else { return }
 
-        let ms = latest.quantity.doubleValue(for: .secondUnit(with: .milli))
+        let milliseconds = latest.quantity.doubleValue(for: .secondUnit(with: .milli))
         Task { @MainActor in
-            self.latestHRV = ms
+            self.latestHRV = milliseconds
         }
     }
 }
