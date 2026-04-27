@@ -42,3 +42,10 @@
 - 変更ファイル: docs/readme/04_開発ワークフロー.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: 022725c
 - メモ: 03 §6「開発フェーズ (v1)」の Phase 1〜5（Project Setup / Sensor Logic / Data Model / Watch UI / iOS UI）と、04 §3〜§4 の Agent Workflow Phase 1〜8（Foundation 〜 Validation）が **同じ「Phase」という用語で別体系**を指しているズレを確認。指示は「04 側を 03 に合わせて修正」だが、リポジトリ実態（v1_phase1.txt〜v1_phase6.txt の存在、Phase 6/7 完了クロック）は 04 の Agent Workflow 体系と一致しており、04 を 03 体系に書き換えると実態と矛盾する。判断として、04 側に §1.4「用語注記：03 §6 との関係」を新設し、3 体系（Agent Workflow Phase / Loop / v1 開発マイルストーン）の対応表とクロスリファレンスを明記する形で「ズレ解消」を実施。03 §6 自体は触らず温存。残課題: 03 §6 の Phase 1〜5 がリポジトリ実態（Phase 6/7 まで進んでいる Agent Workflow）から見ると古い区分の可能性があり、次回以降に 03 側の見直しを別タスクとして上げるとよい。
+
+## 2026-04-27 20:38 JST  tick 5
+- task: docs/readme/01_プロジェクト概要.md の「対象プラットフォーム」「主要機能」記述を、ScheduleManagementTool/ 配下の Xcode プロジェクト実態（iPhone / Watch / Shared 構成）と突き合わせて齟齬があれば修正する
+- 結果: done
+- 変更ファイル: docs/readme/01_プロジェクト概要.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: <未確定>
+- メモ: ScheduleManagementTool/iPhoneApp/iPhoneApp.swift と WatchApp/WatchApp.swift を確認し、両ターゲットとも `import SwiftData` + `ModelContainer` のみで Core Data 不使用、deployment target は iOS 17 / watchOS 10 系（Swift 5.9 SwiftUI）であることを確認。01 §3 技術スタック表の「データ保存: SwiftData または Core Data」は実態と齟齬があったため「SwiftData（ModelContainer によるローカル永続化・単一ユーザー）」に修正。「対象OS」「言語」も `iOS 17+ / watchOS 10+` `Swift 5.9` と具体化。さらに Shared/Sync/ 配下に SyncMessage / 各 DTO（UserStateDTO, MeasurementSessionDTO 等 7 種）が存在し WatchConnectivity 経由の双方向同期が実装済みであるため、技術スタック表に「デバイス間連携」行を追加。§4「v1 実装機能スコープ」（A〜E）と §6「画面構成」は 03 が真正典の仕様記述であり、Watch 側 MainView/ActionView/FeedbackView・iOS 側 DashboardView/HistoryLogView/SettingsView・HealthKitService/SwitchBotService の存在も確認できたため温存。なお iOS DashboardView の「大きなトグルボタン」未実装は backlog の別タスクで追跡されているため 01 では書き換えない判断。
