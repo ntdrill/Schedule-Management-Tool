@@ -75,5 +75,5 @@
 - task: chore(docs): docs/readme/06_ディレクトリ構造ガイド.md の末尾に「ビルド方法」セクションを追加（XcodeGen 必須・brew install xcodegen → xcodegen generate → open .xcodeproj、MacBook 2016 / macOS 12 ではローカルビルド不可で GitHub Actions に依存）
 - 結果: done
 - 変更ファイル: docs/readme/06_ディレクトリ構造ガイド.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <pending>
+- commit: d2e50e0
 - メモ: 06 の末尾（「## 提案/ドラフト」の後）に「## ビルド方法」を新設。サブセクションは (1) 必須ツール（Xcode 16+, XcodeGen） (2) ローカルビルド手順（brew install xcodegen / xcodegen generate / open ScheduleManagementTool.xcodeproj の 3 ステップ。`*.xcodeproj/` が .gitignore 対象で都度生成する点・project.yml 変更時は再 generate が必要な点・`Package.resolved` のみ例外で git 追跡対象である点を明記） (3) 古い開発機（MacBook 2016 / macOS 12 等で Xcode 14 以下しか動かない環境）でのフロー（GitHub Actions の `.github/workflows/ios-build.yml` が macos-latest で xcodegen → xcodebuild を回す前提、push/PR で自動実行、実機検証は別環境を確保） の 3 つ。前 tick で作った project.yml / .gitignore / .github/workflows/ios-build.yml の運用面のドキュメント化が目的で、コード／設定変更は無し。
