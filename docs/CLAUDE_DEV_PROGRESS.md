@@ -173,7 +173,7 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施。CI
 - task: chore(ci-hardening): `.github/workflows/ios-build.yml` を仕上げる。(a) concurrency で同一ブランチ重複ジョブをキャンセル (b) xcodebuild 前に simctl list runtimes 等で SDK バージョンを stdout に出して切り分けやすく (c) ジョブ失敗時に *.xcresult を必ずアップロード (d) PR コメント自動投稿（actions/github-script で coverage 1 行サマリ）(e) badge URL を README に貼れるよう workflow 名を `iOS Build & Test` に整える
 - 結果: done
 - 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <after-commit>
+- commit: 7ab44ac
 - メモ: workflow 名を `iOS Build` → `iOS Build & Test` に変更（要件 e、badge URL `https://github.com/<owner>/<repo>/actions/workflows/ios-build.yml/badge.svg` を README に貼れる状態にする）。
 
 要件 (a) concurrency: トップレベルに `concurrency:` ブロックを追加。`group: ${{ github.workflow }}-${{ github.ref }}` で workflow×ref ごとに 1 ジョブ。`cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}` とし、main は履歴保持のためキャンセルしない／feature ブランチや PR は古いラン即停止で時間節約。
