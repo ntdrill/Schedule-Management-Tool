@@ -35,3 +35,6 @@ jobs:
 
       - name: Build WatchApp
         run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build
+
+      - name: Run SharedTests (iOS Simulator)
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15'

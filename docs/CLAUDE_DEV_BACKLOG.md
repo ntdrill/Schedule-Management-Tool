@@ -36,7 +36,7 @@
 
 <!-- ↓↓ レンタル MacBook Pro 2020 到着までに価値を出すタスク -->
 
-- [ ] test(Shared): `ScheduleManagementTool/Tests/SharedTests/` を新設し、Shared/Models/ と Shared/Types/ の純ロジック（`@Model` のデフォルト値・Enum raw 値整合性・`Timestamped` プロトコル準拠・`StateSnapshotConvertible` の往復変換等）を XCTest で覆う。狙いは「CI で意味のある検証ができる範囲を広げる」。SwiftData 永続化を要するテストは避け、純粋な Swift 単体テストに絞る。`project.yml` に `Tests` ターゲット（platform: iOS）を追加し、`.github/workflows/ios-build.yml` に `xcodebuild test -scheme Tests -destination 'platform=iOS Simulator,name=iPhone 15'` ステップを追加する。テスト本体は最小 5 ケース程度から
+- [x] test(Shared): `ScheduleManagementTool/Tests/SharedTests/` を新設し、Shared/Models/ と Shared/Types/ の純ロジック（`@Model` のデフォルト値・Enum raw 値整合性・`Timestamped` プロトコル準拠・`StateSnapshotConvertible` の往復変換等）を XCTest で覆う。狙いは「CI で意味のある検証ができる範囲を広げる」。SwiftData 永続化を要するテストは避け、純粋な Swift 単体テストに絞る。`project.yml` に `Tests` ターゲット（platform: iOS）を追加し、`.github/workflows/ios-build.yml` に `xcodebuild test -scheme Tests -destination 'platform=iOS Simulator,name=iPhone 15'` ステップを追加する。テスト本体は最小 5 ケース程度から — 2026-04-27 22:14 JST commit:PENDING
 - [ ] docs(handoff): `docs/RENTAL_MAC_ONBOARDING.md` を新規作成。レンタル MacBook Pro 2020 が到着した日に 30 分で動作確認まで持っていける手順書。内容: (1) Xcode 16+ インストール（App Store） (2) `git clone` → `brew install xcodegen` → `xcodegen generate` → `open ScheduleManagementTool.xcodeproj` (3) iPhone Simulator + Apple Watch Simulator のペアリング設定確認 (4) ビルド & ラン（iPhone と Watch 両方） (5) 実機接続する場合の手順（Apple ID で署名、Capabilities で HealthKit を有効化、実機を信頼、Personal Team で開発者証明書発行） (6) 既知の制約（SwitchBot 実 API key 未設定なら温湿度は表示されない 等）。チェックリスト形式で、各項目に「期待結果」を 1 行ずつ書く
 
 <!-- ↓↓ CI で検証範囲を最大化するタスク群（GitHub Actions macOS runner で実機なしに到達可能な最大）-->

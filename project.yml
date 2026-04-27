@@ -53,6 +53,9 @@ targets:
       - target: WatchApp
         embed: true
         codeSign: true
+    scheme:
+      testTargets:
+        - SharedTests
 
   WatchApp:
     type: application
@@ -70,3 +73,18 @@ targets:
         INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.ntdrill.schedulemanagementtool
         INFOPLIST_KEY_WKApplication: YES
         INFOPLIST_KEY_WKWatchOnly: NO
+
+  # iOS 単体テスト。Shared/ の純ロジック（Enum 定数・@Model デフォルト・Codable 構造体）を検証する。
+  # SwiftData 永続化 (ModelContainer) は使わず、未アタッチの @Model インスタンスでデフォルト値だけ確認する。
+  SharedTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: ScheduleManagementTool/Tests/SharedTests
+    dependencies:
+      - target: iPhoneApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.SharedTests
+        GENERATE_INFOPLIST_FILE: YES
