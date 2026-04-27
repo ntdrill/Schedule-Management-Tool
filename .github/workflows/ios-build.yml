@@ -38,3 +38,24 @@ jobs:
 
       - name: Run SharedTests (iOS Simulator)
         run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'platform=iOS Simulator,name=iPhone 15'
+
+      - name: Setup paired Watch + iPhone simulators
+        run: |
+          set -e
+          xcrun simctl list runtimes
+          xcrun simctl list pairs
+          # macos-latest runner usually ships a pre-paired Apple Watch Series 9 (45mm) + iPhone 15.
+          # If the pair is missing, create devices for the latest installed runtimes and pair them.
+          if ! xcrun simctl list pairs | grep -q "Apple Watch Series 9 (45mm)"; then
+            IOS_RT=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform=="iOS" and .isAvailable)] | last | .identifier')
+            WATCH_RT=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform=="watchOS" and .isAvailable)] | last | .identifier')
+            echo "Using iOS runtime: $IOS_RT"
+            echo "Using watchOS runtime: $WATCH_RT"
+            PHONE=$(xcrun simctl create "Test iPhone 15" "iPhone 15" "$IOS_RT")
+            WATCH=$(xcrun simctl create "Test Apple Watch Series 9 (45mm)" "Apple Watch Series 9 (45mm)" "$WATCH_RT")
+            xcrun simctl pair "$PHONE" "$WATCH"
+            xcrun simctl list pairs
+          fi
+
+      - name: Run WatchAppTests (watchOS Simulator)
+        run: xcodebuild test -project ScheduleManagementTool.xcodeproj -scheme WatchAppTests -destination 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)'

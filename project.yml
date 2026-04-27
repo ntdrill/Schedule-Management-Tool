@@ -73,6 +73,9 @@ targets:
         INFOPLIST_KEY_WKCompanionAppBundleIdentifier: com.ntdrill.schedulemanagementtool
         INFOPLIST_KEY_WKApplication: YES
         INFOPLIST_KEY_WKWatchOnly: NO
+    scheme:
+      testTargets:
+        - WatchAppTests
 
   # iOS 単体テスト。Shared/ の純ロジック（Enum 定数・@Model デフォルト・Codable 構造体）を検証する。
   # SwiftData 永続化 (ModelContainer) は使わず、未アタッチの @Model インスタンスでデフォルト値だけ確認する。
@@ -87,4 +90,20 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.SharedTests
+        GENERATE_INFOPLIST_FILE: YES
+
+  # watchOS 単体テスト。WatchApp の MeasurementService の状態遷移と
+  # HealthKitServicing プロトコル経由のモック注入による更新フローを検証する。
+  # SwiftData の ModelContainer は in-memory（isStoredInMemoryOnly: true）で生成。
+  WatchAppTests:
+    type: bundle.unit-test
+    platform: watchOS
+    deploymentTarget: "10.0"
+    sources:
+      - path: ScheduleManagementTool/Tests/WatchAppTests
+    dependencies:
+      - target: WatchApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.watchkitapp.WatchAppTests
         GENERATE_INFOPLIST_FILE: YES
