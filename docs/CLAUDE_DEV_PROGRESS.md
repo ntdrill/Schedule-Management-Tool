@@ -192,5 +192,5 @@ PR コメント投稿には GITHUB_TOKEN の `pull-requests: write` / `issues: w
 - task: docs(handoff): 半自動開発/CLAUDE_SESSION_HANDOFF.md を最新化（claude-dev LaunchAgent 自己 unload + /loop cron 移行 + CI 緑化までの timeline 追記）
 - 結果: done
 - 変更ファイル: 半自動開発/CLAUDE_SESSION_HANDOFF.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: (本コミット内、push 後に sha 反映)
+- commit: 405db61
 - メモ: §1 を「2 つの LaunchAgent」→「駆動方式の変遷」3 世代テーブルに改訂（旧 halfauto-scheduler / 中 claude-dev / 現 /loop cron `f5e0c276`）。§2 を /loop cron + loop_instruction.txt 駆動の説明に書き換え。§7 のタイムラインに 23:55 自己 unload と、その後の /loop ベース CI 修正 9 commit (6539e9e → ed30b1e の緑化) を追記。§8 復元プロトコルの 3 点セットを launchctl 系→`grep -c [ ]` + `git log` + GitHub Actions API curl に置換（旧 launchctl 系は両世代とも空振りする旨を注記）。

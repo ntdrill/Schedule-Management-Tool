@@ -49,6 +49,6 @@
 
 <!-- ↓↓ CI 緑化（commit ed30b1e で達成）後の継続タスク。/loop ベース cron で駆動中。 -->
 
-- [x] docs(handoff): `半自動開発/CLAUDE_SESSION_HANDOFF.md` を最新化。com.user.claude-dev LaunchAgent が 2026-04-27 23:55 に自己 unload（全タスク消化）したこと、その後 `/loop 7m loop_instruction.txt` ベースの cron 駆動に切り替えたこと、CI 緑化までの修正履歴（SwiftLint 緩和 → 不足 Swift ファイル commit → 署名無効化 → iPhone 15→16 → TEST_HOST 補正 → host scheme + only-testing） commit `ed30b1e` 緑化までを「7. 直近の出来事タイムライン」に追記。「2 つの LaunchAgent」表は claude-dev も unload 済として更新する — 2026-04-28 00:50 JST commit:(本 push)
+- [x] docs(handoff): `半自動開発/CLAUDE_SESSION_HANDOFF.md` を最新化。com.user.claude-dev LaunchAgent が 2026-04-27 23:55 に自己 unload（全タスク消化）したこと、その後 `/loop 7m loop_instruction.txt` ベースの cron 駆動に切り替えたこと、CI 緑化までの修正履歴（SwiftLint 緩和 → 不足 Swift ファイル commit → 署名無効化 → iPhone 15→16 → TEST_HOST 補正 → host scheme + only-testing） commit `ed30b1e` 緑化までを「7. 直近の出来事タイムライン」に追記。「2 つの LaunchAgent」表は claude-dev も unload 済として更新する — 2026-04-28 00:50 JST commit:405db61
 - [ ] chore(quality): SwiftLint の `identifier_name` を再有効化（`min_length: { warning: 2, error: 1 }`, `max_length: { warning: 50, error: 80 }` 程度に緩和）し、`HealthKitService.swift` の `let ms = ...` を `let milliseconds = ...` にリネーム。`.swiftlint.yml` の disabled_rules から `identifier_name` を外す。CI が緑のまま維持されることを確認（push 後 `/loop` cron が CI 結果を確認する）
 - [ ] docs(readme): リポジトリルートの README（または無ければ `docs/readme/00_README索引.md`）に `iOS Build & Test` workflow の status badge を追加。マークダウン形式で `https://github.com/ntdrill/Schedule-Management-Tool/actions/workflows/ios-build.yml/badge.svg?branch=sdk-migration` を埋め込み、Actions 一覧へのリンクも併記する
