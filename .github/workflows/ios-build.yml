@@ -11,11 +11,23 @@
 #     `xcpretty` 等のフィルタは挟まない。
 #   - public repo 化前提で macos-latest 無料枠で回す。
 
-name: iOS Build
+name: iOS Build & Test
 
 on:
   push:
   pull_request:
+
+# 同一ブランチで重複起動した古いジョブはキャンセル。
+# main は cancel-in-progress: false にして履歴を保持。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+# PR コメント投稿（actions/github-script による issues.createComment）に必要な権限のみ付与。
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 
 jobs:
   build:
@@ -35,6 +47,17 @@ jobs:
 
       - name: Generate Xcode project
         run: xcodegen generate
+
+      # ランナー上で利用可能な Xcode / SDK / Simulator runtime を最初に明示。
+      # ビルドや test の destination 解決失敗を切り分けやすくする。
+      - name: Show toolchain & simulator runtimes
+        run: |
+          sw_vers
+          xcodebuild -version
+          xcrun --show-sdk-path --sdk iphonesimulator || true
+          xcrun --show-sdk-path --sdk watchsimulator || true
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Build iPhoneApp
         run: xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS' build
@@ -84,6 +107,8 @@ jobs:
           done
           ls -la TestResults-*.xcresult coverage-*.json 2>/dev/null || true
 
+      # 失敗時も xcresult を必ず残す。ビルド/テストいずれかが失敗してジョブが
+      # 止まっても、Actions UI から原因解析できるよう if: always() で固定。
       - name: Upload xcresult bundles & coverage JSON
         if: always()
         uses: actions/upload-artifact@v4
@@ -93,3 +118,41 @@ jobs:
             TestResults-*.xcresult
             coverage-*.json
           if-no-files-found: warn
+
+      # PR にカバレッジ 1 行サマリをコメント投稿（push 時はスキップ）。
+      # coverage-*.json から行カバレッジ率を抜き出して 1 コメントにまとめる。
+      - name: Comment coverage summary on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const files = fs.readdirSync('.').filter(f => f.startsWith('coverage-') && f.endsWith('.json'));
+            const lines = ['## iOS Build & Test — Coverage Summary', ''];
+            if (files.length === 0) {
+              lines.push('_No coverage JSON found (tests may have failed before producing xcresult)._');
+            } else {
+              lines.push('| Test bundle | Line coverage |');
+              lines.push('|---|---|');
+              for (const f of files.sort()) {
+                let pct = 'n/a';
+                try {
+                  const data = JSON.parse(fs.readFileSync(f, 'utf8'));
+                  if (typeof data.lineCoverage === 'number') {
+                    pct = (data.lineCoverage * 100).toFixed(2) + ' %';
+                  }
+                } catch (e) {
+                  pct = 'parse error';
+                }
+                lines.push(`| \`${f}\` | ${pct} |`);
+              }
+            }
+            lines.push('');
+            lines.push(`<sub>commit: \`${context.sha.slice(0, 7)}\` · workflow: ${context.workflow}</sub>`);
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: lines.join('\n'),
+            });

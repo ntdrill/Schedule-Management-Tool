@@ -168,3 +168,22 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施。CI
 閾値判定（カバレッジ %% が一定以下なら fail 等）は backlog 指示どおり**導入せず**、最初は可視化のみ。今後 coverage を gating したくなった場合は別タスクで `jq '.lineCoverage' coverage-SharedTests.json` 等で取り出し閾値比較を追加する想定。`xcrun xccov view --report --json` は Xcode 14+ で安定動作する古典 API（`xcresulttool get` の新フローもあるが、backlog 指示の literal `xccov view` を踏襲）。
 
 検証は MacBook 2016 ローカル不可。CI 緑化と Actions UI で成果物 `test-results-and-coverage` artifact がダウンロード可能になることを push 後に確認する想定。
+
+## 2026-04-27 23:44 JST  tick 19
+- task: chore(ci-hardening): `.github/workflows/ios-build.yml` を仕上げる。(a) concurrency で同一ブランチ重複ジョブをキャンセル (b) xcodebuild 前に simctl list runtimes 等で SDK バージョンを stdout に出して切り分けやすく (c) ジョブ失敗時に *.xcresult を必ずアップロード (d) PR コメント自動投稿（actions/github-script で coverage 1 行サマリ）(e) badge URL を README に貼れるよう workflow 名を `iOS Build & Test` に整える
+- 結果: done
+- 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: <after-commit>
+- メモ: workflow 名を `iOS Build` → `iOS Build & Test` に変更（要件 e、badge URL `https://github.com/<owner>/<repo>/actions/workflows/ios-build.yml/badge.svg` を README に貼れる状態にする）。
+
+要件 (a) concurrency: トップレベルに `concurrency:` ブロックを追加。`group: ${{ github.workflow }}-${{ github.ref }}` で workflow×ref ごとに 1 ジョブ。`cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}` とし、main は履歴保持のためキャンセルしない／feature ブランチや PR は古いラン即停止で時間節約。
+
+要件 (b) SDK 可視化: `Generate Xcode project` の直後・最初の `xcodebuild` 呼び出し（Build iPhoneApp）の前に `Show toolchain & simulator runtimes` ステップを追加。`sw_vers` / `xcodebuild -version` / `xcrun --show-sdk-path --sdk iphonesimulator` / `... --sdk watchsimulator` / `xcrun simctl list runtimes` / `xcrun simctl list devices available` を順に流し、ランナーの Xcode/SDK/Simulator 構成を job log の最序盤に固定して切り分けやすくする。SDK パス取得は失敗してもログに残せばよいので `|| true` で fail させない。
+
+要件 (c) 失敗時の xcresult upload: 既存の `Upload xcresult bundles & coverage JSON` は既に `if: always()` で固定済みだったため、その意図をコメントで明文化（「ビルド/テストいずれかが失敗してジョブが止まっても、Actions UI から原因解析できるよう if: always() で固定」）。`Generate coverage JSON from xcresult bundles` も `if: always()` 維持。
+
+要件 (d) PR コメント: `actions/github-script@v7` を使った `Comment coverage summary on PR` ステップを Upload の直後に追加。`if: always() && github.event_name == 'pull_request'` で PR 時のみ実行（push 時はスキップ）。`fs.readdirSync('.')` で `coverage-*.json` を列挙、各ファイルから `data.lineCoverage` を読み取って `(*100).toFixed(2) + ' %'` で表組み投稿。1 ファイルもない場合は「テストが xcresult 生成前に失敗した可能性」の旨を併記。最後に commit short-sha と workflow 名を `<sub>` 行で添える。`github.rest.issues.createComment` で `context.issue.number` 宛に投稿。
+
+PR コメント投稿には GITHUB_TOKEN の `pull-requests: write` / `issues: write` 権限が必要なため、トップレベルに `permissions:` ブロックを追加（`contents: read` / `pull-requests: write` / `issues: write`）。デフォルトトークン権限がリポジトリ設定で read-only に絞られているケースでも動くよう明示。
+
+検証は MacBook 2016 ローカル不可。CI 緑化と PR 作成時のコメント投稿動作確認は push 後に行う想定。`actions/github-script@v7` は Node 20 ベースの GitHub-hosted action のため、ランナー側追加セットアップ不要。
