@@ -118,5 +118,5 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施、CI
 - task: docs(handoff): docs/RENTAL_MAC_ONBOARDING.md を新規作成（レンタル MacBook Pro 2020 到着時に 30 分で動作確認まで到達するための手順書）
 - 結果: done
 - 変更ファイル: docs/RENTAL_MAC_ONBOARDING.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: PENDING
+- commit: c88c317
 - メモ: タスク仕様の (1)〜(6) すべてをチェックリスト形式で網羅。各項目に「期待結果」を 1 行ずつ併記。実態根拠は (a) `project.yml`（targets: iPhoneApp / WatchApp / SharedTests, bundleIdPrefix: com.ntdrill, deploymentTarget: iOS 17.0 / watchOS 10.0, WatchApp は iPhoneApp の embed）(b) `ScheduleManagementTool/iPhoneApp/Views/SettingsView.swift` の `@AppStorage("switchBotToken")` / `@AppStorage("switchBotDeviceId")`（既知制約「SwitchBot key 未設定なら温湿度 `--`」の根拠）(c) `WatchApp/Services/HealthKitService.swift` の `HKQuantityType.heartRate` / `heartRateVariabilitySDNN` 利用と `HKHealthStore.isHealthDataAvailable()` ガード（実機 HealthKit / Simulator 制約の根拠）(d) `docs/readme/06_ディレクトリ構造ガイド.md §ビルド方法` の XcodeGen 手順（重複だが要約再掲）(e) `.github/workflows/ios-build.yml` の存在（CI 緑/赤フォールバック）。§5 実機接続では Personal Team 7 日失効・HealthKit Capability 追加・Watch ターゲット側にも同設定が必要な点を明記。§6 既知制約には SwiftBot key 未設定 / Simulator HealthKit 空 / Personal Team 7 日失効 / Watch independent 不可 / macOS 12 ローカルビルド不可 / `WatchAppTests` `iPhoneAppUITests` 未配線（backlog 後続項目）の 6 件を列挙。最後に「困ったときの確認順序」6 ステップを付録として追加。Build 検証は本ドキュメントが純テキスト追加のため不要。
