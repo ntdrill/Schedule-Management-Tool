@@ -70,3 +70,10 @@
 - 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: 0cd2b5a
 - メモ: `.github/workflows/` 不在を確認の上、ディレクトリ作成 → `ios-build.yml` を新規作成。`name: iOS Build` / `on: [push, pull_request]`（push はブランチ絞り込みなし）/ `jobs.build.runs-on: macos-latest` 1 ジョブ構成。ステップは (a) `actions/checkout@v4` (b) `brew install xcodegen` (c) `xcodegen generate` (d) `xcodebuild -project ScheduleManagementTool.xcodeproj -scheme iPhoneApp -destination 'generic/platform=iOS' build` (e) `xcodebuild -project ScheduleManagementTool.xcodeproj -scheme WatchApp -destination 'generic/platform=watchOS' build` の 5 ステップ。タスク仕様どおり `set -o pipefail` や `xcpretty` 等のフィルタは挟まず、xcodebuild の素のログがそのまま Actions UI に出る形にした。キャッシュ（`actions/cache` 等）も導入せず最初は素朴に。前 tick の `project.yml` と前々 tick の `.gitignore` (`*.xcodeproj/` ignore) の組み合わせで、CI 上で都度 `xcodegen generate` → `xcodebuild` のフローが成立する。実 CI の動作確認は public repo 化後 / push 後のため、本 tick はファイル作成のみで完了。
+
+## 2026-04-27 21:19 JST  tick 9
+- task: chore(docs): docs/readme/06_ディレクトリ構造ガイド.md の末尾に「ビルド方法」セクションを追加（XcodeGen 必須・brew install xcodegen → xcodegen generate → open .xcodeproj、MacBook 2016 / macOS 12 ではローカルビルド不可で GitHub Actions に依存）
+- 結果: done
+- 変更ファイル: docs/readme/06_ディレクトリ構造ガイド.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: <pending>
+- メモ: 06 の末尾（「## 提案/ドラフト」の後）に「## ビルド方法」を新設。サブセクションは (1) 必須ツール（Xcode 16+, XcodeGen） (2) ローカルビルド手順（brew install xcodegen / xcodegen generate / open ScheduleManagementTool.xcodeproj の 3 ステップ。`*.xcodeproj/` が .gitignore 対象で都度生成する点・project.yml 変更時は再 generate が必要な点・`Package.resolved` のみ例外で git 追跡対象である点を明記） (3) 古い開発機（MacBook 2016 / macOS 12 等で Xcode 14 以下しか動かない環境）でのフロー（GitHub Actions の `.github/workflows/ios-build.yml` が macos-latest で xcodegen → xcodebuild を回す前提、push/PR で自動実行、実機検証は別環境を確保） の 3 つ。前 tick で作った project.yml / .gitignore / .github/workflows/ios-build.yml の運用面のドキュメント化が目的で、コード／設定変更は無し。
