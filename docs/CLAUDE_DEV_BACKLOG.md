@@ -19,7 +19,7 @@
 - [x] docs/readme/06_ディレクトリ構造ガイド.md を、現在のリポジトリ実態（`半自動開発/`, `Agent_workspace/`, `ScheduleManagementTool/` 等）と突き合わせて更新する。実態と差分があれば全箇所を直す — 2026-04-27 19:35 JST commit:a08114a
 - [x] docs/readme/07_進捗・履歴.md を現状に合わせて更新する。現行 sdk-migration ブランチの進捗・最近の Phase 6/Phase 7 完了クロック・半自動開発移植完了など、`Agent_workspace/Agent_maneger/クロック受付/` と `進捗管理agent/進捗報告受付/` の実ファイルを根拠として参照し、何が今最新かを 1 セクション追記する（既存セクションは温存、追記のみ） — 2026-04-27 20:11 JST commit:f082a85
 - [x] docs/readme/03_バージョン別機能スコープ.md と docs/readme/04_開発ワークフロー.md の間で用語・フェーズ番号がズレていないかを照合し、ズレがあれば 04 側を 03 に合わせて修正する。ズレが無ければ PROGRESS にその旨だけ記録して done — 2026-04-27 20:25 JST commit:022725c
-- [x] docs/readme/01_プロジェクト概要.md の「対象プラットフォーム」「主要機能」記述を、`ScheduleManagementTool/` 配下の Xcode プロジェクト実態（iPhone / Watch / Shared 構成）と突き合わせて齟齬があれば修正する — 2026-04-27 20:38 JST commit:<pending>
+- [x] docs/readme/01_プロジェクト概要.md の「対象プラットフォーム」「主要機能」記述を、`ScheduleManagementTool/` 配下の Xcode プロジェクト実態（iPhone / Watch / Shared 構成）と突き合わせて齟齬があれば修正する — 2026-04-27 20:38 JST commit:37d998e
 
 <!-- ↓↓ ここから CI 基盤構築タスク。MacBook 2016 では Xcode が動かないため、GitHub Actions の macos-latest ランナーで xcodegen → xcodebuild を回す。public repo 化前提（無料で macOS 無制限）。-->
 
