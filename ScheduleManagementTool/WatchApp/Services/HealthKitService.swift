@@ -97,7 +97,7 @@ final class HealthKitService: ObservableObject, HealthKitServicing {
         hrvQuery = query
     }
 
-    private func processHeartRateSamples(_ samples: [HKSample]?) {
+    nonisolated private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let quantitySamples = samples as? [HKQuantitySample],
               let latest = quantitySamples.last else { return }
 
@@ -107,7 +107,7 @@ final class HealthKitService: ObservableObject, HealthKitServicing {
         }
     }
 
-    private func processHRVSamples(_ samples: [HKSample]?) {
+    nonisolated private func processHRVSamples(_ samples: [HKSample]?) {
         guard let quantitySamples = samples as? [HKQuantitySample],
               let latest = quantitySamples.last else { return }
 
