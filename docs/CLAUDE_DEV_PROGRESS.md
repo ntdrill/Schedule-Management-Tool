@@ -158,7 +158,7 @@ Build / test 検証は MacBook 2016 でローカル不可のため未実施。CI
 - task: chore(coverage): CI workflow の test ステップに `-enableCodeCoverage YES -resultBundlePath` を付与し、`xcrun xccov view --report --json` で coverage.json を生成、`actions/upload-artifact` で xcresult と coverage JSON を CI 成果物として残す（閾値判定なし）
 - 結果: done
 - 変更ファイル: .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: <pending>
+- commit: c047220
 - メモ: 既存の 3 つの test ステップ（SharedTests / WatchAppTests / iPhoneAppUITests）それぞれに `-enableCodeCoverage YES -resultBundlePath TestResults-<scheme>.xcresult` を追記。`-resultBundlePath` は xcodebuild が path 既存だと失敗するため、CI ランナーは clean state なので衝突なし、かつ scheme 単位で別バンドルにすることで 3 つを並行保持。
 
 `Generate coverage JSON from xcresult bundles` ステップを追加：bash for ループで各 xcresult bundle の存在を `[ -d ]` 確認し、存在すれば `xcrun xccov view --report --json <bundle> > coverage-<bundle名>.json` を実行、無ければ skip ログ出力で続行。`|| echo` で抽出失敗時もステップ全体は緑のまま（テスト失敗時に部分的な xcresult が出ても処理を継続するため）。`if: always()` でテストが赤でも実行する。
