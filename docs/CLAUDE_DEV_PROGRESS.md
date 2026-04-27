@@ -201,3 +201,10 @@ PR コメント投稿には GITHUB_TOKEN の `pull-requests: write` / `issues: w
 - 変更ファイル: .swiftlint.yml, ScheduleManagementTool/WatchApp/Services/HealthKitService.swift, ScheduleManagementTool/iPhoneApp/Views/HistoryLogView.swift, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
 - commit: (本コミット内、push 後に sha 反映)
 - メモ: identifier_name を disabled から外し、custom config を追加。max_length warning 60 error 80 にすることで Shared/AppConstants.swift の `thresholdMeasurementCapabilityForMonitoring` (41 chars) を許容。`thresholdDiscrepancyForDissociationAlert` (40 chars) もデフォルト 40 だとボーダーなので明示的にバッファを取る。short identifier は `ms` (HealthKitService.swift:114) を `milliseconds` に、HistoryLogView.swift の `if let v/a/f/ft` を `valence/arousal/focus/fatigue` に置換。Tests 配下の `e`/`d` (CodableTypesTests.swift) は SwiftLint excluded のため触らない。CI 緑維持の確認は次 cron tick 待ち。
+
+## 2026-04-28 02:30 JST  tick (loop cron)
+- task: docs(readme): リポジトリルートに README.md を新規作成し、iOS Build & Test workflow status badge と docs/readme/ 索引を埋め込む
+- 結果: done
+- 変更ファイル: README.md, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
+- commit: (本コミット内、push 後に sha 反映)
+- メモ: ルートに README が無かったため新規作成。badge は `https://github.com/ntdrill/Schedule-Management-Tool/actions/workflows/ios-build.yml/badge.svg?branch=sdk-migration` をリンク化（クリックで Actions 一覧へ）。プロダクト概要 1 段落 + docs/readme/01〜07 の索引テーブル + ビルド手順（XcodeGen 経由）+ 現行ブランチ sdk-migration の旨を記載。実機ビルドは Xcode 15+ / macOS 13+ 必須でローカル不可、CI で全検証する旨も明示。badge は sdk-migration 専用にしているが、main マージ後は branch クエリ削除で main に追従させる想定。
