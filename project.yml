@@ -91,6 +91,11 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.SharedTests
         GENERATE_INFOPLIST_FILE: YES
+        # iPhoneApp ターゲットは PRODUCT_NAME=ScheduleManagementTool で上書きしているため、
+        # XcodeGen 既定の TEST_HOST=$(BUILT_PRODUCTS_DIR)/iPhoneApp.app/iPhoneApp は
+        # 実体パスと噛み合わない。明示的に ScheduleManagementTool.app に向ける。
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/ScheduleManagementTool.app/ScheduleManagementTool
+        BUNDLE_LOADER: $(TEST_HOST)
 
   # watchOS 単体テスト。WatchApp の MeasurementService の状態遷移と
   # HealthKitServicing プロトコル経由のモック注入による更新フローを検証する。
@@ -107,6 +112,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.watchkitapp.WatchAppTests
         GENERATE_INFOPLIST_FILE: YES
+        # WatchApp も PRODUCT_NAME=ScheduleManagementTool 上書き済みのため SharedTests と同様の TEST_HOST 補正。
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/ScheduleManagementTool.app/ScheduleManagementTool
+        BUNDLE_LOADER: $(TEST_HOST)
 
   # iOS UI テスト。アプリ起動直後の TabView スモークのみ。
   # XCUITest なので host app（iPhoneApp）を実機/Simulator で launch する必要があり、
