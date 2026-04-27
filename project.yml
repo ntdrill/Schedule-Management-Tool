@@ -107,3 +107,20 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.watchkitapp.WatchAppTests
         GENERATE_INFOPLIST_FILE: YES
+
+  # iOS UI テスト。アプリ起動直後の TabView スモークのみ。
+  # XCUITest なので host app（iPhoneApp）を実機/Simulator で launch する必要があり、
+  # `-destination 'platform=iOS Simulator,...'` でしか走らない（generic ビルド不可）。
+  iPhoneAppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: ScheduleManagementTool/Tests/iPhoneAppUITests
+    dependencies:
+      - target: iPhoneApp
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ntdrill.schedulemanagementtool.iPhoneAppUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: iPhoneApp
