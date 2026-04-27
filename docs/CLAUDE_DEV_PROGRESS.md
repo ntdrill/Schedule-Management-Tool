@@ -103,7 +103,7 @@
 - task: test(Shared): Tests/SharedTests/ を新設し Shared/Models と Shared/Types の純ロジックを XCTest で覆う（最小 5 ケース）
 - 結果: done
 - 変更ファイル: ScheduleManagementTool/Tests/SharedTests/EnumsTests.swift, ScheduleManagementTool/Tests/SharedTests/CodableTypesTests.swift, ScheduleManagementTool/Tests/SharedTests/ModelDefaultsTests.swift, project.yml, .github/workflows/ios-build.yml, docs/CLAUDE_DEV_BACKLOG.md, docs/CLAUDE_DEV_PROGRESS.md
-- commit: PENDING
+- commit: b2df903
 - メモ: テスト 3 ファイル合計 17 ケース。EnumsTests (5 件): `ExpectedStatePreset.allCases` が 5 件・各 raw 値、raw → enum の往復、`MeasurementSessionStatus`/`MeasurementCapabilityStatus`/`MeasurementSessionQuality` の raw 値整合性。CodableTypesTests (5 件): `SensorSnapshot`/`SubjectiveInput`/`DeltaResult` の JSON Codable 往復（`dateEncodingStrategy: .iso8601` 統一）と `SensorSnapshot()` / `DeltaResult()` のデフォルト nil 確認。ModelDefaultsTests (7 件): `UserState` / `MeasurementSession` / `ExecutionRecord` / `ExpectedStateSchema` / `EvaluationResult` を未アタッチで `init` し、`statusRaw == "active"` / `measurementCapabilityStatusRaw == "normal"` / `isMeasurementMode == true` / `isMeasurementStateActive == false` / `displayOrder == 0` / `isSystemPreset == true` 等のデフォルト値、および enum raw 値との整合性を確認。SwiftData の `ModelContainer` / `ModelContext` は使わず、`@Model` インスタンスをそのまま生成して比較するパターン（タスク仕様「SwiftData 永続化を要するテストは避ける」を満たす）。
 
 `Timestamped` プロトコルと `StateSnapshotConvertible` プロトコルは `Shared/Protocols/` に定義されているが、現在どの `@Model` クラスも明示的に conformance を宣言していないため、本 tick では「往復変換」テストは追加せず enum + Codable 構造体 + @Model デフォルト値 のみに留めた（プロトコル準拠は別タスクで `extension UserState: Timestamped {}` 等を追加する想定）。
